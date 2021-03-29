@@ -33,6 +33,12 @@ void __declspec(naked) BoomaEarlyWalkFix()
         jmp addrBoomaEarlyWalkFixO
 
     _skip:
+        // These flags make the booma invincible until it has fully spawned
+        // like it's supposed to be.
+        mov dword ptr [ecx + 0x340], 0xffff
+        mov eax, dword ptr [ecx + 0x30]
+        or eax, 0x4040000
+        mov dword ptr [ecx + 0x30], eax
         jmp addrBoomaEarlyWalkFixJMP
     }
 }
