@@ -21,4 +21,9 @@ The purpose of the patch is not to change game mechanics but to avoid having to 
 Use the psobb.exe bundled with this project. That client is modified to automatically load bbpp.dll. Place bbpp.dll in your game directory.
 
 ## Building
+### Windows
 Use Visual Studio.
+
+### Linux
+It is possible to build the project on Linux by using Wine to run MSVC.
+Install MSVC ([recommended Dockerfile](https://github.com/mstorsjo/msvc-wine)) and run wine-build.sh.
