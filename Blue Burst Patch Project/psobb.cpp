@@ -2,6 +2,7 @@
 #include "globals.h"
 #include "shop.h"
 #include "earlywalk.h"
+#include "slow_gibbles.h"
 
 void PSOBB()
 {
@@ -14,4 +15,8 @@ void PSOBB()
 #endif
 
     PatchShop();
+
+#ifdef PATCH_SLOW_GIBBLES_FIX
+    ApplySlowGibblesFix();
+#endif
 }

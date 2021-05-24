@@ -13,6 +13,10 @@ Prevents you from selling rare items to vendors.
 ### Early walk fix `[COMPILED:PATCH_EARLY_WALK_FIX]`
 Fixes the notorious "early walk" bug which is when enemies sometimes skip their battle cry animation and start moving immediately after spawning.
 
+### Slow Gibbles fix `[COMPILED:PATCH_SLOW_GIBBLES_FIX]`
+Fixes the "slow Gibbles" bug which causes the spawning animation of Gibbles to be permanently slow after they do their jump attack.
+The purpose of the patch is not to change game mechanics but to avoid having to restart the client to fix the bug thus the fix is only applied when a new party is created.
+
 ## Installation
 Use the psobb.exe bundled with this project. That client is modified to automatically load bbpp.dll. Place bbpp.dll in your game directory.
 
