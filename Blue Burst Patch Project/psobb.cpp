@@ -3,6 +3,7 @@
 #include "shop.h"
 #include "earlywalk.h"
 #include "slow_gibbles.h"
+#include "customize_menu.h"
 
 void PSOBB()
 {
@@ -18,5 +19,9 @@ void PSOBB()
 
 #ifdef PATCH_SLOW_GIBBLES_FIX
     ApplySlowGibblesFix();
+#endif
+
+#ifdef PATCH_CUSTOMIZE_MENU
+    CustomizeMenu::ApplyActionListPatch();
 #endif
 }
