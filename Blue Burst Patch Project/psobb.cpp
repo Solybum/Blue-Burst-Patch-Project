@@ -1,9 +1,11 @@
 #include "pch.h"
 #include "globals.h"
+#include "palette.h"
 #include "shop.h"
 #include "earlywalk.h"
 #include "slow_gibbles.h"
 #include "customize_menu.h"
+
 
 void PSOBB()
 {
@@ -13,6 +15,10 @@ void PSOBB()
 
 #ifdef PATCH_EARLY_WALK_FIX
     ApplyEarlyWalkFix();
+#endif
+
+#ifdef PATCH_KEYBOARD_ALTERNATE_PALETTE
+    PatchPalette();
 #endif
 
     PatchShop();
