@@ -4,10 +4,12 @@ A collection of patches for the Phantasy Star Online Blue Burst client.
 ## Patches
 Some patches must be enabled at compile time via preprocessor definitions and some patches may be enabled and disabled via the Windows Registry.
 
-### Disable GameGuard `[COMPILED:PATCH_DISABLE_GAMEGUARD]`
-Disables GameGuard.
+### Disable GameGuard `[COMPILED:DO_NOT_PATCH_DISABLE_GAMEGUARD]`
+Enables GameGuard.  
+GameGuard is disabled by default, use this flag to skip that patch.  
+Note: Some GameGuard code was previously disabled in the client binary.
 
-### Unsellable rare items `[REGISTRY:TODO]`
+### Unsellable rare items `[COMPILED:PATCH_SHOP - REGISTRY:TODO]`
 Prevents you from selling rare items to vendors.
 
 ### Early walk fix `[COMPILED:PATCH_EARLY_WALK_FIX]`

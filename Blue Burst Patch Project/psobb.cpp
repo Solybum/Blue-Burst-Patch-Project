@@ -9,7 +9,8 @@
 
 void PSOBB()
 {
-#ifdef PATCH_DISABLE_GAMEGUARD
+    // By default, keep the game guard patch enabled
+#ifndef DO_NOT_PATCH_DISABLE_GAMEGUARD
     memset((void*)addrMainGameGuardCall, 0x90, 0x05);
 #endif
 
@@ -21,7 +22,9 @@ void PSOBB()
     PatchPalette();
 #endif
 
+#ifdef PATCH_SHOP
     PatchShop();
+#endif
 
 #ifdef PATCH_SLOW_GIBBLES_FIX
     ApplySlowGibblesFix();
