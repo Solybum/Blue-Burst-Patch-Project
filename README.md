@@ -9,8 +9,11 @@ Enables GameGuard.
 GameGuard is disabled by default, use this flag to skip that patch.  
 Note: Some GameGuard code was previously disabled in the client binary.
 
-### Unsellable rare items `[COMPILED:PATCH_SHOP - REGISTRY:TODO]`
+### Unsellable rare items `[REGISTRY:TODO]`
 Prevents you from selling rare items to vendors.
+
+### Enable IME `[REGISTRY:TODO]`
+Enables the use of IME.
 
 ### Early walk fix `[COMPILED:PATCH_EARLY_WALK_FIX]`
 Fixes the notorious "early walk" bug which is when enemies sometimes skip their battle cry animation and start moving immediately after spawning.
