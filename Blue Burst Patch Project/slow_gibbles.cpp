@@ -8,11 +8,12 @@ void __declspec(naked) SlowGibblesFix()
     __asm
     {
         // If this is null then gibbles was not initialized yet and cannot be slow
-        mov eax, ds:[GIBBLES_ANIMATION_SPEEDS]
+        mov eax, ds:[GIBBLES_INIT_SENTINEL]
         test eax, eax
         je _out
 
         // Get the original value
+        mov eax, ds:[GIBBLES_ANIMATION_SPEEDS]
         fld [eax]
         // and restore the jump speed
         fstp ds:[GIBBLES_JUMP_ANIMATION_SPEED]
