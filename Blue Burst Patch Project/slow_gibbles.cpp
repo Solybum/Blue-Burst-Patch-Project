@@ -1,35 +1,32 @@
-
+#include <cstdint>
 #include "pch.h"
 #include "helpers.h"
 #include "slow_gibbles.h"
 
-void __declspec(naked) SlowGibblesFix()
+const size_t gibblesBpId = 0x3d;
+const size_t bpAnimSpeedSz = 0x30;
+// Actually a pointer to a struct of size 0x30 but let's just call it a float pointer
+float** bpAnimSpeeds = (float**) 0x00a9b1d0;
+float* gibblesJumpAnimSpeed = (float*) 0x009be1e8;
+
+float* getBpAnimationSpeeds(size_t id)
 {
-    __asm
-    {
-        // If this is null then gibbles was not initialized yet and cannot be slow
-        mov eax, ds:[GIBBLES_INIT_SENTINEL]
-        test eax, eax
-        je _out
+    return (*bpAnimSpeeds) + id * bpAnimSpeedSz / sizeof(float);
+}
 
-        // Get the original value
-        mov eax, ds:[GIBBLES_ANIMATION_SPEEDS]
-        fld [eax]
-        // and restore the jump speed
-        fstp ds:[GIBBLES_JUMP_ANIMATION_SPEED]
+void __cdecl SlowGibblesFix()
+{
+    // BP should be loaded at this point but just in case
+    if (*bpAnimSpeeds == nullptr) return;
 
-    _out:
-        // Original code
-        push 0
-        lea ecx, [ebp - 0x60]
-
-        jmp addrSlowGibblesFixJMP
-    }
+    // Restore jump speed
+    *gibblesJumpAnimSpeed = *getBpAnimationSpeeds(gibblesBpId);
 }
 
 void ApplySlowGibblesFix()
 {
-    // Adding this to the "creating or joining a party" part of the main update function.
-    // In other words slow gibbles will be fixed when a new party is created or joined.
-    PatchJMP(addrSlowGibblesFixI, addrSlowGibblesFixO, (int) &SlowGibblesFix);
+    // Append to a function table that is called on party join/create
+    *((void**) 0x00a0f630) = &SlowGibblesFix;
+    // Adjust size of function table
+    *((uint8_t*) 0x007bd159) = 0x58;
 }
