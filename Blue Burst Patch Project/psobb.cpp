@@ -6,7 +6,7 @@
 #include "slow_gibbles.h"
 #include "customize_menu.h"
 #include "ime.h"
-
+#include "fastwarp.h"
 
 void PSOBB()
 {
@@ -34,4 +34,8 @@ void PSOBB()
     PatchShop();
 
     PatchIme();
+
+#ifdef PATCH_FASTWARP
+    ApplyFastWarpPatch();
+#endif
 }
