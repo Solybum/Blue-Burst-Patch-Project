@@ -22,6 +22,9 @@ Fixes the notorious "early walk" bug which is when enemies sometimes skip their 
 Fixes the "slow Gibbles" bug which causes the spawning animation of Gibbles to be permanently slow after they do their jump attack.
 The purpose of the patch is not to change game mechanics but to avoid having to restart the client to fix the bug thus the fix is only applied when a new party is created.
 
+### Fastwarp `[COMPILED:PATCH_FASTWARP]`
+This patch improves all loading times by allowing the game to load assets as fast as possible during loading screens. Can be disabled during quests with FASTWARP_NO_QUEST.
+
 ## Installation
 Use the psobb.exe bundled with this project. That client is modified to automatically load bbpp.dll. Place bbpp.dll in your game directory.
 
