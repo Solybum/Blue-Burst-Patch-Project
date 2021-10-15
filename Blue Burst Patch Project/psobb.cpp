@@ -7,6 +7,8 @@
 #include "customize_menu.h"
 #include "ime.h"
 #include "fastwarp.h"
+#include "enemy_spawns.h"
+#include "map.h"
 
 void PSOBB()
 {
@@ -37,5 +39,13 @@ void PSOBB()
 
 #ifdef PATCH_FASTWARP
     ApplyFastWarpPatch();
+#endif
+
+#ifdef PATCH_ENEMY_SPAWNS
+    EnemySpawns::ApplyEnemySpawnPatch();
+#endif
+
+#ifdef PATCH_MAP_INIT_LISTS
+    Map::ApplyMapInitListPatch();
 #endif
 }
