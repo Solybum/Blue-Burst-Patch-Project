@@ -7,7 +7,6 @@ during loading screens to allow the game to load as fast as possible.
 */
 
 #define LOGIN_CONNECTION_MANAGER 0x00a3ad08
-#define UNKNOWN_CONNECTION_MANAGER 0x00a3a93c
 #define QUEST_STARTED 0x00a95624
 
 int sleepSkipAddr = 0x0083ae4c;
@@ -36,17 +35,6 @@ void __declspec(naked) CheckRenderSkip()
         test eax, eax
         // Don't skip the next frame anymore
         jne dont_skip_next_frame
-
-        // To skip the patch loading screen, check if an unknown flag is set in an unknown struct
-        // Null check
-        mov eax, ds:[UNKNOWN_CONNECTION_MANAGER]
-        test eax, eax
-        je dont_skip
-
-        // *field_0x12120 != 2
-        mov eax, dword ptr [eax + 0x12120]
-        cmp eax, 2
-        jne goto_skip
 
     dont_skip:
         jmp renderSkipOutAddr
@@ -114,7 +102,6 @@ void __declspec(naked) PatchInQuest()
 }
 
 #undef LOGIN_CONNECTION_MANAGER
-#undef UNKNOWN_CONNECTION_MANAGER
 #undef QUEST_STARTED
 
 void ApplyFastWarpPatch()
