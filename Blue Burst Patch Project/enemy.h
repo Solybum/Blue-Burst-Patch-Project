@@ -1,8 +1,9 @@
 #pragma once
 
+#include <vector>
 #include <cstdint>
 
-namespace EnemySpawns
+namespace Enemy
 {
 
     enum class NpcType : uint16_t
@@ -157,5 +158,9 @@ namespace EnemySpawns
         return terminator;
     }();
 
-    void ApplyEnemySpawnPatch();
+    extern TaggedEnemyConstructor** mapEnemyTable;
+
+    std::vector<TaggedEnemyConstructor> ReadEntriesIntoEnemyConstructorList(TaggedEnemyConstructor*);
+    TaggedEnemyConstructor* CopyEnemyConstructorListToHeap(const std::vector<TaggedEnemyConstructor>&);
+    TaggedEnemyConstructor* FindEnemyConstructor(NpcType);
 };

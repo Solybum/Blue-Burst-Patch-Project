@@ -1,8 +1,11 @@
 #pragma once
 
+#include <vector>
+#include <cstdint>
+
 namespace Map
 {
-    enum class MapType : uint32_t{
+    enum class MapType : uint32_t {
         Pioneer2_Ep1 = 0,
         Forest1 = 1,
         Forest2 = 2,
@@ -71,5 +74,8 @@ namespace Map
         return terminator;
     }();
 
-    void ApplyMapInitListPatch();
+    extern MapInitFunctionPair** mapInitFunctionTable;
+
+    std::vector<MapInitFunctionPair> ReadEntriesIntoMapInitList(MapInitFunctionPair*);
+    MapInitFunctionPair* CopyMapInitFunctionListToHeap(const std::vector<MapInitFunctionPair>&);
 };
