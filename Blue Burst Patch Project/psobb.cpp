@@ -40,7 +40,7 @@ void PSOBB()
     ApplyFastWarpPatch();
 #endif
 
-#ifdef OMNISPAWN
-    ApplyOmnispawnPatch();
+#ifdef PATCH_OMNISPAWN
+    Omnispawn::ApplyOmnispawnPatch();
 #endif
 }
