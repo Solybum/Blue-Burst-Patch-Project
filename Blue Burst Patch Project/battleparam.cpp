@@ -1,4 +1,5 @@
 #include <cstddef>
+#include <stdexcept>
 #include "battleparam.h"
 
 namespace BattleParam
@@ -51,29 +52,32 @@ namespace BattleParam
         return reinterpret_cast<BPFile*>(file);
     }
 
-    void* GetBPEntry(Episode ep, bool solo_mode, BPIndex i, BPEntryType entryType)
+    void* GetBPEntry(Episode ep, bool solo_mode, uint8_t i, BPEntryType entryType)
     {
         // Use currently loaded BP if possible, because it's a bit faster
         BPFile* bp = *loadedBP;
 
-        if (ep != GetCurrentEpisode() || solo_mode != IsSoloMode())
+        if (bp == nullptr || ep != GetCurrentEpisode() || solo_mode != IsSoloMode())
         {
             // Accessing a BP file that is not currently loaded
             bp = GetBPFile(ep, solo_mode);
         }
 
-        size_t asNumber = static_cast<size_t>(i);
+        size_t difficulty = (size_t) GetCurrentDifficulty();
 
         switch (entryType)
         {
             case BPEntryType::Stats:
-                return &bp->stats[asNumber];
+                return &bp->stats[difficulty][i];
             case BPEntryType::Attacks:
-                return &bp->attacks[asNumber];
+                return &bp->attacks[difficulty][i];
             case BPEntryType::Resists:
-                return &bp->resists[asNumber];
+                return &bp->resists[difficulty][i];
             case BPEntryType::Animations:
-                return &bp->animations[asNumber];
+                return &bp->animations[difficulty][i];
         }
+
+        // Appease the compiler
+        throw std::runtime_error("Unreachable");
     }
 };

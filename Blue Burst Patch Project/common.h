@@ -9,6 +9,15 @@ enum class Episode
     Episode4 = 2,
 };
 
+enum class Difficulty
+{
+    Normal = 0,
+    Hard = 1,
+    VeryHard = 2,
+    Ultimate = 3
+};
+
 Episode GetCurrentEpisode();
 bool IsSoloMode();
 Map::MapType GetCurrentMap();
+Difficulty GetCurrentDifficulty();
