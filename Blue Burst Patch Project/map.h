@@ -3,6 +3,8 @@
 #include <vector>
 #include <cstdint>
 
+typedef void (__cdecl *VoidFunction)(void);
+
 namespace Map
 {
     enum class MapType : uint32_t {
@@ -21,9 +23,9 @@ namespace Map
         Boss_Derolle = 12,
         Boss_Volopt = 13,
         Boss_Darkfalz = 14,
-        Battle_Ruins = 15,
+        Lobby = 15,
         Battle_Spaceship = 16,
-        Lobby = 17,
+        Battle_Ruins = 17,
         Pioneer2_Ep2 = 18,
         Temple_A = 19,
         Temple_B = 20,
@@ -53,10 +55,11 @@ namespace Map
         Boss_Saintmilion = 44,
         Pioneer2_Ep4 = 45,
         Test_Area = 46,
+
+        MAX_INDEX = Test_Area,
+
         Invalid  =  0xffffffff
     };
-
-    typedef void (__cdecl *VoidFunction)(void);
 
 #pragma pack(push, 1)
     typedef struct
