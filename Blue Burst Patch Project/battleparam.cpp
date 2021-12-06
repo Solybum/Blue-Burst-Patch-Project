@@ -5,7 +5,7 @@
 namespace BattleParam
 {
     /// The currently loaded BP file
-    BPFile** loadedBP = reinterpret_cast<BPFile**>(0x00a9b1e0);
+    BPDifficultyFile** loadedBP = reinterpret_cast<BPDifficultyFile**>(0x00a9b1e0);
     char** bpFilenames = reinterpret_cast<char**>(0x009f7dec);
 
     void* paramFileStore = reinterpret_cast<void*>(0x00a8d4e0);
@@ -55,26 +55,39 @@ namespace BattleParam
     void* GetBPEntry(Episode ep, bool solo_mode, uint8_t i, BPEntryType entryType)
     {
         // Use currently loaded BP if possible, because it's a bit faster
-        BPFile* bp = *loadedBP;
+        BPDifficultyFile* bpDiff = *loadedBP;
 
-        if (bp == nullptr || ep != GetCurrentEpisode() || solo_mode != IsSoloMode())
+        if (bpDiff == nullptr || ep != GetCurrentEpisode() || solo_mode != IsSoloMode())
         {
             // Accessing a BP file that is not currently loaded
-            bp = GetBPFile(ep, solo_mode);
-        }
+            BPFile* bpFull = GetBPFile(ep, solo_mode);
+            size_t difficulty = (size_t) GetCurrentDifficulty();
 
-        size_t difficulty = (size_t) GetCurrentDifficulty();
+            switch (entryType)
+            {
+                case BPEntryType::Stats:
+                    return &bpFull->stats[difficulty][i];
+                case BPEntryType::Attacks:
+                    return &bpFull->attacks[difficulty][i];
+                case BPEntryType::Resists:
+                    return &bpFull->resists[difficulty][i];
+                case BPEntryType::Animations:
+                    return &bpFull->animations[difficulty][i];
+            }
+
+            throw std::runtime_error("Unreachable");
+        }
 
         switch (entryType)
         {
             case BPEntryType::Stats:
-                return &bp->stats[difficulty][i];
+                return &bpDiff->stats[i];
             case BPEntryType::Attacks:
-                return &bp->attacks[difficulty][i];
+                return &bpDiff->attacks[i];
             case BPEntryType::Resists:
-                return &bp->resists[difficulty][i];
+                return &bpDiff->resists[i];
             case BPEntryType::Animations:
-                return &bp->animations[difficulty][i];
+                return &bpDiff->animations[i];
         }
 
         // Appease the compiler

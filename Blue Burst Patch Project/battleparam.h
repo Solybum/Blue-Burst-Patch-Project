@@ -467,12 +467,21 @@ namespace BattleParam
         int unknown_dfp_modifier;
     } BPResistsEntry;
 
+    /// All difficulties in one, this is the full file
     typedef struct {
         BPStatsEntry stats[4][96];
         BPAttacksEntry attacks[4][96];
         BPResistsEntry resists[4][96];
         BPAnimationsEntry animations[4][96];
     } BPFile;
+
+    /// Only one difficulty, this is what's loaded by the game when joining a room
+    typedef struct {
+        BPStatsEntry stats[96];
+        BPAttacksEntry attacks[96];
+        BPResistsEntry resists[96];
+        BPAnimationsEntry animations[96];
+    } BPDifficultyFile;
 #pragma pack(pop)
 
     /// Custom type

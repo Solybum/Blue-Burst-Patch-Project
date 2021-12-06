@@ -1607,7 +1607,7 @@ namespace Omnispawn
     }
 
     /// Transforms a NewBPIndex (new) to a BPIndex (old)
-    BPIndex DecodeNewBpIndex(NewBPIndex i, BPEntryType entryType)
+    uint8_t DecodeNewBpIndex(NewBPIndex i, BPEntryType entryType)
     {
         if (GetCurrentEpisode() == Episode::Episode2)
         {
@@ -1638,34 +1638,28 @@ namespace Omnispawn
 
         BPIndexAll origIdx = (*entry).second;
 
-        BPIndex result;
-
         switch (entryType)
         {
             case BPEntryType::Stats:
-                result.stats = origIdx.stats;
-                break;
+                return (uint8_t) origIdx.stats;
             case BPEntryType::Attacks:
-                result.attacks = origIdx.attacks;
-                break;
+                return (uint8_t) origIdx.attacks;
             case BPEntryType::Resists:
-                result.resists = origIdx.resists;
-                break;
+                return (uint8_t) origIdx.resists;
             case BPEntryType::Animations:
-                result.animations = origIdx.animations;
-                break;
+                return (uint8_t) origIdx.animations;
         }
 
-        return result;
+        throw std::runtime_error("Unreachable");
     }
 
     /// Get a new BP entry
     void* GetNewBPEntry(NewBPIndex i, BPEntryType entryType)
     {
         Episode fromEp = GetNewBPIndexEpisode(i);
-        BPIndex decoded = DecodeNewBpIndex(i, entryType);
+        uint8_t decoded = DecodeNewBpIndex(i, entryType);
 
-        return BattleParam::GetBPEntry(fromEp, IsSoloMode(), static_cast<uint8_t>(decoded.stats), entryType);
+        return BattleParam::GetBPEntry(fromEp, IsSoloMode(), decoded, entryType);
     }
 
     /// Get a new or old BP entry
