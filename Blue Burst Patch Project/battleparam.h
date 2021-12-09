@@ -295,7 +295,7 @@ namespace BattleParam
         ep1_SinowGold__ep2_SinowSpigell__ep4_DorphonEclair = 0x10,
         ep1_DeRolLeMine__ep2_UlRay__ep4_Goran = 0x11,
         ep1_Dragon__ep2_GolDragon__ep4_PyroGoran = 0x12,
-        ep1_SinowGold__ep2_SinowSpigell__ep4_GoranDetonator = 0x13,
+        ep1_None__ep2_None__ep4_GoranDetonator = 0x13,
         // Empty slots
         ep1_None__ep2_None__ep4_SandRappyDesert = 0x17,
         ep1_RagRappy__ep2_RagRappy__ep4_DelRappyDesert = 0x18,

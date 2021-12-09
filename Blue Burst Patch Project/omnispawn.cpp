@@ -166,7 +166,7 @@ namespace Omnispawn
             BPStatsIndex::ep1_SinowGold__ep2_SinowSpigell__ep4_GoranDetonator,
             BPAttacksIndex::ep1_SinowGold__ep2_SinowSpigell__ep4_None,
             BPResistsIndex::ep1_SinowGold__ep2_SinowSpigell__ep4_GoranDetonator,
-            BPAnimationsIndex::ep1_SinowGold__ep2_SinowSpigell__ep4_GoranDetonator
+            BPAnimationsIndex::ep1_SinowGold__ep2_SinowSpigell__ep4_DorphonEclair
         )},
         {NewBPIndex::RagRappy, BPIndexAll(
             BPStatsIndex::ep1_RagRappy__ep2_RagRappy__ep4_DelRappyDesert,
@@ -377,7 +377,7 @@ namespace Omnispawn
             BPStatsIndex::ep1_SinowGold__ep2_SinowSpigell__ep4_GoranDetonator,
             BPAttacksIndex::ep1_SinowGold__ep2_SinowSpigell__ep4_None,
             BPResistsIndex::ep1_SinowGold__ep2_SinowSpigell__ep4_GoranDetonator,
-            BPAnimationsIndex::ep1_SinowGold__ep2_SinowSpigell__ep4_GoranDetonator
+            BPAnimationsIndex::ep1_SinowGold__ep2_SinowSpigell__ep4_DorphonEclair
         )},
         {NewBPIndex::GiGue, BPIndexAll(
             BPStatsIndex::ep1_NanoDragon__ep2_GiGue__ep4_MerissaAA,
@@ -635,7 +635,7 @@ namespace Omnispawn
             BPStatsIndex::ep1_SinowGold__ep2_SinowSpigell__ep4_GoranDetonator,
             BPAttacksIndex::ep1_BelraFist__ep2_SinowSpigell__ep4_GoranDetonator,
             BPResistsIndex::ep1_SinowGold__ep2_SinowSpigell__ep4_GoranDetonator,
-            BPAnimationsIndex::ep1_SinowGold__ep2_SinowSpigell__ep4_GoranDetonator
+            BPAnimationsIndex::ep1_None__ep2_None__ep4_GoranDetonator
         )},
         {NewBPIndex::GoranDetonatorAttack1, BPIndexAll(
             BPAttacksIndex::ep1_None__ep2_None__ep4_GoranDetonatorAttack1
