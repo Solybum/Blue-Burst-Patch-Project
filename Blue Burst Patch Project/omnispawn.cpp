@@ -1440,6 +1440,7 @@ namespace Omnispawn
         NpcType::Dolmdarl,
         NpcType::Morfos,
         NpcType::Recobox,
+        NpcType::Epsilon_Sinow_Zoa,
         NpcType::Ill_Gill,
         NpcType::Astark,
         NpcType::Satellite_Lizard,
