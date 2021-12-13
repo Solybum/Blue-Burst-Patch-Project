@@ -1315,6 +1315,8 @@ namespace Omnispawn
         {NewBPIndex::Monest               , std::make_pair(0x0051ad94, 0x00519120)},
         {NewBPIndex::SavageWolf           , std::make_pair(0x0051ea94, 0x0051b24c)},
         //{NewBPIndex::BarbarousWolf        , std::make_pair(0x, 0x)}, // Same as Savage Wolf
+        {NewBPIndex::PoisonLily           , std::make_pair(0x00529cf8, 0x0052930c)},
+        // {NewBPIndex::NarLily              , std::make_pair(0x, 0x)}, // Same as Poison Lily
         {NewBPIndex::SinowBeat            , std::make_pair(0x0059051c, 0x0058d268)},
         {NewBPIndex::Canadine             , std::make_pair(0x005420f4, 0x0053e718)},
         // {NewBPIndex::CanadineRing         , std::make_pair(0x, 0x)}, // Same as Canadine
