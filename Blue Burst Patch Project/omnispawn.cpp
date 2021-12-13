@@ -1729,14 +1729,11 @@ namespace Omnispawn
         }
     }
 
-    /**
-     * Patch out calls to a function that tries to access a null pointer.
-     * I think it's a texture that is loaded from the map geometry so it's probably not a big deal to not load it.
-     */ 
-    void PatchGilchicAndGunnerInit()
+    /// Enables loading assets in Pioneer 2 and Lobby that are normally only loaded on Ragol
+    void PatchRagolAssetLoading()
     {
-        memset((void*) 0x00546392, 0x90, 5);
-        memset((void*) 0x00556ab3, 0x90, 5);
+        // jnz -> jmp
+        *(uint8_t*)0x00782496 = 0xeb;
     }
 
     bool patchApplied = false;
@@ -1750,7 +1747,7 @@ namespace Omnispawn
         PatchMapInitLists();
         PatchBPGetters();
         UnhardcodeBattleParamIndices();
-        PatchGilchicAndGunnerInit();
+        PatchRagolAssetLoading();
 
         patchApplied = true;
     }
