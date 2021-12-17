@@ -7,3 +7,6 @@ void PatchCALL(int addrIn, int addrOut, int dest);
 void PatchJMP(int addrIn, int addrOut, int dest);
 
 void Log(const WCHAR* fmt, ...);
+
+/// Fill a function with NOPs leaving only a RET. Only works for caller-cleanup functions.
+void StubOutFunction(int addrIn, int addrOut);
