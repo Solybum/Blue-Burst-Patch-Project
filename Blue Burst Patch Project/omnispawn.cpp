@@ -12,6 +12,7 @@
 #include "enemy.h"
 #include "battleparam.h"
 #include "helpers.h"
+#include "initlist.h"
 
 namespace Omnispawn
 {
@@ -1739,6 +1740,42 @@ namespace Omnispawn
         *(uint8_t*)0x00782496 = 0xeb;
     }
 
+    typedef uint32_t (__cdecl *LoadMapSoundDataFunction)(uint32_t);
+    LoadMapSoundDataFunction LoadMapSoundData = reinterpret_cast<LoadMapSoundDataFunction>(0x00828d40);
+
+    /// Loads all map-specific .pac files
+    void __cdecl LoadSoundDataAllMaps()
+    {
+        for (uint32_t i = 0; i <= (uint32_t) MapType::MAX_INDEX; i++)
+        {
+            if (LoadMapSoundData(i) == 0)
+            {
+                return;
+            }
+        }
+
+        return;
+    }
+
+    void PatchSoundEffects()
+    {
+        // This is an initlist that loads assets that should stay loaded 
+        // for the entire lifetime of the program
+        InitList& lst = InitList::GetInitList(0x009ff6e0, 0x009ff7c0);
+        // No uninit function because at that point the game is exiting anyway
+        lst.AddFunctionPair(InitList::FunctionPair(LoadSoundDataAllMaps, nullptr));
+        lst.AddListReferenceAddress({0x007a666d + 1, 0x007a63a7 + 1});
+        lst.AddSizeReferenceAddress({0x007a63a2 + 1, 0x007a6668 + 1});
+
+        // Stub out load_map_sound_data_:00815584
+        // Because verything should already be loaded
+        StubOutFunction(0x00815584, 0x0081558f);
+
+        // Stub out unload_map_sound_data:00828c38
+        // Because we wan't to keep everything loaded permanently
+        StubOutFunction(0x00828c38, 0x00828d24);
+    }
+
     bool patchApplied = false;
     void ApplyOmnispawnPatch()
     {
@@ -1751,6 +1788,7 @@ namespace Omnispawn
         PatchBPGetters();
         UnhardcodeBattleParamIndices();
         PatchRagolAssetLoading();
+        PatchSoundEffects();
 
         patchApplied = true;
     }
