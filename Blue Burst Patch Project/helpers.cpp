@@ -1,3 +1,4 @@
+#include <cstdint>
 #include "pch.h"
 #include "helpers.h"
 
@@ -60,4 +61,10 @@ void Log(const WCHAR* fmt, ...)
             text);
         fclose(fp);
     }
+}
+
+void StubOutFunction(int addrIn, int addrOut)
+{
+    PatchNOP(addrIn, addrOut - addrIn);
+    *(uint8_t*) addrIn = 0xc3; // ret
 }

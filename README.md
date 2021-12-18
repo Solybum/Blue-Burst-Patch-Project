@@ -25,6 +25,15 @@ The purpose of the patch is not to change game mechanics but to avoid having to 
 ### Fastwarp `[COMPILED:PATCH_FASTWARP]`
 This patch improves all loading times by allowing the game to load assets as fast as possible during loading screens. Can be disabled during quests with FASTWARP_NO_QUEST.
 
+### Omnispawn `[COMPILED:PATCH_OMNISPAWN]`
+Allows spawning any enemy in any area with some exceptions.
+* Del Lily may not be spawned outside of Tower and other Lilies may not be spawned in Tower.
+* Sinow Zoa may not be spawned outside of Seabed and Epsilon may not be spawned in Seabed.
+* Only the Rappies that normally appear in an episode maybe be spawned in that episode.
+* Enemies that appear in both E1 and E2 have the current episode's stats.
+* E4 enemies have Crater stats in E1 and Desert stats in E2.
+* Enemies that appear in both E1 and E2 have E1 stats in Crater and E2 stats in Desert.
+
 ## Installation
 Use the psobb.exe bundled with this project. That client is modified to automatically load bbpp.dll. Place bbpp.dll in your game directory.
 

@@ -7,6 +7,8 @@
 #include "customize_menu.h"
 #include "ime.h"
 #include "fastwarp.h"
+#include "omnispawn.h"
+#include "initlist.h"
 
 void PSOBB()
 {
@@ -37,5 +39,14 @@ void PSOBB()
 
 #ifdef PATCH_FASTWARP
     ApplyFastWarpPatch();
+#endif
+
+#ifdef PATCH_OMNISPAWN
+    Omnispawn::ApplyOmnispawnPatch();
+#endif
+
+#ifdef PATCH_INITLISTS
+    // Should be last so that other patches can apply their changes first
+    InitList::PatchAllInitLists();
 #endif
 }
