@@ -1,9 +1,7 @@
 #pragma once
 
-#include <vector>
 #include <cstdint>
-
-typedef void (__cdecl *VoidFunction)(void);
+#include "initlist.h"
 
 namespace Map
 {
@@ -61,24 +59,5 @@ namespace Map
         Invalid  =  0xffffffff
     };
 
-#pragma pack(push, 1)
-    typedef struct
-    {
-        VoidFunction init;
-        VoidFunction uninit;
-    } MapInitFunctionPair;
-#pragma pack(pop)
-
-    const MapInitFunctionPair mapInitListTerminator = []()
-    {
-        MapInitFunctionPair terminator;
-        terminator.init = nullptr;
-        terminator.uninit = nullptr;
-        return terminator;
-    }();
-
-    extern MapInitFunctionPair** mapInitFunctionTable;
-
-    std::vector<MapInitFunctionPair> ReadEntriesIntoMapInitList(MapInitFunctionPair*);
-    MapInitFunctionPair* CopyMapInitFunctionListToHeap(const std::vector<MapInitFunctionPair>&);
+    InitList& GetMapInitList(MapType);
 };
