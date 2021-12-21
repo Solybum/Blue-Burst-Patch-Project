@@ -3,7 +3,6 @@
 #include <map>
 #include <vector>
 #include <algorithm>
-#include <utility>
 #include <string>
 #include <cstring>
 #include "omnispawn.h"
@@ -1311,95 +1310,95 @@ namespace Omnispawn
         )},
     };
 
-    std::map<NewBPIndex, std::pair<size_t, size_t>> enemyInitFuncPairs = {
-        // {NewBPIndex::Mothmant             , std::make_pair(0x, 0x)}, // Inside Monest's function
-        {NewBPIndex::Monest               , std::make_pair(0x0051ad94, 0x00519120)},
-        {NewBPIndex::SavageWolf           , std::make_pair(0x0051ea94, 0x0051b24c)},
-        //{NewBPIndex::BarbarousWolf        , std::make_pair(0x, 0x)}, // Same as Savage Wolf
-        {NewBPIndex::PoisonLily           , std::make_pair(0x00529cf8, 0x0052930c)},
-        // {NewBPIndex::NarLily              , std::make_pair(0x, 0x)}, // Same as Poison Lily
-        {NewBPIndex::SinowBeat            , std::make_pair(0x0059051c, 0x0058d268)},
-        {NewBPIndex::Canadine             , std::make_pair(0x005420f4, 0x0053e718)},
-        // {NewBPIndex::CanadineRing         , std::make_pair(0x, 0x)}, // Same as Canadine
-        // {NewBPIndex::Canane               , std::make_pair(0x, 0x)},
-        {NewBPIndex::ChaosSorcerer        , std::make_pair(0x0059d6ac, 0x0059b164)},
-        // {NewBPIndex::BeeR                 , std::make_pair(0x, 0x)},
-        // {NewBPIndex::BeeL                 , std::make_pair(0x, 0x)}, // Inside Chaos Sorcerer's function
-        {NewBPIndex::ChaosBringer         , std::make_pair(0x0053c914, 0x0053a378)},
-        {NewBPIndex::DarkBelra            , std::make_pair(0x00538ef4, 0x00536b0c)},
-        // {NewBPIndex::SinowGold            , std::make_pair(0x, 0x)}, // Same as Sinow Beat
-        {NewBPIndex::RagRappy             , std::make_pair(0x00527934, 0x00526c64)},
-        // {NewBPIndex::AlRappy              , std::make_pair(0x, 0x)}, // Same as Rag Rappy
-        {NewBPIndex::NanoDragon           , std::make_pair(0x0057fae0, 0x0057f5c4)},
-        {NewBPIndex::Dubchic              , std::make_pair(0x005569bc, 0x00556528)},
-        // {NewBPIndex::Gillchic             , std::make_pair(0x, 0x)}, // Same as Dubchic
-        {NewBPIndex::Garanz               , std::make_pair(0x0056fc10, 0x0056f8b8)},
-        {NewBPIndex::DarkGunner           , std::make_pair(0x005462b0, 0x00545e10)},
-        {NewBPIndex::Bulclaw              , std::make_pair(0x00531808, 0x005317c8)},
-        // {NewBPIndex::Claw                 , std::make_pair(0x, 0x)}, // Same as Bulclaw
-        {NewBPIndex::PofuillySlime        , std::make_pair(0x00599a20, 0x00595ba8)},
-        {NewBPIndex::PanArms              , std::make_pair(0x00583450, 0x0058335c)},
-        // {NewBPIndex::Hidoom               , std::make_pair(0x, 0x)}, // Same as Pan Arms
-        // {NewBPIndex::Migium               , std::make_pair(0x, 0x)}, // Same as Pan Arms
-        // {NewBPIndex::PouillySlime         , std::make_pair(0x, 0x)}, // Same as Pofuilly Slime
-        {NewBPIndex::Dubwitch             , std::make_pair(0x006194e4, 0x00618a48)},
-        {NewBPIndex::Hildebear            , std::make_pair(0x00516124, 0x005152e4)},
-        // {NewBPIndex::Hildeblue            , std::make_pair(0x, 0x)}, // Same as Hildebear
-        {NewBPIndex::Booma                , std::make_pair(0x00536314, 0x00535d90)},
-        // {NewBPIndex::Gobooma              , std::make_pair(0x, 0x)}, // Same as Booma
-        // {NewBPIndex::Gigobooma            , std::make_pair(0x, 0x)}, // Same as Booma
-        {NewBPIndex::GrassAssassin        , std::make_pair(0x005255b8, 0x00524888)},
-        {NewBPIndex::EvilShark            , std::make_pair(0x0051303c, 0x00512a44)},
-        // {NewBPIndex::PalShark             , std::make_pair(0x, 0x)}, // Same as Evil Shark
-        // {NewBPIndex::GuilShark            , std::make_pair(0x, 0x)}, // Same as Evil Shark
-        {NewBPIndex::Delsaber             , std::make_pair(0x005511a4, 0x00550030)},
-        {NewBPIndex::Dimenian             , std::make_pair(0x00552198, 0x00551bb0)},
-        // {NewBPIndex::LaDimenian           , std::make_pair(0x, 0x)}, // Same as Dimenian
-        // {NewBPIndex::SoDimenian           , std::make_pair(0x, 0x)}, // Same as Dimenian
-        {NewBPIndex::SinowBerill          , std::make_pair(0x005a155c, 0x0059dfa8)},
-        {NewBPIndex::Gee                  , std::make_pair(0x0055f7dc, 0x0055c918)},
-        {NewBPIndex::Delbiter             , std::make_pair(0x0054d724, 0x0054a680)},
-        // {NewBPIndex::SinowSpigell         , std::make_pair(0x, 0x)}, // Same as Sinow Berill
-        {NewBPIndex::GiGue                , std::make_pair(0x0056c2e0, 0x0056bda4)},
-        {NewBPIndex::Epsilon              , std::make_pair(0x00557f90, 0x00557f18)},
-        // {NewBPIndex::Epsigard             , std::make_pair(0x, 0x)}, // Same as Epsilon
-        {NewBPIndex::IllGill              , std::make_pair(0x00531240, 0x0052e25c)},
-        {NewBPIndex::Deldepth             , std::make_pair(0x00549db0, 0x00549a60)},
-        {NewBPIndex::Mericarol            , std::make_pair(0x00573638, 0x00572b24)},
-        {NewBPIndex::UlGibbon             , std::make_pair(0x00568fb0, 0x005649c8)},
-        // {NewBPIndex::ZolGibbon            , std::make_pair(0x, 0x)}, // Same as Ul Gibbon
-        {NewBPIndex::Gibbles              , std::make_pair(0x00564440, 0x005630fc)},
-        {NewBPIndex::Morfos               , std::make_pair(0x0057c830, 0x0057a094)},
-        {NewBPIndex::Recobox              , std::make_pair(0x00589d08, 0x005884fc)},
-        // {NewBPIndex::Recon                , std::make_pair(0x, 0x)}, // Inside Recobox's function
-        {NewBPIndex::SinowZoa             , std::make_pair(0x00594c30, 0x0059147c)},
-        // {NewBPIndex::SinowZele            , std::make_pair(0x, 0x)}, // Same as Sinow Zoa
-        // {NewBPIndex::Merikle              , std::make_pair(0x, 0x)}, // Same as Mericarol
-        // {NewBPIndex::Mericus              , std::make_pair(0x, 0x)}, // Same as Mericarol
-        {NewBPIndex::Merillia             , std::make_pair(0x005762cc, 0x00575d1c)},
-        // {NewBPIndex::Meriltas             , std::make_pair(0x, 0x)}, // Same as Merillia
-        {NewBPIndex::Dolmolm              , std::make_pair(0x00554114, 0x00553af0)},
-        // {NewBPIndex::Dolmdarl             , std::make_pair(0x, 0x)}, // Same as Dolmolm
-        {NewBPIndex::Boota                , std::make_pair(0x005a60cc, 0x005a5b48)},
-        // {NewBPIndex::ZeBoota              , std::make_pair(0x, 0x)}, // Same as Boota
-        // {NewBPIndex::BaBoota              , std::make_pair(0x, 0x)}, // Same as Boota
-        {NewBPIndex::ZuCrater             , std::make_pair(0x005b4f5c, 0x005b4798)},
-        // {NewBPIndex::PazuzuCrater         , std::make_pair(0x, 0x)}, // Same as Zu
-        // {NewBPIndex::ZuDesert             , std::make_pair(0x, 0x)}, // Same as other Zu
-        // {NewBPIndex::PazuzuDesert         , std::make_pair(0x, 0x)}, // Same as Zu
-        {NewBPIndex::Astark               , std::make_pair(0x005a4c3c, 0x005a3cac)},
-        {NewBPIndex::SatelliteLizardCrater, std::make_pair(0x005b21e4, 0x005ae7ac)},
-        // {NewBPIndex::YowieCrater          , std::make_pair(0x, 0x)}, // Same as Satellite Lizard
-        // {NewBPIndex::SatelliteLizardDesert, std::make_pair(0x, 0x)}, // Same as Satellite Lizard
-        // {NewBPIndex::YowieDesert          , std::make_pair(0x, 0x)}, // Same as Satellite Lizard
-        {NewBPIndex::Dorphon              , std::make_pair(0x005a9adc, 0x005a671c)},
-        // {NewBPIndex::DorphonEclair        , std::make_pair(0x, 0x)}, // Same as Dorphon
-        {NewBPIndex::Goran                , std::make_pair(0x005adfc8, 0x005ad9e8)},
-        // {NewBPIndex::PyroGoran            , std::make_pair(0x, 0x)}, // Same as Goran
-        // {NewBPIndex::GoranDetonator       , std::make_pair(0x, 0x)}, // Same as Goran
-        {NewBPIndex::MerissaA             , std::make_pair(0x005b70ac, 0x005b6f0c)},
-        // {NewBPIndex::MerissaAA            , std::make_pair(0x, 0x)}, // Same as Merissa
-        {NewBPIndex::Girtablulu           , std::make_pair(0x005ac6e4, 0x005ab954)},
+    std::map<NewBPIndex, InitList::FunctionPair> enemyInitFuncPairs = {
+        // {NewBPIndex::Mothmant             , InitList::FunctionPair(0x, 0x)}, // Inside Monest's function
+        {NewBPIndex::Monest               , InitList::FunctionPair(0x0051ad94, 0x00519120)},
+        {NewBPIndex::SavageWolf           , InitList::FunctionPair(0x0051ea94, 0x0051b24c)},
+        //{NewBPIndex::BarbarousWolf        , InitList::FunctionPair(0x, 0x)}, // Same as Savage Wolf
+        {NewBPIndex::PoisonLily           , InitList::FunctionPair(0x00529cf8, 0x0052930c)},
+        // {NewBPIndex::NarLily              , InitList::FunctionPair(0x, 0x)}, // Same as Poison Lily
+        {NewBPIndex::SinowBeat            , InitList::FunctionPair(0x0059051c, 0x0058d268)},
+        {NewBPIndex::Canadine             , InitList::FunctionPair(0x005420f4, 0x0053e718)},
+        // {NewBPIndex::CanadineRing         , InitList::FunctionPair(0x, 0x)}, // Same as Canadine
+        // {NewBPIndex::Canane               , InitList::FunctionPair(0x, 0x)},
+        {NewBPIndex::ChaosSorcerer        , InitList::FunctionPair(0x0059d6ac, 0x0059b164)},
+        // {NewBPIndex::BeeR                 , InitList::FunctionPair(0x, 0x)},
+        // {NewBPIndex::BeeL                 , InitList::FunctionPair(0x, 0x)}, // Inside Chaos Sorcerer's function
+        {NewBPIndex::ChaosBringer         , InitList::FunctionPair(0x0053c914, 0x0053a378)},
+        {NewBPIndex::DarkBelra            , InitList::FunctionPair(0x00538ef4, 0x00536b0c)},
+        // {NewBPIndex::SinowGold            , InitList::FunctionPair(0x, 0x)}, // Same as Sinow Beat
+        {NewBPIndex::RagRappy             , InitList::FunctionPair(0x00527934, 0x00526c64)},
+        // {NewBPIndex::AlRappy              , InitList::FunctionPair(0x, 0x)}, // Same as Rag Rappy
+        {NewBPIndex::NanoDragon           , InitList::FunctionPair(0x0057fae0, 0x0057f5c4)},
+        {NewBPIndex::Dubchic              , InitList::FunctionPair(0x005569bc, 0x00556528)},
+        // {NewBPIndex::Gillchic             , InitList::FunctionPair(0x, 0x)}, // Same as Dubchic
+        {NewBPIndex::Garanz               , InitList::FunctionPair(0x0056fc10, 0x0056f8b8)},
+        {NewBPIndex::DarkGunner           , InitList::FunctionPair(0x005462b0, 0x00545e10)},
+        {NewBPIndex::Bulclaw              , InitList::FunctionPair(0x00531808, 0x005317c8)},
+        // {NewBPIndex::Claw                 , InitList::FunctionPair(0x, 0x)}, // Same as Bulclaw
+        {NewBPIndex::PofuillySlime        , InitList::FunctionPair(0x00599a20, 0x00595ba8)},
+        {NewBPIndex::PanArms              , InitList::FunctionPair(0x00583450, 0x0058335c)},
+        // {NewBPIndex::Hidoom               , InitList::FunctionPair(0x, 0x)}, // Same as Pan Arms
+        // {NewBPIndex::Migium               , InitList::FunctionPair(0x, 0x)}, // Same as Pan Arms
+        // {NewBPIndex::PouillySlime         , InitList::FunctionPair(0x, 0x)}, // Same as Pofuilly Slime
+        {NewBPIndex::Dubwitch             , InitList::FunctionPair(0x006194e4, 0x00618a48)},
+        {NewBPIndex::Hildebear            , InitList::FunctionPair(0x00516124, 0x005152e4)},
+        // {NewBPIndex::Hildeblue            , InitList::FunctionPair(0x, 0x)}, // Same as Hildebear
+        {NewBPIndex::Booma                , InitList::FunctionPair(0x00536314, 0x00535d90)},
+        // {NewBPIndex::Gobooma              , InitList::FunctionPair(0x, 0x)}, // Same as Booma
+        // {NewBPIndex::Gigobooma            , InitList::FunctionPair(0x, 0x)}, // Same as Booma
+        {NewBPIndex::GrassAssassin        , InitList::FunctionPair(0x005255b8, 0x00524888)},
+        {NewBPIndex::EvilShark            , InitList::FunctionPair(0x0051303c, 0x00512a44)},
+        // {NewBPIndex::PalShark             , InitList::FunctionPair(0x, 0x)}, // Same as Evil Shark
+        // {NewBPIndex::GuilShark            , InitList::FunctionPair(0x, 0x)}, // Same as Evil Shark
+        {NewBPIndex::Delsaber             , InitList::FunctionPair(0x005511a4, 0x00550030)},
+        {NewBPIndex::Dimenian             , InitList::FunctionPair(0x00552198, 0x00551bb0)},
+        // {NewBPIndex::LaDimenian           , InitList::FunctionPair(0x, 0x)}, // Same as Dimenian
+        // {NewBPIndex::SoDimenian           , InitList::FunctionPair(0x, 0x)}, // Same as Dimenian
+        {NewBPIndex::SinowBerill          , InitList::FunctionPair(0x005a155c, 0x0059dfa8)},
+        {NewBPIndex::Gee                  , InitList::FunctionPair(0x0055f7dc, 0x0055c918)},
+        {NewBPIndex::Delbiter             , InitList::FunctionPair(0x0054d724, 0x0054a680)},
+        // {NewBPIndex::SinowSpigell         , InitList::FunctionPair(0x, 0x)}, // Same as Sinow Berill
+        {NewBPIndex::GiGue                , InitList::FunctionPair(0x0056c2e0, 0x0056bda4)},
+        {NewBPIndex::Epsilon              , InitList::FunctionPair(0x00557f90, 0x00557f18)},
+        // {NewBPIndex::Epsigard             , InitList::FunctionPair(0x, 0x)}, // Same as Epsilon
+        {NewBPIndex::IllGill              , InitList::FunctionPair(0x00531240, 0x0052e25c)},
+        {NewBPIndex::Deldepth             , InitList::FunctionPair(0x00549db0, 0x00549a60)},
+        {NewBPIndex::Mericarol            , InitList::FunctionPair(0x00573638, 0x00572b24)},
+        {NewBPIndex::UlGibbon             , InitList::FunctionPair(0x00568fb0, 0x005649c8)},
+        // {NewBPIndex::ZolGibbon            , InitList::FunctionPair(0x, 0x)}, // Same as Ul Gibbon
+        {NewBPIndex::Gibbles              , InitList::FunctionPair(0x00564440, 0x005630fc)},
+        {NewBPIndex::Morfos               , InitList::FunctionPair(0x0057c830, 0x0057a094)},
+        {NewBPIndex::Recobox              , InitList::FunctionPair(0x00589d08, 0x005884fc)},
+        // {NewBPIndex::Recon                , InitList::FunctionPair(0x, 0x)}, // Inside Recobox's function
+        {NewBPIndex::SinowZoa             , InitList::FunctionPair(0x00594c30, 0x0059147c)},
+        // {NewBPIndex::SinowZele            , InitList::FunctionPair(0x, 0x)}, // Same as Sinow Zoa
+        // {NewBPIndex::Merikle              , InitList::FunctionPair(0x, 0x)}, // Same as Mericarol
+        // {NewBPIndex::Mericus              , InitList::FunctionPair(0x, 0x)}, // Same as Mericarol
+        {NewBPIndex::Merillia             , InitList::FunctionPair(0x005762cc, 0x00575d1c)},
+        // {NewBPIndex::Meriltas             , InitList::FunctionPair(0x, 0x)}, // Same as Merillia
+        {NewBPIndex::Dolmolm              , InitList::FunctionPair(0x00554114, 0x00553af0)},
+        // {NewBPIndex::Dolmdarl             , InitList::FunctionPair(0x, 0x)}, // Same as Dolmolm
+        {NewBPIndex::Boota                , InitList::FunctionPair(0x005a60cc, 0x005a5b48)},
+        // {NewBPIndex::ZeBoota              , InitList::FunctionPair(0x, 0x)}, // Same as Boota
+        // {NewBPIndex::BaBoota              , InitList::FunctionPair(0x, 0x)}, // Same as Boota
+        {NewBPIndex::ZuCrater             , InitList::FunctionPair(0x005b4f5c, 0x005b4798)},
+        // {NewBPIndex::PazuzuCrater         , InitList::FunctionPair(0x, 0x)}, // Same as Zu
+        // {NewBPIndex::ZuDesert             , InitList::FunctionPair(0x, 0x)}, // Same as other Zu
+        // {NewBPIndex::PazuzuDesert         , InitList::FunctionPair(0x, 0x)}, // Same as Zu
+        {NewBPIndex::Astark               , InitList::FunctionPair(0x005a4c3c, 0x005a3cac)},
+        {NewBPIndex::SatelliteLizardCrater, InitList::FunctionPair(0x005b21e4, 0x005ae7ac)},
+        // {NewBPIndex::YowieCrater          , InitList::FunctionPair(0x, 0x)}, // Same as Satellite Lizard
+        // {NewBPIndex::SatelliteLizardDesert, InitList::FunctionPair(0x, 0x)}, // Same as Satellite Lizard
+        // {NewBPIndex::YowieDesert          , InitList::FunctionPair(0x, 0x)}, // Same as Satellite Lizard
+        {NewBPIndex::Dorphon              , InitList::FunctionPair(0x005a9adc, 0x005a671c)},
+        // {NewBPIndex::DorphonEclair        , InitList::FunctionPair(0x, 0x)}, // Same as Dorphon
+        {NewBPIndex::Goran                , InitList::FunctionPair(0x005adfc8, 0x005ad9e8)},
+        // {NewBPIndex::PyroGoran            , InitList::FunctionPair(0x, 0x)}, // Same as Goran
+        // {NewBPIndex::GoranDetonator       , InitList::FunctionPair(0x, 0x)}, // Same as Goran
+        {NewBPIndex::MerissaA             , InitList::FunctionPair(0x005b70ac, 0x005b6f0c)},
+        // {NewBPIndex::MerissaAA            , InitList::FunctionPair(0x, 0x)}, // Same as Merissa
+        {NewBPIndex::Girtablulu           , InitList::FunctionPair(0x005ac6e4, 0x005ab954)},
     };
 
     NpcType newEnemies[] = {
@@ -1507,35 +1506,12 @@ namespace Omnispawn
     {
         for (size_t i = 0; i <= (size_t) MapType::MAX_INDEX; i++)
         {
-            auto mapInitList = Map::ReadEntriesIntoMapInitList(Map::mapInitFunctionTable[i]);
+            InitList& mapInitList = Map::GetMapInitList((MapType) i);
 
-            // Compute union of old list and new list
             for (const auto& entry : enemyInitFuncPairs)
             {
-                auto newFuncs = entry.second;
-                bool found = false;
-
-                for (const Map::MapInitFunctionPair& oldFuncs : mapInitList)
-                {
-                    if (oldFuncs.init == reinterpret_cast<VoidFunction>(newFuncs.first))
-                    {
-                        found = true;
-                        break;
-                    }
-                }
-
-                if (!found)
-                {
-                    Map::MapInitFunctionPair funcs;
-                    funcs.init = reinterpret_cast<VoidFunction>(newFuncs.first);
-                    funcs.uninit = reinterpret_cast<VoidFunction>(newFuncs.second);
-                    mapInitList.push_back(funcs);
-                }
+                mapInitList.AddFunctionPair(entry.second);
             }
-
-            // Apply new list
-            mapInitList.push_back(Map::mapInitListTerminator);
-            Map::mapInitFunctionTable[i] = Map::CopyMapInitFunctionListToHeap(mapInitList);
         }
     }
 
