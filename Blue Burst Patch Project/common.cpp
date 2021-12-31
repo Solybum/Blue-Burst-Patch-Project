@@ -20,3 +20,11 @@ Difficulty GetCurrentDifficulty()
 {
     return *reinterpret_cast<Difficulty*>(0x00a9b1cc);
 }
+
+volatile Vec3& Vec3::operator=(volatile Vec3 const& other) volatile
+{
+    x = other.x;
+    y = other.y;
+    z = other.z;
+    return *this;
+}
