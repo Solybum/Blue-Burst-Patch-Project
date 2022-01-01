@@ -66,4 +66,65 @@ namespace Enemy
 
         return nullptr;
     }
+
+    bool patchedConstructorLists = false;
+
+    void PatchEnemyConstructorLists()
+    {
+        if (patchedConstructorLists) return;
+
+        patchedConstructorLists = true;
+
+        // Write used lists
+        for (const auto& entry : enemyConstructorListCache)
+        {
+            auto map = entry.first;
+            auto enemyList = entry.second;
+
+            // Add terminator
+            enemyList.push_back(enemyListTerminator);
+
+            // Copy to heap (deliberate leak) and write new list to table
+            TaggedEnemyConstructor* copy = new TaggedEnemyConstructor[enemyList.size()];
+            std::copy(enemyList.begin(), enemyList.end(), copy);
+            mapEnemyTable[(size_t) map] = copy;
+        }
+    }
+
+    BmlData::LoadBmlFunction LoadBml = reinterpret_cast<BmlData::LoadBmlFunction>(0x0051f6b0);
+    BmlData::FreeBmlFunction FreeBml = reinterpret_cast<BmlData::FreeBmlFunction>(0x004066a8);
+
+    void** rootEnemyObject = reinterpret_cast<void**>(0x00aca360);
+
+    EnemyBase::EnemyBase(void* parentObject)
+    {
+        // Call original constructor
+        Constructor(this, parentObject);
+
+        // Inherit vtable
+        vtable = new Vtable(*origVtable);
+
+        OVERRIDE_METHOD(EnemyBase, Destruct);
+    }
+
+    void EnemyBase::Destruct(bool32 freeMemory)
+    {
+        // Superdestructors will reassign the vtable so it's fine to delete our vtable here
+        delete vtable;
+        vtable = nullptr;
+
+        // Recursively call superdestructors, without letting them deallocate
+        origVtable->Destruct(this, false);
+
+        // We can deallocate our own memory if this object was not derived further
+        if (freeMemory)
+        {
+            MainArenaDealloc(this);
+        }
+    }
+
+    const EnemyBase::ConstructorFunction EnemyBase::Constructor = reinterpret_cast<EnemyBase::ConstructorFunction>(0x007865e8);
+    const EnemyBase::Vtable* EnemyBase::origVtable = reinterpret_cast<Vtable*>(0x00b44b40);
+
+    InsertIntoEntityListFunction InsertIntoEntityList = reinterpret_cast<InsertIntoEntityListFunction>(0x007b4f54);
 };

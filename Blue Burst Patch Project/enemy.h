@@ -162,16 +162,84 @@ namespace Enemy
     TaggedEnemyConstructor* FindEnemyConstructor(NpcType);
     void PatchEnemyConstructorLists();
 
-    const TaggedEnemyConstructor enemyListTerminator = []()
+    struct BmlContentsInfo
     {
-        TaggedEnemyConstructor terminator;
-        terminator.enemyType = NpcType::ListTerminator;
-        return terminator;
-    }();
+        const char* bmlName;
+        const char** njNames;
+        const char** njmNames;
+        const uint16_t njCount;
+        const uint16_t njmCount;
+    };
 
-    extern TaggedEnemyConstructor** mapEnemyTable;
+    struct BmlData
+    {
+        union
+        {
+            uint8_t _padding[0x440];
 
-    std::vector<TaggedEnemyConstructor> ReadEntriesIntoEnemyConstructorList(TaggedEnemyConstructor*);
-    TaggedEnemyConstructor* CopyEnemyConstructorListToHeap(const std::vector<TaggedEnemyConstructor>&);
-    TaggedEnemyConstructor* FindEnemyConstructor(NpcType);
+            DEFINE_FIELD(0x42c, void* nj);
+            DEFINE_FIELD(0x430, void* njm);
+            DEFINE_FIELD(0x434, size_t njCount);
+            DEFINE_FIELD(0x438, size_t njmCount);
+        };
+
+        typedef BmlData* (__cdecl *LoadBmlFunction)(BmlContentsInfo* toc);
+        typedef BmlData* (__thiscall *FreeBmlFunction)(BmlData* self, bool32 free_memory);
+    };
+
+    extern BmlData::LoadBmlFunction LoadBml;
+    extern BmlData::FreeBmlFunction FreeBml;
+
+    extern void** rootEnemyObject;
+
+    struct EnemyBase
+    {
+        struct Vtable {
+            union {
+                void (__thiscall *Destruct)(void* self, bool32 free_memory);
+                DEFINE_FIELD(0x4, void (__thiscall *Update)(void* self));
+                DEFINE_FIELD(0x8, void (__thiscall *Render)(void* self));
+                DEFINE_FIELD(0xc, void (__thiscall *RenderShadow)(void* self));
+                DEFINE_FIELD(0x14c, void (__thiscall *ApplyInitData)(void* self, void* initData));
+            };
+        };
+
+        typedef void* (__thiscall *ConstructorFunction)(void* self, void* parentObject);
+        static const ConstructorFunction Constructor;
+        static const Vtable* origVtable;
+
+        union
+        {
+            Vtable* vtable;
+
+            union {
+                DEFINE_FIELD(0x24, void* njtl);
+                DEFINE_FIELD(0x30, uint32_t entityFlags);
+                DEFINE_FIELD(0x34, void* njcm);
+                DEFINE_FIELD(0x38, Vec3 xyz2);
+                DEFINE_FIELD(0x44, Vec3 xyz5);
+                DEFINE_FIELD(0x50, Vec3 xyz1);
+                DEFINE_FIELD(0xd8, void* unknown1);
+                DEFINE_FIELD(0xdc, void* njm);
+                DEFINE_FIELD(0x2bc, int16_t maxHP);
+                DEFINE_FIELD(0x334, int16_t currentHP);
+                DEFINE_FIELD(0x346, int16_t maxHP2);
+                DEFINE_FIELD(0x378, uint32_t nameUnitxtIndex);
+                DEFINE_FIELD(0x298, Vec3 xyz4);
+                DEFINE_FIELD(0x2a4, Vec3 xyz3);
+            };
+
+            // Ensure object's size is at least the same as its superclass
+            //uint8_t _padding[0x37c];
+            uint8_t _padding[0x428];
+        };
+
+        EnemyBase::EnemyBase(void* parentObject);
+
+        void Destruct(bool32 freeMemory);
+    };
+
+    typedef uint32_t (__thiscall *InsertIntoEntityListFunction)(void* entity);
+    extern InsertIntoEntityListFunction InsertIntoEntityList;
+#pragma pack(pop)
 };
