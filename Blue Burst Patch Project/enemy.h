@@ -2,6 +2,11 @@
 
 #include <vector>
 #include <cstdint>
+#include "common.h"
+#include "object_extension.h"
+
+// Automatically enable patching if included
+#define PATCH_ENEMY_CONSTRUCTOR_LISTS
 
 namespace Enemy
 {
@@ -141,15 +146,21 @@ namespace Enemy
     typedef void* (__cdecl *EnemyConstructor)(void*);
 
 #pragma pack(push, 1)
-    typedef struct
+    struct TaggedEnemyConstructor
     {
         NpcType enemyType;
         uint16_t unknown1;
         EnemyConstructor constructor;
         float unknown2;
-        uint32_t unknown3;
-    } TaggedEnemyConstructor;
-#pragma pack(pop)
+        uint32_t defaultCloneCount;
+
+        TaggedEnemyConstructor(NpcType type, EnemyConstructor ctor);
+        TaggedEnemyConstructor();
+    };
+
+    std::vector<TaggedEnemyConstructor>& GetEnemyConstructorList(Map::MapType);
+    TaggedEnemyConstructor* FindEnemyConstructor(NpcType);
+    void PatchEnemyConstructorLists();
 
     const TaggedEnemyConstructor enemyListTerminator = []()
     {

@@ -9,6 +9,7 @@
 #include "fastwarp.h"
 #include "omnispawn.h"
 #include "initlist.h"
+#include "enemy.h"
 
 void PSOBB()
 {
@@ -43,6 +44,10 @@ void PSOBB()
 
 #ifdef PATCH_OMNISPAWN
     Omnispawn::ApplyOmnispawnPatch();
+#endif
+
+#ifdef PATCH_ENEMY_CONSTRUCTOR_LISTS
+    Enemy::PatchEnemyConstructorLists();
 #endif
 
 #ifdef PATCH_INITLISTS
