@@ -10,6 +10,7 @@
 #include "omnispawn.h"
 #include "initlist.h"
 #include "enemy.h"
+#include "newenemy.h"
 
 void PSOBB()
 {
@@ -44,6 +45,10 @@ void PSOBB()
 
 #ifdef PATCH_OMNISPAWN
     Omnispawn::ApplyOmnispawnPatch();
+#endif
+
+#ifdef PATCH_NEWENEMY
+    ApplyNewEnemyPatch();
 #endif
 
 #ifdef PATCH_ENEMY_CONSTRUCTOR_LISTS
