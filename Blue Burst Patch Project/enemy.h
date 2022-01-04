@@ -2,7 +2,7 @@
 
 #include <vector>
 #include <cstdint>
-#include "common.h"
+#include "math.h"
 #include "object_extension.h"
 
 // Automatically enable patching if included
@@ -171,14 +171,28 @@ namespace Enemy
         const uint16_t njmCount;
     };
 
+    struct NjChunk
+    {
+        uint32_t flags;
+        uint32_t unknown;
+        void* njcm;
+        void* njtl;
+    };
+
+    struct NjmData
+    {
+        uint32_t unknown;
+        void* data;
+    };
+
     struct BmlData
     {
         union
         {
             uint8_t _padding[0x440];
 
-            DEFINE_FIELD(0x42c, void* nj);
-            DEFINE_FIELD(0x430, void* njm);
+            DEFINE_FIELD(0x42c, NjChunk* nj);
+            DEFINE_FIELD(0x430, NjmData* njm);
             DEFINE_FIELD(0x434, size_t njCount);
             DEFINE_FIELD(0x438, size_t njmCount);
         };
@@ -214,19 +228,27 @@ namespace Enemy
 
             union {
                 DEFINE_FIELD(0x24, void* njtl);
+                DEFINE_FIELD(0x28, uint16_t originalMapSection);
                 DEFINE_FIELD(0x30, uint32_t entityFlags);
                 DEFINE_FIELD(0x34, void* njcm);
-                DEFINE_FIELD(0x38, Vec3 xyz2);
-                DEFINE_FIELD(0x44, Vec3 xyz5);
-                DEFINE_FIELD(0x50, Vec3 xyz1);
-                DEFINE_FIELD(0xd8, void* unknown1);
+                DEFINE_FIELD(0x38, Vec3<float> xyz2);
+                DEFINE_FIELD(0x44, Vec3<float> xyz5);
+                DEFINE_FIELD(0x50, Vec3<float> xyz1);
+                DEFINE_FIELD(0x5c, Vec3<uint32_t> rotation);
+                DEFINE_FIELD(0xb8, uint16_t animationId);
+                DEFINE_FIELD(0xc0, float currentAnimationCounter);
+                DEFINE_FIELD(0xc4, float currentAnimationLength);
+                DEFINE_FIELD(0xc8, float currentAnimationSpeed);
+                DEFINE_FIELD(0xd8, void* unknownAnimationData);
                 DEFINE_FIELD(0xdc, void* njm);
                 DEFINE_FIELD(0x2bc, int16_t maxHP);
+                DEFINE_FIELD(0x298, Vec3<float> xyz4);
+                DEFINE_FIELD(0x2a4, Vec3<float> xyz3);
+                DEFINE_FIELD(0x300, Vec3<float> xyz6);
+                DEFINE_FIELD(0x30c, Vec3<float> xyz7);
                 DEFINE_FIELD(0x334, int16_t currentHP);
                 DEFINE_FIELD(0x346, int16_t maxHP2);
                 DEFINE_FIELD(0x378, uint32_t nameUnitxtIndex);
-                DEFINE_FIELD(0x298, Vec3 xyz4);
-                DEFINE_FIELD(0x2a4, Vec3 xyz3);
             };
 
             // Ensure object's size is at least the same as its superclass
