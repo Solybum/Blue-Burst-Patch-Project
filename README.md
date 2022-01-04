@@ -34,6 +34,9 @@ Allows spawning any enemy in any area with some exceptions.
 * E4 enemies have Crater stats in E1 and Desert stats in E2.
 * Enemies that appear in both E1 and E2 have E1 stats in Crater and E2 stats in Desert.
 
+### New Enemy `[COMPILED:PATCH_NEWENEMY]`
+A demonstration of how a new enemy may be implemented using the object extension framework.
+
 ## Installation
 Use the psobb.exe bundled with this project. That client is modified to automatically load bbpp.dll. Place bbpp.dll in your game directory.
 
