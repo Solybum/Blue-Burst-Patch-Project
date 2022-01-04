@@ -2,7 +2,6 @@
 
 #include <cstdint>
 #include "object.h"
-#include "common.h"
 
 /// Defines a method that returns a reference to an offset in the object
 #define DECLARE_WRAPPED_MEMBER(offset, type, name) \
