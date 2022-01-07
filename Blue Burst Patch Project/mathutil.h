@@ -38,6 +38,8 @@ struct Vec3
 };
 #pragma pack(pop)
 
+typedef Vec3<float> Vec3f;
+
 template<typename T>
 auto DistanceSquaredXZ(volatile Vec3<T> const& a, volatile Vec3<T> const& b)
 {
