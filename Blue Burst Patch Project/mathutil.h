@@ -49,7 +49,7 @@ auto DistanceSquaredXZ(volatile Vec3<T> const& a, volatile Vec3<T> const& b)
 }
 
 template <typename T>
-constexpr T Squared(T x) { return x * x; }
+constexpr T Squared(const T x) { return x * x; }
 
 double RadDistance(double a, double b);
 

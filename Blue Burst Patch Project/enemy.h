@@ -2,7 +2,7 @@
 
 #include <vector>
 #include <cstdint>
-#include "math.h"
+#include "mathutil.h"
 #include "object_extension.h"
 
 // Automatically enable patching if included

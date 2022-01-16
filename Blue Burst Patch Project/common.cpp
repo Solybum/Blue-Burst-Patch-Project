@@ -1,4 +1,6 @@
 #include <stdexcept>
+#include <locale>
+#include <codecvt>
 #include "common.h"
 
 Episode GetCurrentEpisode()
@@ -31,7 +33,7 @@ namespace Graphics
 
 namespace Transform
 {
-    const Matrix* identityMatrix = reinterpret_cast<Matrix*>(0x00a21740);
+    const D3DMATRIX* identityMatrix = reinterpret_cast<D3DMATRIX*>(0x00a21740);
 
     decltype(PushTransformStackCopy) PushTransformStackCopy = reinterpret_cast<decltype(PushTransformStackCopy)>(0x0082d7b0);
     decltype(PushTransformStack) PushTransformStack = reinterpret_cast<decltype(PushTransformStack)>(0x0082d7b0);
@@ -51,3 +53,32 @@ decltype(FreeCollisionBoxes) FreeCollisionBoxes = reinterpret_cast<decltype(Free
 decltype(GetRandomFloat) GetRandomFloat = reinterpret_cast<decltype(GetRandomFloat)>(0x007751b0);
 decltype(CheckAnimationDuration) CheckAnimationDuration = reinterpret_cast<decltype(CheckAnimationDuration)>(0x007aaa30);
 decltype(PlaySoundEffect) PlaySoundEffect = reinterpret_cast<decltype(PlaySoundEffect)>(0x00814298);
+
+IDirect3DDevice8** d3dDevice = reinterpret_cast<IDirect3DDevice8**>(0x00acd528);
+
+std::string dirname(const std::string& path)
+{
+    auto pos = path.find_last_of(PATH_SEPARATOR);
+    return std::string::npos == pos ? "" : path.substr(0, pos);
+}
+
+std::string joinPath(const std::initializer_list<std::string>& parts)
+{
+    std::string result = "";
+    for (auto const& part : parts)
+    {
+        if (!part.empty())
+        {
+            if (!result.empty()) result += PATH_SEPARATOR;
+
+            result += part;
+        }
+    }
+
+    return result;
+}
+
+std::wstring ToWideString(const std::string& narrow)
+{
+    return std::wstring_convert<std::codecvt_utf8<wchar_t>>().from_bytes(narrow);
+}

@@ -1,6 +1,9 @@
 #pragma once
 
-#include "math.h"
+#include <vector>
+#include <string>
+#include <d3d8.h>
+#include "mathutil.h"
 
 enum class Episode
 {
@@ -33,6 +36,13 @@ Difficulty GetCurrentDifficulty();
 template<class T, size_t N>
 constexpr size_t arraySize(T (&)[N]) { return N; }
 
+/// Get the byte size of a vector
+template<class T>
+size_t vectorSize(const std::vector<T>& vec)
+{
+    return sizeof(T) * vec.size();
+}
+
 #define CONCAT_(a, b) a##b
 /// Concatenate two macro arguments
 #define CONCAT(a, b) CONCAT_(a, b)
@@ -63,33 +73,12 @@ namespace Graphics
 
 namespace Transform
 {
-#pragma pack(push, 1)
-    struct Matrix {
-        float _11;
-        float _12;
-        float _13;
-        float _14;
-        float _21;
-        float _22;
-        float _23;
-        float _24;
-        float _31;
-        float _32;
-        float _33;
-        float _34;
-        float _41;
-        float _42;
-        float _43;
-        float _44;
-    };
-#pragma pack(pop)
-
-    extern const Matrix* identityMatrix;
+    extern const D3DMATRIX* identityMatrix;
 
     extern void (__fastcall *PushTransformStackCopy)(void);
-    extern void (__fastcall *PushTransformStack)(const Matrix* matrix);
+    extern void (__fastcall *PushTransformStack)(const D3DMATRIX* matrix);
     extern void (__fastcall *PopTransformStack)(void);
-    extern void (__fastcall *RotateMatrix)(Matrix* matrix, uint32_t angle);
+    extern void (__fastcall *RotateMatrix)(D3DMATRIX* matrix, uint32_t angle);
     extern void (__fastcall *TranslateTransformStackHead)(Vec3<float>* translation);
 };
 
@@ -123,3 +112,16 @@ extern void (__cdecl *PlaySoundEffect)(uint32_t soundId, Vec3<float>* position);
 typedef int16_t EntityIndex;
 const EntityIndex UndefinedEntityIndex = -1;
 
+extern IDirect3DDevice8** d3dDevice;
+
+#if defined(WIN32) || defined(_WIN32) 
+#define PATH_SEPARATOR "\\" 
+#else 
+#define PATH_SEPARATOR "/" 
+#endif 
+
+std::string dirname(const std::string& path);
+
+std::string joinPath(const std::initializer_list<std::string>& parts);
+
+std::wstring ToWideString(const std::string& narrow);

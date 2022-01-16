@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <cmath>
 #include <limits>
+#include <vector>
 #include "newenemy.h"
 #include "common.h"
 #include "math.h"
@@ -15,6 +16,7 @@
 #include "initlist.h"
 #include "object_wrapper.h"
 #include "entitylist.h"
+#include "newgfx/animation.h"
 
 using Enemy::EnemyBase;
 using EntityList::BaseEntityWrapper;
@@ -22,17 +24,15 @@ using Map::MapObjectWrapper;
 
 struct NewEnemy : EnemyBase
 {
-    static Enemy::BmlData* bml;
+    static AnimatedModel* modelData;
     static const Enemy::NpcType enemyType = (Enemy::NpcType) 1337;
-
-    int i;
 
     enum class Animation : uint16_t
     {
+        None = 0,
         Idle = 0,
-        Walk = 2,
-        AttackR = 3,
-        AttackL = 4
+        Walk = 0,
+        Attack = 0
     };
 
     EntityIndex targetEntityIndex;
@@ -40,11 +40,13 @@ struct NewEnemy : EnemyBase
     bool hasTarget;
 
     bool playingFullAnimation;
+    AnimatedModel model;
 
     NewEnemy::NewEnemy(void* parentObject, void* initData) :
         targetEntityIndex(UndefinedEntityIndex),
         hasTarget(false),
         playingFullAnimation(false),
+        model(*NewEnemy::modelData),
         EnemyBase(parentObject)
     {
         OVERRIDE_METHOD(NewEnemy, Destruct);
@@ -55,16 +57,10 @@ struct NewEnemy : EnemyBase
 
         Enemy::InsertIntoEntityList(this);
 
-        njtl = NewEnemy::bml->nj[0].njtl;
-        njcm = NewEnemy::bml->nj[0].njcm;
-        njm = NewEnemy::bml->njm;
-
         InitEnemyCollisionBoxes(this, (void*) 0x009bc8e0, 1);
 
-        unknownAnimationData = reinterpret_cast<void*>(0x009bc980);
-        InitEnemyAnimations(this, 0);
-
-        UseAnimation(Animation::Idle);
+        animationId = -1;
+        UseAnimation(Animation::Attack);
     }
 
     void Destruct(bool32 freeMemory)
@@ -79,27 +75,20 @@ struct NewEnemy : EnemyBase
         }
     }
 
-    void UseAnimation(Animation anim)
+    void UseAnimation(Animation newAnim)
     {
-        animationId = (uint16_t) anim;
+        if (newAnim != (Animation) animationId)
+        {
+            model.ChangeAnimation((size_t) newAnim);
+            animationId = (uint16_t) newAnim;
+        }
     }
 
     void PlayAnimationFullyOnce(Animation anim)
     {
         UseAnimation(anim);
+        model.AnimationLoopingEnabled(false);
         playingFullAnimation = true;
-    }
-
-    bool AnimationEnded()
-    {
-        return currentAnimationCounter + currentAnimationSpeed >= currentAnimationLength;
-    }
-
-    void Spin()
-    {
-        i++;
-        xyz2.x = std::sin(i / 5.0) * 20.0 + xyz1.x;
-        xyz2.z = std::cos(i / 5.0) * 20.0 + xyz1.z;
     }
 
     void FaceTowardsTarget()
@@ -233,9 +222,7 @@ struct NewEnemy : EnemyBase
             if (DistanceSquaredXZ(targetPosition, xyz2) < Squared(20.0))
             {
                 // Close enough to attack
-                Animation attackAnim = Animation::AttackR;
-                if (GetRandomFloat(this) < 0.5) attackAnim = Animation::AttackL;
-                PlayAnimationFullyOnce(attackAnim);
+                PlayAnimationFullyOnce(Animation::Attack);
             }
             else
             {
@@ -250,7 +237,7 @@ struct NewEnemy : EnemyBase
     bool IsAttacking()
     {
         Animation currentAnim = (Animation) animationId;
-        return currentAnim == Animation::AttackR || currentAnim == Animation::AttackL;
+        return currentAnim == Animation::Attack;
     }
 
     void PlaySoundEffect(uint32_t soundId)
@@ -258,19 +245,23 @@ struct NewEnemy : EnemyBase
         ::PlaySoundEffect(soundId, const_cast<Vec3<float>*>(&xyz2));
     }
 
-    void NewEnemy::Update()
+    void Update()
     {
         if (playingFullAnimation)
         {
-            playingFullAnimation = !AnimationEnded();
+            if (model.AnimationEnded())
+            {
+                playingFullAnimation = false;
+                model.AnimationLoopingEnabled(true);
+            }
         }
         else
         {
             Behavior();
         }
 
-        // Damaging portion of attack animation comes out at frame 7
-        if (IsAttacking() && CheckAnimationDuration(this, 7.0))
+        // Damaging portion of attack animation comes out at halfway through the animation
+        if (IsAttacking() && model.AnimationTime() > 1.0)
         {
             PlaySoundEffect(0xe8);
 
@@ -281,71 +272,36 @@ struct NewEnemy : EnemyBase
         SnapToMapSurface();
         CollideWithEntities();
 
-        AnimateEntity(this);
+        model.UpdateAnimation();
 
         EnableReticle(this);
 
         AddMinimapIcon(const_cast<Vec3<float>*>(&xyz2), (uint32_t) MinimapIconColor::Enemy, MinimapIconShape::Circle, true);
     }
 
-    void NewEnemy::Render()
+    void Render()
     {
-        Graphics::EnableTexture(const_cast<void*>(njtl));
         // Apply transformations and render
         Transform::PushTransformStackCopy();
         Transform::TranslateTransformStackHead(const_cast<Vec3<float>*>(&xyz2));
         Transform::RotateMatrix(nullptr, rotation.y);
-        Graphics::Render3D(this);
+
+        model.Draw();
+
         Transform::PopTransformStack();
     }
 };
 
-Enemy::BmlData* NewEnemy::bml;
-
-const char* newEnemyNjNames[] =
-{
-    "re8_b_beast_wola_body.nj",
-    "re8_b_rdbeast_wola_body.nj",
-    "re8_b_srdbeast_wola_body.nj"
-};
-
-const char* newEnemyNjmNames[] =
-{
-    "appear_bm1_s_wala_body.njm",
-    "atackl_bm1_s_wala_body.njm",
-    "atackr_bm1_s_wala_body.njm",
-    "damage_bm1_s_wala_body.njm",
-    "deadb_bm1_s_wala_body.njm",
-    "dead_bm1_s_wala_body.njm",
-    "leader_bm1_s_wala_body.njm",
-    "mihari_bm1_s_wala_body.njm",
-    "run_bm1_s_wala_body.njm",
-    "stund_bm1_s_wala_body.njm",
-    "wakeup_bm1_s_wala_body.njm",
-    "walk_bm1_s_wala_body.njm"
-};
-
-Enemy::BmlContentsInfo newEnemyBmlToc =
-{
-    "bm_ene_newenemy.bml",
-    newEnemyNjNames,
-    newEnemyNjmNames,
-    arraySize(newEnemyNjNames),
-    arraySize(newEnemyNjmNames)
-};
+AnimatedModel* NewEnemy::modelData;
 
 void __cdecl GlobalInit()
 {
-    NewEnemy::bml = Enemy::LoadBml(&newEnemyBmlToc);
+    NewEnemy::modelData = new AnimatedModel("newenemy");
 }
 
 void __cdecl GlobalUninit()
 {
-    if (NewEnemy::bml != nullptr)
-    {
-        Enemy::FreeBml(NewEnemy::bml, true);
-        NewEnemy::bml = nullptr;
-    }
+    delete NewEnemy::modelData;
 }
 
 void* __cdecl CreateNewEnemy(void* initData)
@@ -358,7 +314,9 @@ void* __cdecl CreateNewEnemy(void* initData)
 void ApplyNewEnemyPatch()
 {
     auto& forest1InitList = Map::GetMapInitList(Map::MapType::Forest1);
+    auto& lobbyInitList = Map::GetMapInitList(Map::MapType::Lobby);
     forest1InitList.AddFunctionPair(InitList::FunctionPair(GlobalInit, GlobalUninit));
+    lobbyInitList.AddFunctionPair(InitList::FunctionPair(GlobalInit, GlobalUninit));
 
     auto& forest1Enemies = Enemy::GetEnemyConstructorList(Map::MapType::Forest1);
     Enemy::TaggedEnemyConstructor newEnemyTagged(NewEnemy::enemyType, CreateNewEnemy);
