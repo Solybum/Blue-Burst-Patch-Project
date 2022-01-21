@@ -11,9 +11,13 @@
 #include <assimp/vector2.h>
 #include <assimp/color4.h>
 #include <assimp/material.h>
-#include <IL/devil_cpp_wrapper.hpp>
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
 #include "../common.h"
 #include "model.h"
+
+// Force images to always have 4 channels
+const size_t IMAGE_CHANNEL_COUNT = 4;
 
 uint32_t PackColor(const aiColor4D* color)
 {
@@ -24,10 +28,9 @@ uint32_t PackColor(const aiColor4D* color)
     return a | r | g | b;
 }
 
-IDirect3DTexture8* TextureFromData(size_t width, size_t height, const ilImage& img, bool flipY = false)
+IDirect3DTexture8* TextureFromData(int width, int height, stbi_uc* img, bool flipY = true)
 {
-    img.Bind(); // Activate image for use
-
+    // The only 4-component 32-bit format with alpha in d3d8
     auto dstFmt = D3DFMT_A8R8G8B8;
 
     // Create texture object
@@ -47,25 +50,27 @@ IDirect3DTexture8* TextureFromData(size_t width, size_t height, const ilImage& i
 
     // Copy pixel data from image into texture object
     // We do it row by row because the size of a row might be padded (pitch) in the destination buffer
-    auto textureData = reinterpret_cast<uint8_t*>(lockedRect.pBits);
-    const auto copyX = 0; // Always start from the beginning of the row
-    const auto copyZ = 0;
-    const auto copyWidth = width;
-    const auto copyHeight = 1; // One row at a time
-    const auto copyDepth = 1;
-    const auto copyType = IL_UNSIGNED_BYTE;
+    auto textureDst = reinterpret_cast<uint8_t*>(lockedRect.pBits);
+    auto rowSize = width * IMAGE_CHANNEL_COUNT;
     // Iterate rows in specified order
     for (int y = flipY ? height - 1 : 0,
              end = flipY ? -1 : height,
              step = flipY ? -1 : 1;
          y != end; y += step)
     {
-        // DevIL will convert to the pixel format we want
-        if (!ilCopyPixels(copyX, y, copyZ, copyWidth, copyHeight, copyDepth, IL_BGRA, copyType, textureData))
-            throw std::runtime_error("Failed to copy pixel data");
+        auto textureSrc = img + y * rowSize;
+
+        // Convert pixels from RGBA to BGRA
+        for (auto x = 0; x < rowSize; x += IMAGE_CHANNEL_COUNT)
+        {
+            textureDst[x + 0] = textureSrc[x + 2]; // B
+            textureDst[x + 1] = textureSrc[x + 1]; // G
+            textureDst[x + 2] = textureSrc[x + 0]; // R
+            textureDst[x + 3] = textureSrc[x + 3]; // A
+        }
 
         // Pitch = row width + padding
-        textureData += lockedRect.Pitch;
+        textureDst += lockedRect.Pitch;
     }
 
     texture->lpVtbl->UnlockRect(texture, lockMipLevel);
@@ -73,46 +78,34 @@ IDirect3DTexture8* TextureFromData(size_t width, size_t height, const ilImage& i
     return texture;
 }
 
-IDirect3DTexture8* TextureFromFile(const std::string& filename, const std::string& directory, bool flipY = false)
+IDirect3DTexture8* TextureFromFile(const std::string& filename, const std::string& directory, bool flipY = true)
 {
     // Read file from FS
     auto path = joinPath({directory, filename});
-    auto img = ilImage();
-    if (!img.Load(path.c_str()))
+    
+    int width, height, origNumChannels;
+    auto img = stbi_load(path.c_str(), &width, &height, &origNumChannels, IMAGE_CHANNEL_COUNT);
+    if (img == nullptr)
         throw std::runtime_error("Failed to load image file: " + path);
 
-    return TextureFromData(img.Width(), img.Height(), img, flipY);
+    return TextureFromData(width, height, img, flipY);
 }
 
-IDirect3DTexture8* TextureFromEmbedded(const aiTexture* embedded, bool flipY = false)
+IDirect3DTexture8* TextureFromEmbedded(const aiTexture* embedded, bool flipY = true)
 {
-    auto img = ilImage();
-    auto hint = std::string(embedded->achFormatHint);
-
     // If mHeight == 0 it means data is compressed
     bool compressed = embedded->mHeight == 0;
-
-    ILenum type;
-    if (hint == "png")
-    {
-        type = IL_PNG;
-    }
-    else if (hint == "jpg")
-    {
-        type = IL_JPG;
-    }
-    else
-    {
-        throw std::runtime_error("Unsupported image format in embedded texture: " + hint);
-    }
-
     // If compressed mWidth is size of buffer
-    auto byteSize = compressed ? embedded->mWidth : 0;
+    auto byteSize = compressed ? embedded->mWidth : embedded->mWidth * embedded->mHeight * sizeof(aiTexel);
 
-    // Put data into image object
-    ilLoadL(type, (void*) embedded->pcData, byteSize);
+    int width, height, origNumChannels;
+    auto img = stbi_load_from_memory(
+        reinterpret_cast<stbi_uc*>(embedded->pcData), byteSize,
+        &width, &height, &origNumChannels, IMAGE_CHANNEL_COUNT);
+    if (img == nullptr)
+        throw std::runtime_error("Failed to load embedded texture");
 
-    return TextureFromData(img.Width(), img.Height(), img, flipY);
+    return TextureFromData(width, height, img, flipY);
 }
 
 Model::Model(const std::string& path)

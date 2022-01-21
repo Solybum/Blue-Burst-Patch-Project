@@ -1,6 +1,8 @@
 #pragma once
 
 #include <cstddef>
+#include "initlist.h"
+#include "enemy.h"
 #include "battleparam.h"
 
 namespace Omnispawn
