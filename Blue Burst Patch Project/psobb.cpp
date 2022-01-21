@@ -1,16 +1,43 @@
 #include "pch.h"
 #include "globals.h"
-#include "palette.h"
-#include "shop.h"
-#include "earlywalk.h"
-#include "slow_gibbles.h"
-#include "customize_menu.h"
 #include "ime.h"
+#include "shop.h"
+
+#ifdef PATCH_EARLY_WALK_FIX
+#include "earlywalk.h"
+#endif
+
+#ifdef PATCH_KEYBOARD_ALTERNATE_PALETTE
+#include "palette.h"
+#endif
+
+#ifdef PATCH_SLOW_GIBBLES_FIX
+#include "slow_gibbles.h"
+#endif
+
+#ifdef PATCH_CUSTOMIZE_MENU
+#include "customize_menu.h"
+#endif
+
+#ifdef PATCH_FASTWARP
 #include "fastwarp.h"
+#endif
+
+#ifdef PATCH_OMNISPAWN
 #include "omnispawn.h"
-#include "initlist.h"
-#include "enemy.h"
+#endif
+
+#ifdef PATCH_NEWENEMY
 #include "newenemy.h"
+#endif
+
+#ifdef PATCH_ENEMY_CONSTRUCTOR_LISTS
+#include "enemy.h"
+#endif
+
+#ifdef PATCH_INITLISTS
+#include "initlist.h"
+#endif
 
 void PSOBB()
 {
