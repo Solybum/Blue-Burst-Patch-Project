@@ -43,6 +43,10 @@ void PSOBB()
     ApplyFastWarpPatch();
 #endif
 
+#ifdef PATCH_SKIP_INTRO_CREDITS
+    *(uint8_t*)0x007a645e = 2;
+#endif
+
 #ifdef PATCH_OMNISPAWN
     Omnispawn::ApplyOmnispawnPatch();
 #endif

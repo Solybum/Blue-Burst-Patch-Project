@@ -37,6 +37,9 @@ Allows spawning any enemy in any area with some exceptions.
 ### New Enemy `[COMPILED:PATCH_NEWENEMY]`
 A demonstration of how a new enemy may be implemented using the object extension framework.
 
+### Intro credits skip `[COMPILED:PATCH_SKIP_INTRO_CREDITS]`
+Skips the credits screen when the game is launched.
+
 ## Installation
 Use the psobb.exe bundled with this project. That client is modified to automatically load bbpp.dll. Place bbpp.dll in your game directory.
 
