@@ -83,7 +83,6 @@ namespace Transform
     extern void (__fastcall *TranslateTransformStackHead)(Vec3<float>* translation);
 };
 
-extern void (__thiscall *InitEnemyCollisionBoxes)(void* self, void* collisionData, uint32_t collisionBoxCount);
 /// The unknown parameter seems to commonly be set to 0
 extern void (__thiscall *InitEnemyAnimations)(void* self, uint16_t unknown);
 /// Moves the current animation forward by one or loops back to the start
@@ -109,6 +108,7 @@ extern float (__thiscall *GetRandomFloat)(void* entity);
 /// Check if current animation has been running for at least the specified duration
 extern bool32 (__thiscall *CheckAnimationDuration)(void* entity, float duration);
 extern void (__cdecl *PlaySoundEffect)(uint32_t soundId, Vec3<float>* position);
+extern void (__cdecl *PlayParticleEffect)(Vec3f* position, size_t effectId, size_t delay, size_t duration);
 
 typedef int16_t EntityIndex;
 const EntityIndex UndefinedEntityIndex = -1;

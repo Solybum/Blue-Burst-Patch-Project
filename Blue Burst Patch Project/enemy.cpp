@@ -127,4 +127,17 @@ namespace Enemy
     const EnemyBase::Vtable* EnemyBase::origVtable = reinterpret_cast<Vtable*>(0x00b44b40);
 
     InsertIntoEntityListFunction InsertIntoEntityList = reinterpret_cast<InsertIntoEntityListFunction>(0x007b4f54);
+
+    decltype(InitCollisionBoxes) InitCollisionBoxes = reinterpret_cast<decltype(InitCollisionBoxes)>(0x007b9a88);
+
+    decltype(SetStatsFromBattleParams) SetStatsFromBattleParams = reinterpret_cast<decltype(SetStatsFromBattleParams)>(0x007868f8);
+
+    CollisionBox::CollisionBox(float x_, float y_, float z_, float r_)
+    {
+        x = x_;
+        y = y_;
+        z = z_;
+        r = r_;
+        unknownFlags = 0x8003;
+    }
 };

@@ -17,15 +17,29 @@
 #include "object_wrapper.h"
 #include "entitylist.h"
 #include "newgfx/animation.h"
+#include "battleparam.h"
+#include "object.h"
 
 using Enemy::EnemyBase;
+using Enemy::EntityFlag;
 using EntityList::BaseEntityWrapper;
 using Map::MapObjectWrapper;
 
-struct NewEnemy : EnemyBase
+auto PlaySpawnAnimationParticleEffects = reinterpret_cast<void (__cdecl *)(volatile Vec3f* position)>(0x00578998);
+auto CreateBloodStain = reinterpret_cast<void (__thiscall *)(void* self)>(0x00535b38);
+
+class NewEnemy : public EnemyBase
 {
+public:
     static AnimatedModel* modelData;
     static const Enemy::NpcType enemyType = (Enemy::NpcType) 1337;
+
+private:
+    static const Enemy::CollisionBox collisionBox;
+    // TODO: Put these in the actual bp files
+    static const BattleParam::BPStatsEntry bpStats;
+    static const BattleParam::BPAttacksEntry bpAttacks;
+    static const BattleParam::BPResistsEntry bpResists;
 
     enum class Animation : uint16_t
     {
@@ -45,10 +59,18 @@ struct NewEnemy : EnemyBase
     bool playingFullAnimation;
     AnimatedModel model;
 
+    bool hasSpawned;
+    size_t spawnSequenceCounter;
+    size_t deathSequenceCounter;
+
+public:
     NewEnemy::NewEnemy(void* parentObject, void* initData) :
         targetEntityIndex(UndefinedEntityIndex),
         hasTarget(false),
         playingFullAnimation(false),
+        hasSpawned(false),
+        spawnSequenceCounter(0),
+        deathSequenceCounter(0),
         model(*NewEnemy::modelData),
         EnemyBase(parentObject)
     {
@@ -56,15 +78,20 @@ struct NewEnemy : EnemyBase
         OVERRIDE_METHOD(NewEnemy, Update);
         OVERRIDE_METHOD(NewEnemy, Render);
 
+        // Custom index requires modified unitxt file
+        nameUnitxtIndex = 109;
+        attribute = Enemy::Attribute::Native;
         vtable->ApplyInitData(this, initData);
+        Enemy::SetStatsFromBattleParams(this, &NewEnemy::bpStats, &NewEnemy::bpAttacks, &NewEnemy::bpResists);
 
         Enemy::InsertIntoEntityList(this);
 
-        InitEnemyCollisionBoxes(this, (void*) 0x009bc8e0, 1);
+        Enemy::InitCollisionBoxes(this, &NewEnemy::collisionBox, 1);
 
-        UseAnimation(Animation::Idle);
+        UseAnimation(Animation::Fall);
     }
 
+private:
     void Destruct(bool32 freeMemory)
     {
         FreeCollisionBoxes(this);
@@ -247,20 +274,70 @@ struct NewEnemy : EnemyBase
         ::PlaySoundEffect(soundId, const_cast<Vec3<float>*>(&xyz2));
     }
 
+    void FlagForDestruction()
+    {
+        objectFlags = ObjectFlag(objectFlags | ObjectFlag::AwaitingDestruction);
+    }
+
     void Update()
     {
-        if (playingFullAnimation)
+        model.UpdateAnimation();
+
+        if (playingFullAnimation && model.AnimationEnded())
         {
-            if (model.AnimationEnded())
+            playingFullAnimation = false;
+            model.AnimationLoopingEnabled(true);
+        }
+
+        if (entityFlags & EntityFlag::Dead)
+        {
+            // Dead
+            switch (deathSequenceCounter)
             {
-                playingFullAnimation = false;
-                model.AnimationLoopingEnabled(true);
+                case 0:
+                    UseAnimation(Animation::LandJump);
+                    break;
+                case 30:
+                    CreateBloodStain(this);
+                    break;
+                case 60:
+                    FlagForDestruction();
+                    break;
             }
+
+            // Sink into ground
+            xyz2.y -= 0.5;
+            deathSequenceCounter++;
+            return;
         }
-        else
+
+        if (!hasSpawned)
         {
-            Behavior();
+            // Spawning
+            switch (spawnSequenceCounter)
+            {
+                case 0:
+                    PlaySoundEffect(0x124);
+                    PlaySpawnAnimationParticleEffects(&xyz2);
+                    break;
+                case 30:
+                    hasSpawned = true;
+                    break;
+            }
+            
+            spawnSequenceCounter++;
+            return;
         }
+
+        if (entityFlags & EntityFlag::TookDamage)
+        {
+            // Flinch from damage
+            PlaySoundEffect(81);
+            PlayAnimationFullyOnce(Animation::LandJump);
+            entityFlags = EntityFlag(entityFlags & ~EntityFlag::TookDamage);
+        }
+
+        if (!playingFullAnimation) Behavior();
 
         // Damaging portion of attack animation comes out at a quarter into the animation
         if (IsAttacking() && model.CurrentFrameRatio(0.25))
@@ -274,8 +351,6 @@ struct NewEnemy : EnemyBase
         SnapToMapSurface();
         CollideWithEntities();
 
-        model.UpdateAnimation();
-
         EnableReticle(this);
 
         AddMinimapIcon(const_cast<Vec3<float>*>(&xyz2), (uint32_t) MinimapIconColor::Enemy, MinimapIconShape::Circle, true);
@@ -283,11 +358,16 @@ struct NewEnemy : EnemyBase
 
     void Render()
     {
+        if (spawnSequenceCounter < 5) return;
+
         // Apply transformations and render
         Transform::PushTransformStackCopy();
         Transform::TranslateTransformStackHead(const_cast<Vec3<float>*>(&xyz2));
         Transform::RotateMatrix(nullptr, rotation.y);
         Transform::ScaleMatrix(nullptr, 10.0, 10.0, 10.0);
+
+        if (hasSpawned) model.UseNormalShading();
+        else model.UseTransparentShading();
 
         model.Draw();
 
@@ -296,6 +376,41 @@ struct NewEnemy : EnemyBase
 };
 
 AnimatedModel* NewEnemy::modelData;
+
+const Enemy::CollisionBox NewEnemy::collisionBox(0.0, 5.0, 0.0, 5.0);
+
+const BattleParam::BPStatsEntry NewEnemy::bpStats =
+{
+    80,
+    0,
+    75,
+    1000,
+    0,
+    65,
+    12,
+    5,
+    0.0,
+    0.0,
+    0,
+    6,
+    0,
+    0,
+    0
+};
+
+const BattleParam::BPAttacksEntry NewEnemy::bpAttacks =
+{
+    // Nothing
+};
+
+const BattleParam::BPResistsEntry NewEnemy::bpResists =
+{
+    0,
+    50,
+    0,
+    20,
+    15
+};
 
 void __cdecl GlobalInit()
 {
@@ -314,14 +429,25 @@ void* __cdecl CreateNewEnemy(void* initData)
     return enemy;
 }
 
-void ApplyNewEnemyPatch()
+/// Removes limit on number of enemy name entries in the unitxt
+void PatchEnemyNameUnitxtLimit()
+{
+    *(uint8_t*) 0x00793028 = 0x90;
+    *(uint8_t*) 0x00793029 = 0x90;
+}
+
+void MakeNewEnemySpawnable()
 {
     auto& forest1InitList = Map::GetMapInitList(Map::MapType::Forest1);
-    auto& lobbyInitList = Map::GetMapInitList(Map::MapType::Lobby);
     forest1InitList.AddFunctionPair(InitList::FunctionPair(GlobalInit, GlobalUninit));
-    lobbyInitList.AddFunctionPair(InitList::FunctionPair(GlobalInit, GlobalUninit));
 
     auto& forest1Enemies = Enemy::GetEnemyConstructorList(Map::MapType::Forest1);
     Enemy::TaggedEnemyConstructor newEnemyTagged(NewEnemy::enemyType, CreateNewEnemy);
     forest1Enemies.push_back(newEnemyTagged);
+}
+
+void ApplyNewEnemyPatch()
+{
+    PatchEnemyNameUnitxtLimit();
+    MakeNewEnemySpawnable();
 }

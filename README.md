@@ -56,3 +56,4 @@ Blue Burst Patch Project is licensed under the MIT license.
 This product contains unmodified and modified subcomponents with separate copyright notices and license terms.
 * [Learn OpenGL](https://learnopengl.com/Guest-Articles/2020/Skeletal-Animation) ([CC BY 4.0](https://creativecommons.org/licenses/by/4.0/legalcode)): Newgfx library is derived from Learn OpenGL
 * [Wine](https://source.winehq.org/source/) ([LGPL-2.1](https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html)): Newgfx library depends on Wine's header files
+* [Hooded Fox](https://gtibo.itch.io/hooded-fox) ([CC BY-ND 4.0](https://creativecommons.org/licenses/by-nd/4.0/)): Assets used in newenemy demo

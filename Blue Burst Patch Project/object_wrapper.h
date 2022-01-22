@@ -26,7 +26,7 @@ public:
     ObjectWrapper(void* obj);
 
     DECLARE_WRAPPED_MEMBER(0x4, void*, typeId);
-    DECLARE_WRAPPED_MEMBER(0x8, ObjectFlags, flags);
+    DECLARE_WRAPPED_MEMBER(0x8, ObjectFlag, flags);
     DECLARE_WRAPPED_MEMBER(0xc, BaseObject*, relative1);
     DECLARE_WRAPPED_MEMBER(0x10, BaseObject*, relative2);
     DECLARE_WRAPPED_MEMBER(0x14, BaseObject*, relative3);

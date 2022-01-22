@@ -27,6 +27,8 @@ public:
     Model(const std::string& path);
     ~Model();
     void Draw();
+    void UseNormalShading();
+    void UseTransparentShading();
 
 private:
     void ProcessMesh(size_t meshIndex);

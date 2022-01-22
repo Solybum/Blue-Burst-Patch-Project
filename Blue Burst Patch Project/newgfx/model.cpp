@@ -243,3 +243,19 @@ std::vector<Texture> Model::LoadMaterialTextures(aiMaterial* material, aiTexture
 
     return textures;
 }
+
+void Model::UseNormalShading()
+{
+    for (auto& mesh : meshes)
+    {
+        mesh.UseNormalShading();
+    }
+}
+
+void Model::UseTransparentShading()
+{
+    for (auto& mesh : meshes)
+    {
+        mesh.UseTransparentShading();
+    }
+}

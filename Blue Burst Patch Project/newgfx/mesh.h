@@ -41,6 +41,18 @@ private:
     const std::vector<Texture> textures;
     std::vector<std::vector<VertexBoneData>> vertexBoneMap;
 
+    IDirect3DVertexBuffer8* vertexBuffer;
+    IDirect3DIndexBuffer8* indexBuffer;
+
+    enum ShadingMode
+    {
+        Normal,
+        Transparent,
+        Shadow
+    };
+
+    ShadingMode shadingMode;
+
 public:
     Mesh(const size_t sceneMeshIndex,
          const std::vector<Vertex>& vertices,
@@ -57,10 +69,12 @@ public:
     size_t VertexCount() const;
     size_t TextureCount() const;
     size_t SceneMeshIndex() const;
+    void UseNormalShading();
+    void UseTransparentShading();
 
 private:
-    IDirect3DVertexBuffer8* vertexBuffer;
-    IDirect3DIndexBuffer8* indexBuffer;
-
     void SetupMesh();
+    void NormalShading();
+    void TransparentShading();
+    void ShadowShading();
 };

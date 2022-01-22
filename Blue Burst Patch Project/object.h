@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-enum class ObjectFlags : uint16_t
+enum ObjectFlag : uint16_t
 {
     /// An object with this flag will be destroyed on the next update tick.
     AwaitingDestruction = 1,
@@ -16,7 +16,7 @@ struct BaseObject
 {
     void** vtable;
     void* typeId;
-    ObjectFlags flags;
+    ObjectFlag flags;
     uint16_t unused;
     /// The game attaches objects to these pointers to create a graph of objects.
     /// They probably have some unknown meaning.

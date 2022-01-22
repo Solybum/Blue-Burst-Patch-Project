@@ -4,6 +4,8 @@
 #include <cstdint>
 #include "mathutil.h"
 #include "object_extension.h"
+#include "battleparam.h"
+#include "object.h"
 
 // Automatically enable patching if included
 #define PATCH_ENEMY_CONSTRUCTOR_LISTS
@@ -206,6 +208,27 @@ namespace Enemy
 
     extern void** rootEnemyObject;
 
+    enum Attribute : uint32_t
+    {
+        Native = 1,
+        ABeast = 2,
+        Machine = 4,
+        Dark = 8,
+        Special = 0x40
+    };
+
+    enum EntityFlag : uint32_t
+    {
+        Poisoned = 1,
+        Paralyzed = 2,
+        Shocked = 4,
+        Slowed = 8,
+        Confused = 0x10,
+        Frozen = 0x20,
+        TookDamage = 0x200,
+        Dead = 0x800
+    };
+
     struct EnemyBase
     {
         struct Vtable {
@@ -227,9 +250,10 @@ namespace Enemy
             Vtable* vtable;
 
             union {
+                DEFINE_FIELD(0x8, ObjectFlag objectFlags);
                 DEFINE_FIELD(0x24, void* njtl);
                 DEFINE_FIELD(0x28, uint16_t originalMapSection);
-                DEFINE_FIELD(0x30, uint32_t entityFlags);
+                DEFINE_FIELD(0x30, EntityFlag entityFlags);
                 DEFINE_FIELD(0x34, void* njcm);
                 DEFINE_FIELD(0x38, Vec3<float> xyz2);
                 DEFINE_FIELD(0x44, Vec3<float> xyz5);
@@ -241,19 +265,22 @@ namespace Enemy
                 DEFINE_FIELD(0xc8, float currentAnimationSpeed);
                 DEFINE_FIELD(0xd8, void* unknownAnimationData);
                 DEFINE_FIELD(0xdc, void* njm);
+                DEFINE_FIELD(0x2b4, BattleParam::BPStatsEntry* bpStats);
                 DEFINE_FIELD(0x2bc, int16_t maxHP);
                 DEFINE_FIELD(0x298, Vec3<float> xyz4);
                 DEFINE_FIELD(0x2a4, Vec3<float> xyz3);
+                DEFINE_FIELD(0x2e8, Attribute attribute);
                 DEFINE_FIELD(0x300, Vec3<float> xyz6);
                 DEFINE_FIELD(0x30c, Vec3<float> xyz7);
+                DEFINE_FIELD(0x31c, BattleParam::BPAttacksEntry* bpAttacks);
+                DEFINE_FIELD(0x320, BattleParam::BPResistsEntry* bpResists);
                 DEFINE_FIELD(0x334, int16_t currentHP);
                 DEFINE_FIELD(0x346, int16_t maxHP2);
                 DEFINE_FIELD(0x378, uint32_t nameUnitxtIndex);
             };
 
             // Ensure object's size is at least the same as its superclass
-            //uint8_t _padding[0x37c];
-            uint8_t _padding[0x428];
+            uint8_t _padding[0x37c];
         };
 
         EnemyBase::EnemyBase(void* parentObject);
@@ -261,7 +288,28 @@ namespace Enemy
         void Destruct(bool32 freeMemory);
     };
 
+    struct CollisionBox
+    {
+        union
+        {
+            float x;
+            DEFINE_FIELD(0x4, float y);
+            DEFINE_FIELD(0x8, float z);
+            DEFINE_FIELD(0xc, float r);
+            DEFINE_FIELD(0x18, uint32_t unknownFlags);
+            uint8_t _padding[0x2c];
+        };
+
+        CollisionBox(float x, float y, float z, float r);
+    };
+
+#pragma pack(pop)
+
     typedef uint32_t (__thiscall *InsertIntoEntityListFunction)(void* entity);
     extern InsertIntoEntityListFunction InsertIntoEntityList;
-#pragma pack(pop)
+    extern void (__thiscall *InitCollisionBoxes)(void* self, const CollisionBox* collisionData, uint32_t collisionBoxCount);
+    extern bool32 (__thiscall *SetStatsFromBattleParams)(void* self,
+        const BattleParam::BPStatsEntry* stats,
+        const BattleParam::BPAttacksEntry* attacks,
+        const BattleParam::BPResistsEntry* resists);
 };

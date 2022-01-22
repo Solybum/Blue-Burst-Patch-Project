@@ -71,6 +71,46 @@ auto shadowTextureFactor = reinterpret_cast<float*>(0x00acbf24);
 auto SetAmbientLight = reinterpret_cast<void (__stdcall *)(float r, float g, float b)>(0x00843980);
 auto defaultAmbientLight = reinterpret_cast<float*>(0x00a9d480);
 
+void Mesh::NormalShading()
+{
+    // Mesh is affected by lighting
+    (*d3dDevice)->lpVtbl->SetRenderState(*d3dDevice, D3DRS_LIGHTING, true);
+    // I don't really know what these all do, but they are commonly used by the game
+    (*d3dDevice)->lpVtbl->SetRenderState(*d3dDevice, D3DRS_DIFFUSEMATERIALSOURCE, D3DMCS_COLOR1);
+    (*d3dDevice)->lpVtbl->SetRenderState(*d3dDevice, D3DRS_AMBIENTMATERIALSOURCE, D3DMCS_COLOR1);
+    (*d3dDevice)->lpVtbl->SetRenderState(*d3dDevice, D3DRS_ALPHABLENDENABLE, true);
+    (*d3dDevice)->lpVtbl->SetRenderState(*d3dDevice, D3DRS_ALPHAREF, 0xbf); // 0xbf seems to be a common value
+    (*d3dDevice)->lpVtbl->SetRenderState(*d3dDevice, D3DRS_ZWRITEENABLE, true);
+    (*d3dDevice)->lpVtbl->SetRenderState(*d3dDevice, D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+    (*d3dDevice)->lpVtbl->SetRenderState(*d3dDevice, D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+    (*d3dDevice)->lpVtbl->SetTextureStageState(*d3dDevice, 0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
+    (*d3dDevice)->lpVtbl->SetTextureStageState(*d3dDevice, 0, D3DTSS_COLOROP, D3DTOP_MODULATE);
+    (*d3dDevice)->lpVtbl->SetTextureStageState(*d3dDevice, 0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
+    (*d3dDevice)->lpVtbl->SetTextureStageState(*d3dDevice, 0, D3DTSS_COLORARG2, D3DTA_CURRENT);
+    (*d3dDevice)->lpVtbl->SetTextureStageState(*d3dDevice, 0, D3DTSS_ALPHAARG2, D3DTA_CURRENT);
+}
+
+void Mesh::TransparentShading()
+{
+    (*d3dDevice)->lpVtbl->SetRenderState(*d3dDevice, D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+    (*d3dDevice)->lpVtbl->SetRenderState(*d3dDevice, D3DRS_DESTBLEND, D3DBLEND_ONE);
+}
+
+void Mesh::ShadowShading()
+{
+    (*d3dDevice)->lpVtbl->SetRenderState(*d3dDevice, D3DRS_LIGHTING, false);
+    (*d3dDevice)->lpVtbl->SetRenderState(*d3dDevice, D3DRS_ALPHAREF, 0);
+
+    auto c0 = size_t(shadowTextureFactor[0] * 255.0) << 24;
+    auto c1 = size_t(shadowTextureFactor[1] * 255.0) << 16;
+    auto c2 = size_t(shadowTextureFactor[2] * 255.0) << 8;
+    auto c3 = size_t(shadowTextureFactor[3] * 255.0);
+    (*d3dDevice)->lpVtbl->SetRenderState(*d3dDevice, D3DRS_TEXTUREFACTOR, c0 | c1 | c2 | c3);
+
+    (*d3dDevice)->lpVtbl->SetTextureStageState(*d3dDevice, 0, D3DTSS_COLORARG2, D3DTA_TFACTOR);
+    (*d3dDevice)->lpVtbl->SetTextureStageState(*d3dDevice, 0, D3DTSS_ALPHAARG2, D3DTA_TFACTOR);
+}
+
 void Mesh::Draw()
 {
     ApplyTransformStack();
@@ -83,40 +123,24 @@ void Mesh::Draw()
         (*d3dDevice)->lpVtbl->SetVertexShader(*d3dDevice, D3DFVF_XYZ | D3DFVF_TEX1 | D3DFVF_DIFFUSE | D3DFVF_NORMAL);
         // Normalize normals in case the mesh was scaled
         (*d3dDevice)->lpVtbl->SetRenderState(*d3dDevice, D3DRS_NORMALIZENORMALS, true);
-        // Mesh is affected by lighting
-        (*d3dDevice)->lpVtbl->SetRenderState(*d3dDevice, D3DRS_LIGHTING, true);
-        // I don't really know what these all do, but they are commonly used by the game
-        (*d3dDevice)->lpVtbl->SetRenderState(*d3dDevice, D3DRS_DIFFUSEMATERIALSOURCE, D3DMCS_COLOR1);
-        (*d3dDevice)->lpVtbl->SetRenderState(*d3dDevice, D3DRS_AMBIENTMATERIALSOURCE, D3DMCS_COLOR1);
-        (*d3dDevice)->lpVtbl->SetRenderState(*d3dDevice, D3DRS_ALPHABLENDENABLE, true);
-        (*d3dDevice)->lpVtbl->SetRenderState(*d3dDevice, D3DRS_ALPHAREF, 0xbf); // 0xbf seems to be a common value
-        (*d3dDevice)->lpVtbl->SetRenderState(*d3dDevice, D3DRS_ZWRITEENABLE, true);
-        (*d3dDevice)->lpVtbl->SetRenderState(*d3dDevice, D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-        (*d3dDevice)->lpVtbl->SetRenderState(*d3dDevice, D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-        (*d3dDevice)->lpVtbl->SetTextureStageState(*d3dDevice, 0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
-        (*d3dDevice)->lpVtbl->SetTextureStageState(*d3dDevice, 0, D3DTSS_COLOROP, D3DTOP_MODULATE);
-        (*d3dDevice)->lpVtbl->SetTextureStageState(*d3dDevice, 0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
-        (*d3dDevice)->lpVtbl->SetTextureStageState(*d3dDevice, 0, D3DTSS_COLORARG2, D3DTA_CURRENT);
-        (*d3dDevice)->lpVtbl->SetTextureStageState(*d3dDevice, 0, D3DTSS_ALPHAARG2, D3DTA_CURRENT);
         // Two texture coordinates
         (*d3dDevice)->lpVtbl->SetTextureStageState(*d3dDevice, 0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_COUNT2);
         // TODO: Allow more than one texture?
         (*d3dDevice)->lpVtbl->SetTexture(*d3dDevice, 0, (IDirect3DBaseTexture8*) textures[0].object);
 
-        if (*isRenderingShadows)
+        if (*isRenderingShadows) shadingMode = ShadingMode::Shadow;
+
+        switch (shadingMode)
         {
-            // Some settings need to be changed when we are rendering the mesh as a shadow
-            (*d3dDevice)->lpVtbl->SetRenderState(*d3dDevice, D3DRS_LIGHTING, false);
-            (*d3dDevice)->lpVtbl->SetRenderState(*d3dDevice, D3DRS_ALPHAREF, 0);
-
-            auto c0 = size_t(shadowTextureFactor[0] * 255.0) << 24;
-            auto c1 = size_t(shadowTextureFactor[1] * 255.0) << 16;
-            auto c2 = size_t(shadowTextureFactor[2] * 255.0) << 8;
-            auto c3 = size_t(shadowTextureFactor[3] * 255.0);
-            (*d3dDevice)->lpVtbl->SetRenderState(*d3dDevice, D3DRS_TEXTUREFACTOR, c0 | c1 | c2 | c3);
-
-            (*d3dDevice)->lpVtbl->SetTextureStageState(*d3dDevice, 0, D3DTSS_COLORARG2, D3DTA_TFACTOR);
-            (*d3dDevice)->lpVtbl->SetTextureStageState(*d3dDevice, 0, D3DTSS_ALPHAARG2, D3DTA_TFACTOR);
+            case ShadingMode::Normal:
+                NormalShading();
+                break;
+            case ShadingMode::Transparent:
+                TransparentShading();
+                break;
+            case ShadingMode::Shadow:
+                ShadowShading();
+                break;
         }
     }
 
@@ -200,4 +224,14 @@ size_t Mesh::TextureCount() const
 size_t Mesh::SceneMeshIndex() const
 {
     return sceneMeshIndex;
+}
+
+void Mesh::UseNormalShading()
+{
+    shadingMode = ShadingMode::Normal;
+}
+
+void Mesh::UseTransparentShading()
+{
+    shadingMode = ShadingMode::Transparent;
 }
