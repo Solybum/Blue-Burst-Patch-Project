@@ -145,7 +145,7 @@ void Model::ProcessNode(aiNode* node)
     // Process meshes in node
     for (size_t i = 0; i < node->mNumMeshes; i++)
     {
-        ProcessMesh(i);
+        ProcessMesh(node->mMeshes[i]);
     }
 
     // Process child nodes

@@ -5,6 +5,9 @@
 #include "animation.h"
 #include "../common.h"
 
+// Game runs at 30 fps
+const float DELTA_TIME = 1.0 / 30.0;
+
 AnimatedModel::Animation::Animation(const aiAnimation* anim)
 {
     name = anim->mName.C_Str();
@@ -122,6 +125,8 @@ AnimatedModel::AnimatedModel(const std::string& path) :
 
     // Ensure there is one matrix for each bone
     finalBoneMatrices.resize(boneCount);
+
+    ChangeAnimation(0);
 }
 
 /// Copy Assimp's nodes into a nicer format
@@ -164,18 +169,24 @@ void AnimatedModel::ReadAnimations()
     }
 }
 
-void AnimatedModel::UpdateAnimation(float dt)
+void AnimatedModel::UpdateAnimation()
 {
     if (currentAnimation == nullptr) return;
 
-    // Nothing to do if the previous update caused the animation to end
-    // Otherwise increment the timer
-    if (AnimationEnded()) return;
-    else currentTime += currentAnimation->ticksPerSecond * dt;
-
-    // We just caused the animation to end, loop back to start if we are looping
-    if (looping && AnimationEnded())
-        currentTime = fmod(currentTime, currentAnimation->duration);
+    if (AnimationEnded())
+    {
+        // Previous update caused animation to end
+        if (looping)
+        {
+            // Loop back to start
+            currentTime = fmod(currentTime, currentAnimation->duration);
+        }
+        else
+        {
+            // Nothing to do
+            return;
+        }
+    }
 
     ComputeBoneTransform(rootAnimationNode, aiMatrix4x4());
 
@@ -183,6 +194,9 @@ void AnimatedModel::UpdateAnimation(float dt)
     {
         mesh.ApplyBoneTransformations(finalBoneMatrices);
     }
+
+    // Increment animation timer
+    currentTime += currentAnimation->ticksPerSecond * DELTA_TIME;
 }
 
 void AnimatedModel::ChangeAnimation(const std::string& name)
@@ -253,12 +267,26 @@ float AnimatedModel::AnimationTime() const
 
 float AnimatedModel::AnimationRatio() const
 {
-    if (currentAnimation == nullptr) return 0.0;
+    if (currentAnimation == nullptr || currentAnimation->duration == 0.0) return 0.0;
     return currentTime / currentAnimation->duration;
+}
+
+bool AnimatedModel::CurrentFrame(size_t frame) const
+{
+    if (currentAnimation == nullptr) return false;
+
+    auto currentFrame = size_t(currentTime / (currentAnimation->ticksPerSecond * DELTA_TIME));
+    return frame >= currentFrame && frame < currentFrame + 1;
+}
+
+bool AnimatedModel::CurrentFrameRatio(float ratio) const
+{
+    if (currentAnimation == nullptr) return false;
+    return CurrentFrame(size_t(ratio * currentAnimation->duration / (currentAnimation->ticksPerSecond * DELTA_TIME)));
 }
 
 bool AnimatedModel::AnimationEnded() const
 {
     if (currentAnimation == nullptr) return true;
-    return currentTime > currentAnimation->duration;
+    return currentTime >= currentAnimation->duration;
 }

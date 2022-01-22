@@ -79,6 +79,7 @@ namespace Transform
     extern void (__fastcall *PushTransformStack)(const D3DMATRIX* matrix);
     extern void (__fastcall *PopTransformStack)(void);
     extern void (__fastcall *RotateMatrix)(D3DMATRIX* matrix, uint32_t angle);
+    extern void (__thiscall *ScaleMatrix)(D3DMATRIX* matrix, float x, float y, float z);
     extern void (__fastcall *TranslateTransformStackHead)(Vec3<float>* translation);
 };
 

@@ -39,6 +39,7 @@ namespace Transform
     decltype(PushTransformStack) PushTransformStack = reinterpret_cast<decltype(PushTransformStack)>(0x0082d7b0);
     decltype(PopTransformStack) PopTransformStack = reinterpret_cast<decltype(PopTransformStack)>(0x0082da80);
     decltype(RotateMatrix) RotateMatrix = reinterpret_cast<decltype(RotateMatrix)>(0x0082d8bc);
+    decltype(ScaleMatrix) ScaleMatrix = reinterpret_cast<decltype(ScaleMatrix)>(0x0082fa0c);
     decltype(TranslateTransformStackHead) TranslateTransformStackHead = reinterpret_cast<decltype(TranslateTransformStackHead)>(0x0082d838);
 };
 

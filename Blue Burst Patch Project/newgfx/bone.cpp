@@ -53,6 +53,8 @@ void Bone::Update(float animationTime)
 template<typename T>
 size_t FindNearestKeyframeIndex(const std::vector<T>& keyframes, float animationTime)
 {
+    if (keyframes.size() == 2) return 0;
+
     size_t i = 0;
     auto it = keyframes.begin();
     auto penult = keyframes.end() - 1;

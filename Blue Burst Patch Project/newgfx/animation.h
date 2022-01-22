@@ -46,7 +46,7 @@ private:
 
 public:
     AnimatedModel(const std::string& path);
-    void UpdateAnimation(float dt = 1.0 / 30.0); // Game runs at 30 fps
+    void UpdateAnimation();
     void ChangeAnimation(const std::string& name);
     void ChangeAnimation(size_t index);
     void AnimationLoopingEnabled(bool looping);
@@ -54,6 +54,10 @@ public:
     float AnimationTime() const;
     /// How much of the animation has already played on a range from 0 to 1
     float AnimationRatio() const;
+    /// Returns true when the argument matches the currently playing frame
+    bool CurrentFrame(size_t frame) const;
+    /// Returns true when the argument matches the currently playing frame with the timeline being scaled to a range of 0..1
+    bool CurrentFrameRatio(float ratio) const;
     bool AnimationEnded() const;
 
 private:

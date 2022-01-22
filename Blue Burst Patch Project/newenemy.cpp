@@ -29,10 +29,13 @@ struct NewEnemy : EnemyBase
 
     enum class Animation : uint16_t
     {
-        None = 0,
-        Idle = 0,
-        Walk = 0,
-        Attack = 0
+        // Order matches fox.glb
+        Attack,
+        Fall,
+        Idle,
+        Jump,
+        Walk,
+        LandJump
     };
 
     EntityIndex targetEntityIndex;
@@ -59,8 +62,7 @@ struct NewEnemy : EnemyBase
 
         InitEnemyCollisionBoxes(this, (void*) 0x009bc8e0, 1);
 
-        animationId = -1;
-        UseAnimation(Animation::Attack);
+        UseAnimation(Animation::Idle);
     }
 
     void Destruct(bool32 freeMemory)
@@ -260,8 +262,8 @@ struct NewEnemy : EnemyBase
             Behavior();
         }
 
-        // Damaging portion of attack animation comes out at halfway through the animation
-        if (IsAttacking() && model.AnimationTime() > 1.0)
+        // Damaging portion of attack animation comes out at a quarter into the animation
+        if (IsAttacking() && model.CurrentFrameRatio(0.25))
         {
             PlaySoundEffect(0xe8);
 
@@ -285,6 +287,7 @@ struct NewEnemy : EnemyBase
         Transform::PushTransformStackCopy();
         Transform::TranslateTransformStackHead(const_cast<Vec3<float>*>(&xyz2));
         Transform::RotateMatrix(nullptr, rotation.y);
+        Transform::ScaleMatrix(nullptr, 10.0, 10.0, 10.0);
 
         model.Draw();
 
@@ -296,7 +299,7 @@ AnimatedModel* NewEnemy::modelData;
 
 void __cdecl GlobalInit()
 {
-    NewEnemy::modelData = new AnimatedModel("newenemy");
+    NewEnemy::modelData = new AnimatedModel("fox.glb");
 }
 
 void __cdecl GlobalUninit()
