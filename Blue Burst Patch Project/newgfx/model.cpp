@@ -228,14 +228,29 @@ std::vector<Texture> Model::LoadMaterialTextures(aiMaterial* material, aiTexture
         texture.path = texturePath.C_Str();
         texture.type = textureType;
 
-        // Asterisk prefix means embedded texture
+        // Asterisk prefix means embedded texture (but not always?)
         if (texture.path[0] == '*')
         {
             texture.object = TextureFromEmbedded(scene->GetEmbeddedTexture(texture.path.c_str()));
         }
         else
         {
-            texture.object = TextureFromFile(texture.path, this->directory);
+            // Another way of getting an embedded texture
+            aiString texturePath;
+            material->Get(AI_MATKEY_TEXTURE(aiTextureType_DIFFUSE, 0), texturePath);
+            auto maybeEmbedded = scene->GetEmbeddedTexture(texturePath.C_Str());
+
+            if (maybeEmbedded)
+            {
+                // Is embedded
+                texture.path = std::string(texturePath.C_Str());
+                texture.object = TextureFromEmbedded(maybeEmbedded);
+            }
+            else
+            {
+                // Not embedded
+                texture.object = TextureFromFile(texture.path, this->directory);
+            }
         }
 
         textures.push_back(texture);

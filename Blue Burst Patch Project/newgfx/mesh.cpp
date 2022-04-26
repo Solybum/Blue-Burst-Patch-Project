@@ -15,7 +15,8 @@ Mesh::Mesh(const size_t sceneMeshIndex,
     untransformedVertices(vertices),
     indices(indices),
     textures(textures),
-    vertexBoneMap(boneData)
+    vertexBoneMap(boneData),
+    shadingMode(ShadingMode::Normal)
 {
     assert(vertices.size() > 0 && vertices.size() == boneData.size());
 
