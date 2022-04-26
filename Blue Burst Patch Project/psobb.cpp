@@ -2,6 +2,7 @@
 #include "globals.h"
 #include "ime.h"
 #include "shop.h"
+#include <stdint.h>
 
 #ifdef PATCH_EARLY_WALK_FIX
 #include "earlywalk.h"
@@ -29,6 +30,10 @@
 
 #ifdef PATCH_NEWENEMY
 #include "newenemy.h"
+#endif
+
+#ifdef PATCH_LARGE_ASSETS
+#include "large_assets.h"
 #endif
 
 #ifdef PATCH_ENEMY_CONSTRUCTOR_LISTS
@@ -80,6 +85,10 @@ void PSOBB()
 
 #ifdef PATCH_NEWENEMY
     ApplyNewEnemyPatch();
+#endif
+
+#ifdef PATCH_LARGE_ASSETS
+    ApplyLargeAssetsPatch();
 #endif
 
 #ifdef PATCH_ENEMY_CONSTRUCTOR_LISTS
