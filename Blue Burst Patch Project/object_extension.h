@@ -32,3 +32,7 @@ extern MainArenaAllocFunction MainArenaAlloc;
 
 typedef void (__cdecl *MainArenaDeallocFunction)(void* node);
 extern MainArenaDeallocFunction MainArenaDealloc;
+
+extern void* (__thiscall *BaseGameObjectConstructor)(void* self, void* parent);
+extern void (__thiscall *BaseGameObjectDestructor)(void* self, bool32 freeMemory);
+extern void (__thiscall *BaseGameObjectDestructorNoDealloc)(void* self);

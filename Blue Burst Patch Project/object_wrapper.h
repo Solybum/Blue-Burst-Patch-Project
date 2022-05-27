@@ -12,7 +12,8 @@
     template<typename... Args> \
     ret_type name(Args... args) { \
         typedef ret_type (__thiscall *method)(BaseObject*, __VA_ARGS__); \
-        return reinterpret_cast<method>(obj->vtable[index])(obj, args...); \
+        auto vtable = reinterpret_cast<void**>(obj->vtable); \
+        return reinterpret_cast<method>(vtable[index])(obj, args...); \
     }
 
 /// Inherit this class to enable interacting with existing game objects.

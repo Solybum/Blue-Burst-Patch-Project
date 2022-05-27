@@ -1,6 +1,8 @@
 #pragma once
 
 #include <cstdint>
+#include "helpers.h"
+#include "object_extension.h"
 
 enum ObjectFlag : uint16_t
 {
@@ -14,9 +16,18 @@ enum ObjectFlag : uint16_t
 /// The base PSOBB game object. All other objects inherit this.
 struct BaseObject
 {
-    void** vtable;
+    struct Vtable {
+        union {
+            void (__thiscall *Destruct)(void* self, bool32 free_memory);
+            DEFINE_FIELD(0x4, void (__thiscall *Update)(void* self));
+            DEFINE_FIELD(0x8, void (__thiscall *Render)(void* self));
+            DEFINE_FIELD(0xc, void (__thiscall *RenderShadow)(void* self));
+        };
+    };
+
+    Vtable* vtable;
     void* typeId;
-    ObjectFlag flags;
+    ObjectFlag objectFlags;
     uint16_t unused;
     /// The game attaches objects to these pointers to create a graph of objects.
     /// They probably have some unknown meaning.
@@ -26,3 +37,5 @@ struct BaseObject
     BaseObject* relative4;
 };
 #pragma pack(pop)
+
+extern BaseObject::Vtable* baseObjectVtable;
