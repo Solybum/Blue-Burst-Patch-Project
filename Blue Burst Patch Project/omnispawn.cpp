@@ -118,16 +118,16 @@ namespace Omnispawn
             BPAnimationsIndex::ep1_Canadine__ep2_Gee__ep4_ZuCrater
         )},
         {NewBPIndex::CanadineRing, BPIndexAll(
-            BPStatsIndex::ep1_CanadineRing__ep2_None__ep4_PazuzuCrater,
-            BPAttacksIndex::ep1_CanadineRing__ep2_None__ep4_PazuzuCrater,
-            BPResistsIndex::ep1_CanadineRing__ep2_None__ep4_PazuzuCrater,
-            BPAnimationsIndex::ep1_CanadineRing__ep2_None__ep4_PazuzuCrater
+            BPStatsIndex::ep1_CanadineRing__ep2_PigRay__ep4_PazuzuCrater,
+            BPAttacksIndex::ep1_CanadineRing__ep2_PigRay__ep4_PazuzuCrater,
+            BPResistsIndex::ep1_CanadineRing__ep2_PigRay__ep4_PazuzuCrater,
+            BPAnimationsIndex::ep1_CanadineRing__ep2_PigRay__ep4_PazuzuCrater
         )},
         {NewBPIndex::Canane, BPIndexAll(
-            BPStatsIndex::ep1_Canane__ep2_None__ep4_Astark,
-            BPAttacksIndex::ep1_Canane__ep2_None__ep4_None,
-            BPResistsIndex::ep1_Canane__ep2_None__ep4_Astark,
-            BPAnimationsIndex::ep1_Canane__ep2_None__ep4_Astark
+            BPStatsIndex::ep1_Canane__ep2_UlRay__ep4_Astark,
+            BPAttacksIndex::ep1_Canane__ep2_UlRay__ep4_None,
+            BPResistsIndex::ep1_Canane__ep2_UlRay__ep4_Astark,
+            BPAnimationsIndex::ep1_Canane__ep2_UlRay__ep4_Astark
         )},
         {NewBPIndex::ChaosSorcerer, BPIndexAll(
             BPStatsIndex::ep1_ChaosSorcerer__ep2_ChaosSorcerer__ep4_None,
@@ -548,10 +548,10 @@ namespace Omnispawn
             BPAnimationsIndex::ep1_Canadine__ep2_Gee__ep4_ZuCrater
         )},
         {NewBPIndex::PazuzuCrater, BPIndexAll(
-            BPStatsIndex::ep1_CanadineRing__ep2_None__ep4_PazuzuCrater,
-            BPAttacksIndex::ep1_CanadineRing__ep2_None__ep4_PazuzuCrater,
-            BPResistsIndex::ep1_CanadineRing__ep2_None__ep4_PazuzuCrater,
-            BPAnimationsIndex::ep1_CanadineRing__ep2_None__ep4_PazuzuCrater
+            BPStatsIndex::ep1_CanadineRing__ep2_PigRay__ep4_PazuzuCrater,
+            BPAttacksIndex::ep1_CanadineRing__ep2_PigRay__ep4_PazuzuCrater,
+            BPResistsIndex::ep1_CanadineRing__ep2_PigRay__ep4_PazuzuCrater,
+            BPAnimationsIndex::ep1_CanadineRing__ep2_PigRay__ep4_PazuzuCrater
         )},
         {NewBPIndex::ZuDesert, BPIndexAll(
             BPStatsIndex::ep1_Dubchic__ep2_Dubchic__ep4_ZuDesert,
@@ -566,10 +566,10 @@ namespace Omnispawn
             BPAnimationsIndex::ep1_Gillchic__ep2_Gillchic__ep4_PazuzuDesert
         )},
         {NewBPIndex::Astark, BPIndexAll(
-            BPStatsIndex::ep1_Canane__ep2_None__ep4_Astark,
+            BPStatsIndex::ep1_Canane__ep2_UlRay__ep4_Astark,
             BPAttacksIndex::ep1_ChaosSorcerer__ep2_ChaosSorcerer__ep4_Astark,
-            BPResistsIndex::ep1_Canane__ep2_None__ep4_Astark,
-            BPAnimationsIndex::ep1_Canane__ep2_None__ep4_Astark
+            BPResistsIndex::ep1_Canane__ep2_UlRay__ep4_Astark,
+            BPAnimationsIndex::ep1_Canane__ep2_UlRay__ep4_Astark
         )},
         {NewBPIndex::AstarkAttack1, BPIndexAll(
             BPAttacksIndex::ep1_BeeR__ep2_BeeR__ep4_AstarkAttack1
@@ -608,16 +608,16 @@ namespace Omnispawn
             BPAnimationsIndex::ep1_DeRolLe__ep2_BarbaRay__ep4_Dorphon
         )},
         {NewBPIndex::DorphonEclair, BPIndexAll(
-            BPStatsIndex::ep1_DeRolLeShell__ep2_PigRay__ep4_DorphonEclair,
-            BPAttacksIndex::ep1_DeRolLeShell__ep2_PigRay__ep4_DorphonEclair,
-            BPResistsIndex::ep1_DeRolLeShell__ep2_PigRay__ep4_DorphonEclair,
+            BPStatsIndex::ep1_DeRolLeShell__ep2_BarbaRayPart__ep4_DorphonEclair,
+            BPAttacksIndex::ep1_DeRolLeShell__ep2_BarbaRayAttack1__ep4_DorphonEclair,
+            BPResistsIndex::ep1_DeRolLeShell__ep2_BarbaRayPart__ep4_DorphonEclair,
             BPAnimationsIndex::ep1_SinowGold__ep2_SinowSpigell__ep4_DorphonEclair
         )},
         {NewBPIndex::Goran, BPIndexAll(
-            BPStatsIndex::ep1_DeRolLeMine__ep2_UlRay__ep4_Goran,
-            BPAttacksIndex::ep1_DeRolLeMine__ep2_UlRay__ep4_Goran,
-            BPResistsIndex::ep1_DeRolLeMine__ep2_UlRay__ep4_Goran,
-            BPAnimationsIndex::ep1_DeRolLeMine__ep2_UlRay__ep4_Goran
+            BPStatsIndex::ep1_DeRolLeMine__ep2_None__ep4_Goran,
+            BPAttacksIndex::ep1_DeRolLeMine__ep2_BarbaRayAttack2__ep4_Goran,
+            BPResistsIndex::ep1_DeRolLeMine__ep2_None__ep4_Goran,
+            BPAnimationsIndex::ep1_DeRolLeMine__ep2_None__ep4_Goran
         )},
         {NewBPIndex::GoranAttack1, BPIndexAll(
             BPAttacksIndex::ep1_None__ep2_None__ep4_GoranAttack1
@@ -1321,11 +1321,13 @@ namespace Omnispawn
         {NewBPIndex::Canadine             , InitList::FunctionPair(0x005420f4, 0x0053e718)},
         // {NewBPIndex::CanadineRing         , InitList::FunctionPair(0x, 0x)}, // Same as Canadine
         // {NewBPIndex::Canane               , InitList::FunctionPair(0x, 0x)},
+        /*
         {NewBPIndex::ChaosSorcerer        , InitList::FunctionPair(0x0059d6ac, 0x0059b164)},
         // {NewBPIndex::BeeR                 , InitList::FunctionPair(0x, 0x)},
         // {NewBPIndex::BeeL                 , InitList::FunctionPair(0x, 0x)}, // Inside Chaos Sorcerer's function
         {NewBPIndex::ChaosBringer         , InitList::FunctionPair(0x0053c914, 0x0053a378)},
         {NewBPIndex::DarkBelra            , InitList::FunctionPair(0x00538ef4, 0x00536b0c)},
+        */
         // {NewBPIndex::SinowGold            , InitList::FunctionPair(0x, 0x)}, // Same as Sinow Beat
         {NewBPIndex::RagRappy             , InitList::FunctionPair(0x00527934, 0x00526c64)},
         // {NewBPIndex::AlRappy              , InitList::FunctionPair(0x, 0x)}, // Same as Rag Rappy
