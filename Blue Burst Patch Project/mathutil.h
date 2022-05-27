@@ -20,7 +20,7 @@ struct Vec3
     Vec3(volatile Vec3 const& other) : x(other.x), y(other.y), z(other.z) {}
 
     /// Copying a volatile
-    volatile Vec3& Vec3::operator=(volatile Vec3 const& other) volatile
+    volatile Vec3& operator=(volatile Vec3 const& other) volatile
     {
         x = other.x;
         y = other.y;
@@ -28,7 +28,7 @@ struct Vec3
         return *this;
     }
 
-    volatile Vec3& Vec3::operator+(volatile Vec3 const& other) volatile
+    volatile Vec3& operator+(volatile Vec3 const& other) volatile
     {
         x += other.x;
         y += other.y;
