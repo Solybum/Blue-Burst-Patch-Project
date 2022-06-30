@@ -34,6 +34,12 @@ Allows spawning any enemy in any area with some exceptions.
 * E4 enemies have Crater stats in E1 and Desert stats in E2.
 * Enemies that appear in both E1 and E2 have E1 stats in Crater and E2 stats in Desert.
 
+### New Enemy `[COMPILED:PATCH_NEWENEMY]`
+A demonstration of how a new enemy may be implemented using the object extension framework.
+
+### Intro credits skip `[COMPILED:PATCH_SKIP_INTRO_CREDITS]`
+Skips the credits screen when the game is launched.
+
 ## Installation
 Use the psobb.exe bundled with this project. That client is modified to automatically load bbpp.dll. Place bbpp.dll in your game directory.
 
@@ -44,3 +50,10 @@ Use Visual Studio.
 ### Linux
 It is possible to build the project on Linux by using Wine to run MSVC.
 Install MSVC ([recommended Dockerfile](https://github.com/mstorsjo/msvc-wine)) and run wine-build.sh.
+
+## License
+Blue Burst Patch Project is licensed under the MIT license.
+This product contains unmodified and modified subcomponents with separate copyright notices and license terms.
+* [Learn OpenGL](https://learnopengl.com/Guest-Articles/2020/Skeletal-Animation) ([CC BY 4.0](https://creativecommons.org/licenses/by/4.0/legalcode)): Newgfx library is derived from Learn OpenGL
+* [Wine](https://source.winehq.org/source/) ([LGPL-2.1](https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html)): Newgfx library depends on Wine's header files
+* [Hooded Fox](https://gtibo.itch.io/hooded-fox) ([CC BY-ND 4.0](https://creativecommons.org/licenses/by-nd/4.0/)): Assets used in newenemy demo

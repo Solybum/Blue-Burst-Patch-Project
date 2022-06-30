@@ -1473,7 +1473,7 @@ namespace Omnispawn
         // Add new enemies to all maps
         for (size_t i = 0; i <= (size_t) MapType::MAX_INDEX; i++)
         {
-            auto mapEnemyList = Enemy::ReadEntriesIntoEnemyConstructorList(Enemy::mapEnemyTable[i]);
+            auto& mapEnemyList = Enemy::GetEnemyConstructorList((MapType) i);
 
             // Compute union of old list and new list
             for (NpcType newEnemy : newEnemies)
@@ -1494,10 +1494,6 @@ namespace Omnispawn
                     mapEnemyList.push_back(*enemyConstructors[newEnemy]);
                 }
             }
-
-            // Apply new list
-            mapEnemyList.push_back(Enemy::enemyListTerminator);
-            Enemy::mapEnemyTable[i] = Enemy::CopyEnemyConstructorListToHeap(mapEnemyList);
         }
     }
 

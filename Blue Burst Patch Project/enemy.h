@@ -2,6 +2,13 @@
 
 #include <vector>
 #include <cstdint>
+#include "mathutil.h"
+#include "object_extension.h"
+#include "battleparam.h"
+#include "object.h"
+
+// Automatically enable patching if included
+#define PATCH_ENEMY_CONSTRUCTOR_LISTS
 
 namespace Enemy
 {
@@ -141,26 +148,168 @@ namespace Enemy
     typedef void* (__cdecl *EnemyConstructor)(void*);
 
 #pragma pack(push, 1)
-    typedef struct
+    struct TaggedEnemyConstructor
     {
         NpcType enemyType;
         uint16_t unknown1;
         EnemyConstructor constructor;
         float unknown2;
-        uint32_t unknown3;
-    } TaggedEnemyConstructor;
+        uint32_t defaultCloneCount;
+
+        TaggedEnemyConstructor(NpcType type, EnemyConstructor ctor);
+        TaggedEnemyConstructor();
+    };
+
+    std::vector<TaggedEnemyConstructor>& GetEnemyConstructorList(Map::MapType);
+    TaggedEnemyConstructor* FindEnemyConstructor(NpcType);
+    void PatchEnemyConstructorLists();
+
+    struct BmlContentsInfo
+    {
+        const char* bmlName;
+        const char** njNames;
+        const char** njmNames;
+        const uint16_t njCount;
+        const uint16_t njmCount;
+    };
+
+    struct NjChunk
+    {
+        uint32_t flags;
+        uint32_t unknown;
+        void* njcm;
+        void* njtl;
+    };
+
+    struct NjmData
+    {
+        uint32_t unknown;
+        void* data;
+    };
+
+    struct BmlData
+    {
+        union
+        {
+            uint8_t _padding[0x440];
+
+            DEFINE_FIELD(0x42c, NjChunk* nj);
+            DEFINE_FIELD(0x430, NjmData* njm);
+            DEFINE_FIELD(0x434, size_t njCount);
+            DEFINE_FIELD(0x438, size_t njmCount);
+        };
+
+        typedef BmlData* (__cdecl *LoadBmlFunction)(BmlContentsInfo* toc);
+        typedef BmlData* (__thiscall *FreeBmlFunction)(BmlData* self, bool32 free_memory);
+    };
+
+    extern BmlData::LoadBmlFunction LoadBml;
+    extern BmlData::FreeBmlFunction FreeBml;
+
+    extern void** rootEnemyObject;
+
+    enum Attribute : uint32_t
+    {
+        Native = 1,
+        ABeast = 2,
+        Machine = 4,
+        Dark = 8,
+        Special = 0x40
+    };
+
+    enum EntityFlag : uint32_t
+    {
+        Poisoned = 1,
+        Paralyzed = 2,
+        Shocked = 4,
+        Slowed = 8,
+        Confused = 0x10,
+        Frozen = 0x20,
+        TookDamage = 0x200,
+        Dead = 0x800
+    };
+
+    struct EnemyBase
+    {
+        struct Vtable {
+            union {
+                void (__thiscall *Destruct)(void* self, bool32 free_memory);
+                DEFINE_FIELD(0x4, void (__thiscall *Update)(void* self));
+                DEFINE_FIELD(0x8, void (__thiscall *Render)(void* self));
+                DEFINE_FIELD(0xc, void (__thiscall *RenderShadow)(void* self));
+                DEFINE_FIELD(0x14c, void (__thiscall *ApplyInitData)(void* self, void* initData));
+            };
+        };
+
+        typedef void* (__thiscall *ConstructorFunction)(void* self, void* parentObject);
+        static const ConstructorFunction Constructor;
+        static const Vtable* origVtable;
+
+        union
+        {
+            Vtable* vtable;
+
+            union {
+                DEFINE_FIELD(0x8, ObjectFlag objectFlags);
+                DEFINE_FIELD(0x24, void* njtl);
+                DEFINE_FIELD(0x28, uint16_t originalMapSection);
+                DEFINE_FIELD(0x30, EntityFlag entityFlags);
+                DEFINE_FIELD(0x34, void* njcm);
+                DEFINE_FIELD(0x38, Vec3<float> xyz2);
+                DEFINE_FIELD(0x44, Vec3<float> xyz5);
+                DEFINE_FIELD(0x50, Vec3<float> xyz1);
+                DEFINE_FIELD(0x5c, Vec3<uint32_t> rotation);
+                DEFINE_FIELD(0xb8, uint16_t animationId);
+                DEFINE_FIELD(0xc0, float currentAnimationCounter);
+                DEFINE_FIELD(0xc4, float currentAnimationLength);
+                DEFINE_FIELD(0xc8, float currentAnimationSpeed);
+                DEFINE_FIELD(0xd8, void* unknownAnimationData);
+                DEFINE_FIELD(0xdc, void* njm);
+                DEFINE_FIELD(0x2b4, BattleParam::BPStatsEntry* bpStats);
+                DEFINE_FIELD(0x2bc, int16_t maxHP);
+                DEFINE_FIELD(0x298, Vec3<float> xyz4);
+                DEFINE_FIELD(0x2a4, Vec3<float> xyz3);
+                DEFINE_FIELD(0x2e8, Attribute attribute);
+                DEFINE_FIELD(0x300, Vec3<float> xyz6);
+                DEFINE_FIELD(0x30c, Vec3<float> xyz7);
+                DEFINE_FIELD(0x31c, BattleParam::BPAttacksEntry* bpAttacks);
+                DEFINE_FIELD(0x320, BattleParam::BPResistsEntry* bpResists);
+                DEFINE_FIELD(0x334, int16_t currentHP);
+                DEFINE_FIELD(0x346, int16_t maxHP2);
+                DEFINE_FIELD(0x378, uint32_t nameUnitxtIndex);
+            };
+
+            // Ensure object's size is at least the same as its superclass
+            uint8_t _padding[0x37c];
+        };
+
+        EnemyBase::EnemyBase(void* parentObject);
+
+        void Destruct(bool32 freeMemory);
+    };
+
+    struct CollisionBox
+    {
+        union
+        {
+            float x;
+            DEFINE_FIELD(0x4, float y);
+            DEFINE_FIELD(0x8, float z);
+            DEFINE_FIELD(0xc, float r);
+            DEFINE_FIELD(0x18, uint32_t unknownFlags);
+            uint8_t _padding[0x2c];
+        };
+
+        CollisionBox(float x, float y, float z, float r);
+    };
+
 #pragma pack(pop)
 
-    const TaggedEnemyConstructor enemyListTerminator = []()
-    {
-        TaggedEnemyConstructor terminator;
-        terminator.enemyType = NpcType::ListTerminator;
-        return terminator;
-    }();
-
-    extern TaggedEnemyConstructor** mapEnemyTable;
-
-    std::vector<TaggedEnemyConstructor> ReadEntriesIntoEnemyConstructorList(TaggedEnemyConstructor*);
-    TaggedEnemyConstructor* CopyEnemyConstructorListToHeap(const std::vector<TaggedEnemyConstructor>&);
-    TaggedEnemyConstructor* FindEnemyConstructor(NpcType);
+    typedef uint32_t (__thiscall *InsertIntoEntityListFunction)(void* entity);
+    extern InsertIntoEntityListFunction InsertIntoEntityList;
+    extern void (__thiscall *InitCollisionBoxes)(void* self, const CollisionBox* collisionData, uint32_t collisionBoxCount);
+    extern bool32 (__thiscall *SetStatsFromBattleParams)(void* self,
+        const BattleParam::BPStatsEntry* stats,
+        const BattleParam::BPAttacksEntry* attacks,
+        const BattleParam::BPResistsEntry* resists);
 };

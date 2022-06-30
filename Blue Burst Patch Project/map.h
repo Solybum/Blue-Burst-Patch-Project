@@ -2,6 +2,8 @@
 
 #include <cstdint>
 #include "initlist.h"
+#include "entitylist.h"
+#include "object_wrapper.h"
 
 namespace Map
 {
@@ -60,4 +62,13 @@ namespace Map
     };
 
     InitList& GetMapInitList(MapType);
+
+    class MapObjectWrapper : public EntityList::BaseEntityWrapper
+    {
+    public:
+        MapObjectWrapper(void* obj) : BaseEntityWrapper(obj) {}
+
+        DECLARE_WRAPPED_MEMBER(0x28, uint16_t, mapSection);
+        DECLARE_WRAPPED_MEMBER(0x80, uint16_t*, mapObjectType);
+    };
 };
