@@ -43,13 +43,14 @@ private:
 
     enum class Animation : uint16_t
     {
-        // Order matches fox.glb
-        Attack,
-        Fall,
-        Idle,
-        Jump,
-        Walk,
-        LandJump
+        Slide = 0,
+        Spawn = 1,
+        Idle = Slide,
+        BattleCry = Slide,
+        Walk = Slide,
+        Attack = Spawn,
+        Flinch = Spawn,
+        Die = Spawn
     };
 
     EntityIndex targetEntityIndex;
@@ -88,7 +89,7 @@ public:
 
         Enemy::InitCollisionBoxes(this, &NewEnemy::collisionBox, 1);
 
-        UseAnimation(Animation::Fall);
+        UseAnimation(Animation::Spawn);
     }
 
 private:
@@ -97,6 +98,9 @@ private:
         FreeCollisionBoxes(this);
 
         EnemyBase::Destruct(false);
+
+        // Manually call own C++ destructor
+        NewEnemy::~NewEnemy();
 
         if (freeMemory)
         {
@@ -295,7 +299,7 @@ private:
             switch (deathSequenceCounter)
             {
                 case 0:
-                    UseAnimation(Animation::LandJump);
+                    UseAnimation(Animation::Die);
                     break;
                 case 30:
                     CreateBloodStain(this);
@@ -333,7 +337,7 @@ private:
         {
             // Flinch from damage
             PlaySoundEffect(81);
-            PlayAnimationFullyOnce(Animation::LandJump);
+            PlayAnimationFullyOnce(Animation::Flinch);
             entityFlags = EntityFlag(entityFlags & ~EntityFlag::TookDamage);
         }
 
@@ -364,7 +368,6 @@ private:
         Transform::PushTransformStackCopy();
         Transform::TranslateTransformStackHead(const_cast<Vec3<float>*>(&xyz2));
         Transform::RotateMatrix(nullptr, rotation.y);
-        Transform::ScaleMatrix(nullptr, 10.0, 10.0, 10.0);
 
         if (hasSpawned) model.UseNormalShading();
         else model.UseTransparentShading();
@@ -414,12 +417,13 @@ const BattleParam::BPResistsEntry NewEnemy::bpResists =
 
 void __cdecl GlobalInit()
 {
-    NewEnemy::modelData = new AnimatedModel("fox.glb");
+    NewEnemy::modelData = new AnimatedModel("pso-ene-seal-tex-mask-rig_packed-texture.fbx");
 }
 
 void __cdecl GlobalUninit()
 {
     delete NewEnemy::modelData;
+    NewEnemy::modelData = nullptr;
 }
 
 void* __cdecl CreateNewEnemy(void* initData)
