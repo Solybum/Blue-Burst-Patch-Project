@@ -65,7 +65,7 @@ private:
     size_t deathSequenceCounter;
 
 public:
-    NewEnemy::NewEnemy(void* parentObject, void* initData) :
+    NewEnemy(void* parentObject, void* initData) :
         targetEntityIndex(UndefinedEntityIndex),
         hasTarget(false),
         playingFullAnimation(false),
@@ -151,7 +151,7 @@ private:
         auto c = cos(rot);
 
         const auto speed = 0.25;
-        auto newPos = xyz2;
+        auto newPos = *const_cast<Vec3f*>(&xyz2);
         newPos.x -= s * speed;
         newPos.z -= c * speed;
 
@@ -160,13 +160,13 @@ private:
 
         if (ground != nullptr && ground->position != nullptr)
         {
-            xyz2 = newPos;
+            xyz2.set(newPos);
         }
     }
 
     void SnapToMapSurface()
     {
-        auto pos = xyz2;
+        auto pos = *const_cast<Vec3f*>(&xyz2);
         // Move the projection point slightly up to ensure it's actually above the ground
         pos.y += 10.0;
         // 0x15 is what other entities seem to use
@@ -174,7 +174,7 @@ private:
         
         if (ground != nullptr && ground->position != nullptr)
         {
-            xyz2 = *ground->position;
+            xyz2.set(ground->position);
         }
     }
 
@@ -182,7 +182,7 @@ private:
     {
         ::CollideWithEntities(this);
         // Apply position changes from collisions
-        xyz5 = xyz2;
+        xyz5.set(xyz2);
     }
 
     bool IsValidTarget(MapObjectWrapper& obj) const
@@ -196,7 +196,7 @@ private:
     {
         auto infinity = std::numeric_limits<float>::infinity();
 
-        auto nearestTargetPos = Vec3<float>(infinity, infinity, infinity);
+        auto nearestTargetPos = Vec3<float>{infinity, infinity, infinity};
         auto nearestTargetIndex = -1;
         auto nearestTargetDistanceSquared = infinity;
         bool foundTarget = false;
@@ -211,7 +211,7 @@ private:
 
                 if (dist < nearestTargetDistanceSquared)
                 {
-                    nearestTargetPos = obj.position();
+                    nearestTargetPos.set(obj.position());
                     nearestTargetIndex = obj.entityIndex();
                     nearestTargetDistanceSquared = dist;
                     foundTarget = true;
@@ -235,7 +235,7 @@ private:
         if (hasTarget)
         {
             auto target = BaseEntityWrapper(targetPtr);
-            targetPosition = target.position();
+            targetPosition.set(target.position());
         }
     }
 

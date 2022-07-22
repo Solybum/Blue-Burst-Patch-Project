@@ -14,19 +14,9 @@ struct Vec3
     T y;
     T z;
 
-    Vec3() : x(), y(), z() {}
-    Vec3(Vec3 const& other) : x(other.x), y(other.y), z(other.z) {}
-    Vec3(T x, T y, T z) : x(x), y(y), z(z) {}
-    Vec3(volatile Vec3 const& other) : x(other.x), y(other.y), z(other.z) {}
-
-    /// Copying a volatile
-    volatile Vec3& operator=(volatile Vec3 const& other) volatile
-    {
-        x = other.x;
-        y = other.y;
-        z = other.z;
-        return *this;
-    }
+    // Note that there are no implicit constructors for volatiles.
+    // We also can't add constructors or copy-assignment operators because they are
+    // not allowed in unnamed struct fields which is what we use for DEFINE_FIELD.
 
     volatile Vec3& operator+(volatile Vec3 const& other) volatile
     {
@@ -34,6 +24,20 @@ struct Vec3
         y += other.y;
         z += other.z;
         return *this;
+    }
+
+    void set(volatile Vec3 const& other) volatile
+    {
+        x = other.x;
+        y = other.y;
+        z = other.z;
+    }
+
+    void set(volatile Vec3 const* other) volatile
+    {
+        x = other->x;
+        y = other->y;
+        z = other->z;
     }
 };
 #pragma pack(pop)

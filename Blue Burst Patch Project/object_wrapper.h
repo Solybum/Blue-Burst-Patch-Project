@@ -11,7 +11,7 @@
 #define DECLARE_WRAPPED_METHOD(index, ret_type, name, ...) \
     template<typename... Args> \
     ret_type name(Args... args) { \
-        typedef ret_type (__thiscall *method)(BaseObject*, __VA_ARGS__); \
+        typedef ret_type (__thiscall *method)(BaseObject*, ##__VA_ARGS__); \
         auto vtable = reinterpret_cast<void**>(obj->vtable); \
         return reinterpret_cast<method>(vtable[index])(obj, args...); \
     }
