@@ -3,9 +3,7 @@
 src_dir="Blue Burst Patch Project"
 libs="User32.lib"
 
-if [[ "$*" == *"PATCH_NEWENEMY"* ]]; then
-    libs="$libs lib/assimp-vc142-mt.lib lib/zlibstatic.lib Advapi32.lib"
-fi
+libs="$libs lib/assimp-vc142-mt.lib lib/zlibstatic.lib Advapi32.lib"
 
 cmd="/opt/msvc/bin/x86/cl /nologo /LD /EHsc /MD /DCINTERFACE \
 /I'$src_dir' /I'$src_dir'/newgfx /Iinclude \
