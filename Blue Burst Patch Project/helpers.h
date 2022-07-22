@@ -1,5 +1,7 @@
 #pragma once
 
+#include "windows.h"
+
 int gcd(int a, int b);
 
 void PatchNOP(int addr, int size);
