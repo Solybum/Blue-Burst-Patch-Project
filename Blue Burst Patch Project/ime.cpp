@@ -1,3 +1,5 @@
+#ifdef PATCH_IME
+
 #include "pch.h"
 #include "ime.h"
 
@@ -11,3 +13,5 @@ void PatchIme()
         *(int*)addrImeCall = valImePatch;
     }
 }
+
+#endif // PATCH_IME

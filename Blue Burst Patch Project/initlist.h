@@ -8,9 +8,6 @@
 #include <string>
 #include "psobb.h"
 
-// Automatically enable patch if header is used
-#define PATCH_INITLISTS
-
 /// The idea here is to allow initlists to be modified safely from multiple different places
 class InitList
 {

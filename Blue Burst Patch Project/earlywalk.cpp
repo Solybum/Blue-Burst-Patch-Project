@@ -1,3 +1,5 @@
+#ifdef PATCH_EARLY_WALK_FIX
+
 #include "pch.h"
 #include "helpers.h"
 #include "earlywalk.h"
@@ -48,3 +50,5 @@ void ApplyEarlyWalkFix()
     // TODO: dorphon and delbiter early walk fix?
     PatchJMP(addrBoomaEarlyWalkFixI, addrBoomaEarlyWalkFixO, (int) &BoomaEarlyWalkFix);
 }
+
+#endif // PATCH_EARLY_WALK_FIX

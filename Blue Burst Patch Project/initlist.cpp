@@ -1,3 +1,5 @@
+#ifdef PATCH_INITLISTS
+
 #include <cstddef>
 #include <algorithm>
 #include <stdexcept>
@@ -237,3 +239,5 @@ std::string InitList::toString()
     sstream << "InitList(" << std::hex << (size_t) origList << ")";
     return sstream.str();
 }
+
+#endif // PATCH_INITLISTS

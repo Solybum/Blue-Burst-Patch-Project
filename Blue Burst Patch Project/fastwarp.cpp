@@ -1,3 +1,5 @@
+#ifdef PATCH_FASTWARP
+
 #include "helpers.h"
 #include "fastwarp.h"
 
@@ -117,3 +119,5 @@ void ApplyFastWarpPatch()
     PatchJMP(questDoneLoadingInAddr, questDoneLoadingOutAddr, (int) &PatchInQuest);
 #endif
 }
+
+#endif // PATCH_FASTWARP

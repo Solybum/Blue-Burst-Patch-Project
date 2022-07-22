@@ -1,8 +1,15 @@
+#include <stdint.h>
+
 #include "pch.h"
 #include "globals.h"
+
+#ifdef PATCH_IME
 #include "ime.h"
+#endif
+
+#ifdef PATCH_UNSELLABLE_RARES
 #include "shop.h"
-#include <stdint.h>
+#endif
 
 #ifdef PATCH_EARLY_WALK_FIX
 #include "earlywalk.h"
@@ -67,9 +74,13 @@ void PSOBB()
     CustomizeMenu::ApplyActionListPatch();
 #endif
 
+#ifdef PATCH_UNSELLABLE_RARES
     PatchShop();
+#endif
 
+#ifdef PATCH_IME
     PatchIme();
+#endif
 
 #ifdef PATCH_FASTWARP
     ApplyFastWarpPatch();

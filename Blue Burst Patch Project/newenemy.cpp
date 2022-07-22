@@ -1,3 +1,5 @@
+#ifdef PATCH_NEWENEMY
+
 #define _USE_MATH_DEFINES
 
 #include <cstdint>
@@ -455,3 +457,5 @@ void ApplyNewEnemyPatch()
     PatchEnemyNameUnitxtLimit();
     MakeNewEnemySpawnable();
 }
+
+#endif // PATCH_NEWENEMY

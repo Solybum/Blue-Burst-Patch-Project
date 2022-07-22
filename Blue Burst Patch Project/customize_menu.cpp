@@ -1,3 +1,5 @@
+#ifdef PATCH_CUSTOMIZE_MENU
+
 #include <iostream>
 #include <algorithm>
 #include "customize_menu.h"
@@ -98,3 +100,5 @@ namespace CustomizeMenu
         patchApplied = true;
     }
 };
+
+#endif // PATCH_CUSTOMIZE_MENU

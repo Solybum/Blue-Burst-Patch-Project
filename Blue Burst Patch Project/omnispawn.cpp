@@ -1,3 +1,5 @@
+#ifdef PATCH_OMNISPAWN
+
 #include <cstddef>
 #include <stdexcept>
 #include <map>
@@ -1767,3 +1769,5 @@ namespace Omnispawn
         patchApplied = true;
     }
 };
+
+#endif // PATCH_OMNISPAWN

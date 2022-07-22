@@ -9,10 +9,10 @@ Enables GameGuard.
 GameGuard is disabled by default, use this flag to skip that patch.  
 Note: Some GameGuard code was previously disabled in the client binary.
 
-### Unsellable rare items `[REGISTRY:TODO]`
+### Unsellable rare items `[COMPILED:PATCH_UNSELLABLE_RARES]`
 Prevents you from selling rare items to vendors.
 
-### Enable IME `[REGISTRY:TODO]`
+### Enable IME `[COMPILED:PATCH_IME]`
 Enables the use of IME.
 
 ### Early walk fix `[COMPILED:PATCH_EARLY_WALK_FIX]`

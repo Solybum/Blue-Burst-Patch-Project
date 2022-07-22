@@ -1,3 +1,5 @@
+#ifdef USE_NEWGFX
+
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -274,3 +276,5 @@ void Model::UseTransparentShading()
         mesh.UseTransparentShading();
     }
 }
+
+#endif // USE_NEWGFX

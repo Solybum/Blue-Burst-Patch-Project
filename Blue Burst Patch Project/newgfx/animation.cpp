@@ -1,3 +1,5 @@
+#ifdef USE_NEWGFX
+
 #include <stdexcept>
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
@@ -290,3 +292,5 @@ bool AnimatedModel::AnimationEnded() const
     if (currentAnimation == nullptr) return true;
     return currentTime >= currentAnimation->duration;
 }
+
+#endif // USE_NEWGFX

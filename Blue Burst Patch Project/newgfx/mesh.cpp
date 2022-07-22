@@ -1,3 +1,5 @@
+#ifdef USE_NEWGFX
+
 #include <stdexcept>
 #include <cstring>
 #include <cassert>
@@ -236,3 +238,5 @@ void Mesh::UseTransparentShading()
 {
     shadingMode = ShadingMode::Transparent;
 }
+
+#endif // USE_NEWGFX

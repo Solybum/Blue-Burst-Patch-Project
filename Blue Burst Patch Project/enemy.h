@@ -7,9 +7,6 @@
 #include "battleparam.h"
 #include "object.h"
 
-// Automatically enable patching if included
-#define PATCH_ENEMY_CONSTRUCTOR_LISTS
-
 namespace Enemy
 {
 
@@ -283,7 +280,7 @@ namespace Enemy
             uint8_t _padding[0x37c];
         };
 
-        EnemyBase::EnemyBase(void* parentObject);
+        EnemyBase(void* parentObject);
 
         void Destruct(bool32 freeMemory);
     };

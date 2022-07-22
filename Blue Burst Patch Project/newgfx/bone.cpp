@@ -1,3 +1,5 @@
+#ifdef USE_NEWGFX
+
 #include <stdexcept>
 #include "bone.h"
 
@@ -137,3 +139,5 @@ aiVector3D Bone::InterpolateScaling(float animationTime)
 
     return lerpedScale;
 }
+
+#endif // USE_NEWGFX

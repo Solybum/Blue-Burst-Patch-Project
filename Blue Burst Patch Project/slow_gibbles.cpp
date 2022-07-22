@@ -1,3 +1,5 @@
+#ifdef PATCH_SLOW_GIBBLES_FIX
+
 #include <cstdint>
 #include "pch.h"
 #include "helpers.h"
@@ -20,3 +22,5 @@ void ApplySlowGibblesFix()
     lst.AddSizeReferenceAddress({0x007bcb80 + 1, 0x007bd158 + 1, 0x007bd558 + 1});
     lst.AddListReferenceAddress({0x007bcb82 + 1, 0x007bd15a + 1, 0x007bd55a + 1});
 }
+
+#endif // PATCH_SLOW_GIBBLES_FIX

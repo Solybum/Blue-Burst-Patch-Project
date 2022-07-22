@@ -1,3 +1,5 @@
+#ifdef PATCH_UNSELLABLE_RARES
+
 #include "pch.h"
 #include "helpers.h"
 #include "shop.h"
@@ -37,3 +39,5 @@ void PatchShop()
         PatchJMP(addrNoSellRareToolI, addrNoSellRareToolO, (int)&NoSellRareTool);
     }
 }
+
+#endif // PATCH_UNSELLABLE_RARES

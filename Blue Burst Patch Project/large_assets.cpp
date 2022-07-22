@@ -1,3 +1,5 @@
+#ifdef PATCH_LARGE_ASSETS
+
 #include <stdint.h>
 #include <vector>
 #include "large_assets.h"
@@ -32,3 +34,5 @@ void ApplyLargeAssetsPatch()
         *(uint32_t*) addr = newsize;
     }
 }
+
+#endif // PATCH_LARGE_ASSETS

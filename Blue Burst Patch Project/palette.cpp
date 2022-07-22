@@ -1,3 +1,5 @@
+#ifdef PATCH_KEYBOARD_ALTERNATE_PALETTE
+
 #include "pch.h"
 #include "helpers.h"
 #include "palette.h"
@@ -209,3 +211,5 @@ void PatchPalette()
     PatchJMP(addrCheckHotkey3_1I, addrCheckHotkey3_1O, (int)&CheckHotkey3_1);
     PatchJMP(addrCheckHotkey3_2I, addrCheckHotkey3_2O, (int)&CheckHotkey3_2);
 }
+
+#endif // PATCH_KEYBOARD_ALTERNATE_PALETTE
