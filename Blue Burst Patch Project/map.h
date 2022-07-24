@@ -61,7 +61,9 @@ namespace Map
         Invalid  =  0xffffffff
     };
 
+#ifdef PATCH_INITLISTS
     InitList& GetMapInitList(MapType);
+#endif // PATCH_INITLISTS
 
     class MapObjectWrapper : public EntityList::BaseEntityWrapper
     {

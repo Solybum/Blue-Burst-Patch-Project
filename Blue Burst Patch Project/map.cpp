@@ -2,6 +2,7 @@
 
 namespace Map
 {
+#ifdef PATCH_INITLISTS
     InitList& GetMapInitList(MapType map)
     {
         InitList::FunctionPair** mapInitLists = reinterpret_cast<InitList::FunctionPair**>(0x009fcae0);
@@ -9,4 +10,5 @@ namespace Map
         lst.AddListReferenceAddress(&mapInitLists[(size_t) map]);
         return lst;
     }
+#endif // PATCH_INITLISTS
 };
