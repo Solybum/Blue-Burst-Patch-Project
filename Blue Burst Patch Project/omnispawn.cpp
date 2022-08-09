@@ -1323,13 +1323,11 @@ namespace Omnispawn
         {NewBPIndex::Canadine             , InitList::FunctionPair(0x005420f4, 0x0053e718)},
         // {NewBPIndex::CanadineRing         , InitList::FunctionPair(0x, 0x)}, // Same as Canadine
         // {NewBPIndex::Canane               , InitList::FunctionPair(0x, 0x)},
-        /*
         {NewBPIndex::ChaosSorcerer        , InitList::FunctionPair(0x0059d6ac, 0x0059b164)},
         // {NewBPIndex::BeeR                 , InitList::FunctionPair(0x, 0x)},
         // {NewBPIndex::BeeL                 , InitList::FunctionPair(0x, 0x)}, // Inside Chaos Sorcerer's function
         {NewBPIndex::ChaosBringer         , InitList::FunctionPair(0x0053c914, 0x0053a378)},
         {NewBPIndex::DarkBelra            , InitList::FunctionPair(0x00538ef4, 0x00536b0c)},
-        */
         // {NewBPIndex::SinowGold            , InitList::FunctionPair(0x, 0x)}, // Same as Sinow Beat
         {NewBPIndex::RagRappy             , InitList::FunctionPair(0x00527934, 0x00526c64)},
         // {NewBPIndex::AlRappy              , InitList::FunctionPair(0x, 0x)}, // Same as Rag Rappy

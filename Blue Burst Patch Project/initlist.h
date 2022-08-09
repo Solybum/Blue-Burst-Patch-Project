@@ -33,7 +33,7 @@ public:
 
     // The instruction operands we patch are often byte-sized, so that is the maximum size we can use. This could be made configurable if needed.
     typedef uint8_t SizeRefValueType;
-    static const size_t MAX_FN_PAIR_COUNT = sizeof(SizeRefValueType) / sizeof(FunctionPair);
+    static const size_t MAX_FN_PAIR_COUNT = sizeof(SizeRefValueType) * 0xff / sizeof(FunctionPair);
 
 private:
     friend void PSOBB();
@@ -79,6 +79,12 @@ public:
 
     /// Should terminate list with a null element?
     void SetNullTerminated(bool);
+
+    /// Appends the init function pairs from another initist.
+    void Append(const InitList& other);
+
+    /// Removes all init function pairs.
+    void Clear();
 
     static InitList& GetInitList(size_t listStartAddr, size_t listEndAddr);
     static InitList& GetInitList(const FunctionPair* listStart, const FunctionPair* listEnd);

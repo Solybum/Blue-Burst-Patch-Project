@@ -155,6 +155,19 @@ void InitList::SetNullTerminated(bool option)
     nullTerminated = option;
 }
 
+void InitList::Append(const InitList& other)
+{
+    for (const auto& pair : other.functionPairs)
+    {
+        AddFunctionPair(pair);
+    }
+}
+
+void InitList::Clear()
+{
+    functionPairs.clear();
+}
+
 bool InitList::HasChanged()
 {
     return functionPairs.size() != origPairCount;
@@ -171,14 +184,14 @@ void InitList::Patch()
     // This whole thing won't do anything if there isn't at least one list reference
     if (listReferenceAddresses.empty())
     {
-        std::runtime_error(toString() + ": At least one list reference must be defined");
+        throw std::runtime_error(toString() + ": At least one list reference must be defined");
     }
 
-    // Check initlist size
+    // If not null-terminated we need to ensure the size will fit
     size_t pairCount = functionPairs.size();
-    if (pairCount > MAX_FN_PAIR_COUNT)
+    if (!nullTerminated && pairCount > MAX_FN_PAIR_COUNT)
     {
-        std::runtime_error(toString() + ": Too many function pairs (was: " +
+        throw std::runtime_error(toString() + ": Too many function pairs (was: " +
             std::to_string(pairCount) + ", max: " + std::to_string(MAX_FN_PAIR_COUNT) + ")");
     }
 
@@ -221,7 +234,7 @@ void InitList::PatchAllInitLists()
     {
         // Patching twice could cause problems if initlists were modified in between
         // This should never happen anyway, but just in case
-        std::runtime_error("InitList: Tried to apply patch twice");
+        throw std::runtime_error("InitList: Tried to apply patch twice");
     }
 
     for (const auto& entry : initLists)
