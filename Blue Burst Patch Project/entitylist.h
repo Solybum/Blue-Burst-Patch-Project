@@ -13,6 +13,7 @@ namespace EntityList
         BaseEntityWrapper(void* obj);
 
         DECLARE_WRAPPED_MEMBER(0x1c, EntityIndex, entityIndex);
+        DECLARE_WRAPPED_MEMBER(0x28, int16_t, mapSection);
         DECLARE_WRAPPED_MEMBER(0x38, Vec3<float>, position);
 
         DECLARE_WRAPPED_METHOD(23, void, GetHit, void* attacker, float damageMultiplier);
@@ -62,5 +63,6 @@ namespace EntityList
     EntityIterator Players();
     EntityIterator Enemies();
     EntityIterator Objects();
+    EntityIterator PlayersAndEnemies();
     void* FindEntity(uint16_t entityIndex);
 };

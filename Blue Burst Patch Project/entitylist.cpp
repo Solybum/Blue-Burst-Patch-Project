@@ -40,8 +40,15 @@ namespace EntityList
         return EntityIterator(entityList + *playerCount + *enemyCount, *objectCount);
     }
 
-    void* FindEntity(uint16_t entityIndex)
+    EntityIterator PlayersAndEnemies()
     {
+        return EntityIterator(entityList, *playerCount + *enemyCount);
+    }
+
+    void* FindEntity(EntityIndex entityIndex)
+    {
+        if (entityIndex == -1) return nullptr;
+
         for (auto it = entityList, end = entityList + *totalEntityCount; it != end; it++)
         {
             auto entity = BaseEntityWrapper(*it);
