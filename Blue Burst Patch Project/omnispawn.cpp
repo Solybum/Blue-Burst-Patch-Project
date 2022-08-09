@@ -28,7 +28,8 @@ namespace Omnispawn
     using Omnispawn::NewBPIndex;
 
     /// Enemies that appear in both Episode 1 and 2
-    std::vector<NewBPIndex> ep1AndEp2SharedEnemies = {
+    std::vector<NewBPIndex> ep1AndEp2SharedEnemies =
+    {
         NewBPIndex::Mothmant,
         NewBPIndex::Monest,
         NewBPIndex::SavageWolf,
@@ -56,7 +57,8 @@ namespace Omnispawn
         NewBPIndex::SoDimenian
     };
 
-    struct BPIndexAll {
+    struct BPIndexAll
+    {
         BPStatsIndex stats;
         BPAttacksIndex attacks;
         BPResistsIndex resists;
@@ -70,7 +72,8 @@ namespace Omnispawn
     };
 
     /// Map new indices to old
-    std::map<NewBPIndex, BPIndexAll> newBpIndexMap = {
+    std::map<NewBPIndex, BPIndexAll> newBpIndexMap =
+    {
         {NewBPIndex::Mothmant, BPIndexAll(
             BPStatsIndex::ep1_Mothmant__ep2_Mothmant__ep4_Boota,
             BPAttacksIndex::ep1_Mothmant__ep2_Mothmant__ep4_Boota,
@@ -662,7 +665,8 @@ namespace Omnispawn
         )}
     };
 
-    struct HardcodedBPIndexLocations {
+    struct HardcodedBPIndexLocations
+    {
         // size_t because it's more convenient for data entry.
         // vector because some enemies use multiple entries,
         // or their bp is fetched in multiple places.
@@ -675,7 +679,8 @@ namespace Omnispawn
             stats(stats_), attacks(attacks_), resists(resists_), animations(animations_) {}
     };
 
-    std::map<NewBPIndex, HardcodedBPIndexLocations> hardcodedBPIndexLocations = {
+    std::map<NewBPIndex, HardcodedBPIndexLocations> hardcodedBPIndexLocations =
+    {
         {NewBPIndex::Mothmant, HardcodedBPIndexLocations(
             {0x00518ea6},
             {0x00518eb2},
@@ -1312,7 +1317,8 @@ namespace Omnispawn
         )},
     };
 
-    std::map<NewBPIndex, InitList::FunctionPair> enemyInitFuncPairs = {
+    std::map<NewBPIndex, InitList::FunctionPair> enemyInitFuncPairs =
+    {
         // {NewBPIndex::Mothmant             , InitList::FunctionPair(0x, 0x)}, // Inside Monest's function
         {NewBPIndex::Monest               , InitList::FunctionPair(0x0051ad94, 0x00519120)},
         {NewBPIndex::SavageWolf           , InitList::FunctionPair(0x0051ea94, 0x0051b24c)},
@@ -1403,7 +1409,8 @@ namespace Omnispawn
         {NewBPIndex::Girtablulu           , InitList::FunctionPair(0x005ac6e4, 0x005ab954)},
     };
 
-    NpcType newEnemies[] = {
+    NpcType newEnemies[] =
+    {
         NpcType::Hildebear,
         NpcType::Rag_Rappy_Sand_Rappy,
         NpcType::Monest,
@@ -1454,6 +1461,42 @@ namespace Omnispawn
         NpcType::Goran,
     };
 
+    // Excluded P2, boss, lobby, and battle maps
+    MapType patchMaps[] =
+    {
+        MapType::Forest1,
+        MapType::Forest2,
+        MapType::Cave1,
+        MapType::Cave2,
+        MapType::Cave3,
+        MapType::Mines1,
+        MapType::Mines2,
+        MapType::Ruins1,
+        MapType::Ruins2,
+        MapType::Ruins3,
+        MapType::Temple_A,
+        MapType::Temple_B,
+        MapType::Spaceship_A,
+        MapType::Spaceship_B,
+        MapType::CCA,
+        MapType::Jungle_East,
+        MapType::Jungle_North,
+        MapType::Mountain,
+        MapType::Seaside,
+        MapType::Seabed_Upper,
+        MapType::Seabed_Lower,
+        MapType::Seaside_Night,
+        MapType::Tower,
+        MapType::Wilds1,
+        MapType::Wilds2,
+        MapType::Wilds3,
+        MapType::Wilds4,
+        MapType::Crater,
+        MapType::Desert1,
+        MapType::Desert2,
+        MapType::Desert3
+    };
+
     /// Add enemies to the lists that the game uses to find the enemy constructor for each map
     void PatchMapEnemyLists()
     {
@@ -1502,9 +1545,9 @@ namespace Omnispawn
     /// Add enemy global init functions to each map's initlist
     void PatchMapInitLists()
     {
-        for (size_t i = 0; i <= (size_t) MapType::MAX_INDEX; i++)
+        for (MapType map : patchMaps)
         {
-            InitList& mapInitList = Map::GetMapInitList((MapType) i);
+            InitList& mapInitList = Map::GetMapInitList((MapType) map);
 
             for (const auto& entry : enemyInitFuncPairs)
             {
