@@ -226,6 +226,35 @@ namespace Enemy
         Dead = 0x800
     };
 
+    struct EnemyBase;
+
+    struct InitData
+    {
+        int16_t skin;
+        uint16_t flags;
+        struct InnerData
+        {
+            int16_t indexSmall;
+            uint16_t cloneCount;
+            int16_t floorNumber;
+            int16_t entityLarge;
+            int16_t mapSection;
+            int16_t waveNumber;
+            int16_t waveNumber2;
+            int16_t unknown;
+            Vec3f position;
+            Vec3<int32_t> rotation;
+            float param1;
+            float param2;
+            float param3;
+            float param4;
+            float param5;
+            int16_t param6;
+            int16_t param7;
+            EnemyBase* spawnedInstance;
+        } data;
+    };
+
     struct EnemyBase
     {
         struct Vtable {
@@ -234,7 +263,7 @@ namespace Enemy
                 DEFINE_FIELD(0x4, void (__thiscall *Update)(void* self));
                 DEFINE_FIELD(0x8, void (__thiscall *Render)(void* self));
                 DEFINE_FIELD(0xc, void (__thiscall *RenderShadow)(void* self));
-                DEFINE_FIELD(0x14c, void (__thiscall *ApplyInitData)(void* self, void* initData));
+                DEFINE_FIELD(0x14c, void (__thiscall *ApplyInitData)(void* self, InitData::InnerData* initData));
             };
         };
 
@@ -256,6 +285,7 @@ namespace Enemy
                 DEFINE_FIELD(0x44, Vec3<float> xyz5);
                 DEFINE_FIELD(0x50, Vec3<float> xyz1);
                 DEFINE_FIELD(0x5c, Vec3<uint32_t> rotation);
+                DEFINE_FIELD(0x80, InitData* initData);
                 DEFINE_FIELD(0xb8, uint16_t animationId);
                 DEFINE_FIELD(0xc0, float currentAnimationCounter);
                 DEFINE_FIELD(0xc4, float currentAnimationLength);
