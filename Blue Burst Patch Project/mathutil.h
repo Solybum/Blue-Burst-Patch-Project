@@ -45,6 +45,14 @@ struct Vec3
 typedef Vec3<float> Vec3f;
 
 template<typename T>
+auto DistanceSquaredXZ(Vec3<T> const& a, Vec3<T> const& b)
+{
+    auto dx = a.x - b.x;
+    auto dz = a.z - b.z;
+    return fabs(dx * dx + dz * dz);
+}
+
+template<typename T>
 auto DistanceSquaredXZ(volatile Vec3<T> const& a, volatile Vec3<T> const& b)
 {
     auto dx = a.x - b.x;
@@ -69,3 +77,28 @@ template<typename T>
 int Sign(T val) {
     return (T(0) < val) - (val < T(0));
 }
+
+template<typename T>
+T Sign(Vec3<T> p1, Vec3<T> p2, Vec3<T> p3)
+{
+    return (p1.x - p3.x) * (p2.z - p3.z) - (p2.x - p3.x) * (p1.z - p3.z);
+}
+
+template<typename T>
+bool PointInTriangle (Vec3<T> pt, Vec3<T> v1, Vec3<T> v2, Vec3<T> v3)
+{
+    T d1, d2, d3;
+    bool has_neg, has_pos;
+
+    d1 = Sign(pt, v1, v2);
+    d2 = Sign(pt, v2, v3);
+    d3 = Sign(pt, v3, v1);
+
+    has_neg = (d1 < 0) || (d2 < 0) || (d3 < 0);
+    has_pos = (d1 > 0) || (d2 > 0) || (d3 > 0);
+
+    return !(has_neg && has_pos);
+}
+
+double DegToRad(double deg);
+double RadToDeg(double rad);
