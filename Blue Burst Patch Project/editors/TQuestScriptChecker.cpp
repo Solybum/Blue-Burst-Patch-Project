@@ -1,4 +1,5 @@
 #include "pch.h"
+#ifdef PATCH_EDITORS
 #include <stdlib.h>
 #include "helpers.h"
 #include "editors.h"
@@ -227,3 +228,4 @@ void ApplyTQuestScriptCheckerPatches()
         PatchCALL(addr, addr + 5, (int)&NJPrintAtWithColor);
     ReplaceTEditorRenderMethods(vtableRenderAddrs, _countof(vtableRenderAddrs));
 }
+#endif

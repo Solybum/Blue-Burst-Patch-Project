@@ -1,5 +1,5 @@
 #include "pch.h"
-#include <stdint.h>
+#ifdef PATCH_EDITORS
 #include <stdlib.h>
 #include "helpers.h"
 #include "psobb_functions.h"
@@ -90,3 +90,5 @@ void ApplyTParticleEditorPatches()
     PatchNJPrintAtCalls(njPrintAtCalls, _countof(njPrintAtCalls));
     ReplaceTEditorRenderMethods(renderMethods, _countof(renderMethods));
 }
+
+#endif

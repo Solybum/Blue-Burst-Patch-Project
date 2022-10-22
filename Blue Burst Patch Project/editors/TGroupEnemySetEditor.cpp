@@ -1,4 +1,5 @@
 #include "pch.h"
+#ifdef PATCH_EDITORS
 #include <stdlib.h>
 #include "helpers.h"
 #include "editors.h"
@@ -198,4 +199,4 @@ void ApplyTGroupEnemySetEditorPatches()
     for (uint32_t addr : setColorNjPrintAtCalls)
         PatchCALL(addr, addr + 5, (int)&NJPrintAtWithColor);
 }
-
+#endif

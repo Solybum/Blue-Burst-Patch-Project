@@ -1,4 +1,5 @@
 #include "pch.h"
+#ifdef PATCH_EDITORS
 #include <stdlib.h>
 #include "helpers.h"
 #include "editors.h"
@@ -85,3 +86,4 @@ void ApplyTSetEvtScriptTestPatches()
     PatchNJPrintAtCalls(njPrintAtCalls, _countof(njPrintAtCalls));
     ReplaceTEditorRenderMethods(vtableRenderAddrs, _countof(vtableRenderAddrs));
 }
+#endif
