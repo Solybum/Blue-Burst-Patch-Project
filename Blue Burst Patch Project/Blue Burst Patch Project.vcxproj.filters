@@ -13,6 +13,15 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\newgfx">
+      <UniqueIdentifier>{fab43524-a05e-4638-879d-96b02eba84ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\newgfx">
+      <UniqueIdentifier>{02491962-4d35-4789-84e1-bffaa9abadac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\editors">
+      <UniqueIdentifier>{9f6c8e6d-d230-4725-923d-fdaec9ac1569}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -39,6 +48,75 @@
     <ClInclude Include="ime.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="editors.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="newgfx\animation.h">
+      <Filter>Header Files\newgfx</Filter>
+    </ClInclude>
+    <ClInclude Include="newgfx\bone.h">
+      <Filter>Header Files\newgfx</Filter>
+    </ClInclude>
+    <ClInclude Include="newgfx\mesh.h">
+      <Filter>Header Files\newgfx</Filter>
+    </ClInclude>
+    <ClInclude Include="newgfx\model.h">
+      <Filter>Header Files\newgfx</Filter>
+    </ClInclude>
+    <ClInclude Include="battleparam.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="common.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="customize_menu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="earlywalk.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="enemy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="entitylist.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="fastwarp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="initlist.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="large_assets.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="map.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mathutil.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="newenemy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="object.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="object_extension.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="object_wrapper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="omnispawn.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="slow_gibbles.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="psobb_functions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -60,6 +138,96 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ime.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="newgfx\animation.cpp">
+      <Filter>Source Files\newgfx</Filter>
+    </ClCompile>
+    <ClCompile Include="newgfx\bone.cpp">
+      <Filter>Source Files\newgfx</Filter>
+    </ClCompile>
+    <ClCompile Include="newgfx\mesh.cpp">
+      <Filter>Source Files\newgfx</Filter>
+    </ClCompile>
+    <ClCompile Include="newgfx\model.cpp">
+      <Filter>Source Files\newgfx</Filter>
+    </ClCompile>
+    <ClCompile Include="battleparam.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="common.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="customize_menu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="earlywalk.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="enemy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="entitylist.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fastwarp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="initlist.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="large_assets.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="map.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mathutil.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="newenemy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="object.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="object_extension.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="object_wrapper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="omnispawn.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="slow_gibbles.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="editors.cpp">
+      <Filter>Source Files\editors</Filter>
+    </ClCompile>
+    <ClCompile Include="editors\TCameraEditor.cpp">
+      <Filter>Source Files\editors</Filter>
+    </ClCompile>
+    <ClCompile Include="editors\TFreeCamera.cpp">
+      <Filter>Source Files\editors</Filter>
+    </ClCompile>
+    <ClCompile Include="editors\TGroupEnemySetEditor.cpp">
+      <Filter>Source Files\editors</Filter>
+    </ClCompile>
+    <ClCompile Include="editors\TGroupSetEditor.cpp">
+      <Filter>Source Files\editors</Filter>
+    </ClCompile>
+    <ClCompile Include="editors\TParticleEditor.cpp">
+      <Filter>Source Files\editors</Filter>
+    </ClCompile>
+    <ClCompile Include="editors\TQuestScriptChecker.cpp">
+      <Filter>Source Files\editors</Filter>
+    </ClCompile>
+    <ClCompile Include="editors\TSetEvtScriptTest.cpp">
+      <Filter>Source Files\editors</Filter>
+    </ClCompile>
+    <ClCompile Include="psobb_functions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
