@@ -46,10 +46,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <TargetName>bbpp</TargetName>
+    <IncludePath>.;..\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <TargetName>bbpp</TargetName>
+    <IncludePath>.;..\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -86,26 +88,79 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="battleparam.h" />
+    <ClInclude Include="common.h" />
+    <ClInclude Include="customize_menu.h" />
+    <ClInclude Include="earlywalk.h" />
+    <ClInclude Include="editors.h" />
+    <ClInclude Include="enemy.h" />
+    <ClInclude Include="entitylist.h" />
+    <ClInclude Include="fastwarp.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="globals.h" />
     <ClInclude Include="helpers.h" />
     <ClInclude Include="ime.h" />
+    <ClInclude Include="initlist.h" />
+    <ClInclude Include="large_assets.h" />
+    <ClInclude Include="map.h" />
+    <ClInclude Include="mathutil.h" />
+    <ClInclude Include="newenemy.h" />
+    <ClInclude Include="newgfx\animation.h" />
+    <ClInclude Include="newgfx\bone.h" />
+    <ClInclude Include="newgfx\mesh.h" />
+    <ClInclude Include="newgfx\model.h" />
+    <ClInclude Include="object.h" />
+    <ClInclude Include="object_extension.h" />
+    <ClInclude Include="object_wrapper.h" />
+    <ClInclude Include="omnispawn.h" />
     <ClInclude Include="palette.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="psobb.h" />
+    <ClInclude Include="psobb_functions.h" />
     <ClInclude Include="shop.h" />
+    <ClInclude Include="slow_gibbles.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="battleparam.cpp" />
+    <ClCompile Include="common.cpp" />
+    <ClCompile Include="customize_menu.cpp" />
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="earlywalk.cpp" />
+    <ClCompile Include="editors.cpp" />
+    <ClCompile Include="editors\TCameraEditor.cpp" />
+    <ClCompile Include="editors\TFreeCamera.cpp" />
+    <ClCompile Include="editors\TGroupEnemySetEditor.cpp" />
+    <ClCompile Include="editors\TGroupSetEditor.cpp" />
+    <ClCompile Include="editors\TParticleEditor.cpp" />
+    <ClCompile Include="editors\TQuestScriptChecker.cpp" />
+    <ClCompile Include="editors\TSetEvtScriptTest.cpp" />
+    <ClCompile Include="enemy.cpp" />
+    <ClCompile Include="entitylist.cpp" />
+    <ClCompile Include="fastwarp.cpp" />
     <ClCompile Include="helpers.cpp" />
+    <ClCompile Include="initlist.cpp" />
+    <ClCompile Include="large_assets.cpp" />
+    <ClCompile Include="map.cpp" />
+    <ClCompile Include="mathutil.cpp" />
+    <ClCompile Include="newenemy.cpp" />
+    <ClCompile Include="newgfx\animation.cpp" />
+    <ClCompile Include="newgfx\bone.cpp" />
+    <ClCompile Include="newgfx\mesh.cpp" />
+    <ClCompile Include="newgfx\model.cpp" />
+    <ClCompile Include="object.cpp" />
+    <ClCompile Include="object_extension.cpp" />
+    <ClCompile Include="object_wrapper.cpp" />
+    <ClCompile Include="omnispawn.cpp" />
     <ClCompile Include="palette.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="psobb.cpp" />
+    <ClCompile Include="psobb_functions.cpp" />
     <ClCompile Include="shop.cpp" />
     <ClCompile Include="ime.cpp" />
+    <ClCompile Include="slow_gibbles.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
