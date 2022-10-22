@@ -1,3 +1,4 @@
+#include "pch.h"
 #ifdef PATCH_LARGE_ASSETS
 
 #include <stdint.h>

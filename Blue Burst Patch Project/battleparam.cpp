@@ -1,3 +1,4 @@
+#include "pch.h"
 #include <cstddef>
 #include <stdexcept>
 #include "battleparam.h"
