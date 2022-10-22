@@ -172,7 +172,7 @@ static void __declspec(naked) ShowChange3()
 
         mov edi, dword ptr[esp];
         mov ebp, dword ptr[esp + 0x04];
-        push 0x6ba9a0;
+        push 0x6ba9a4;
         ret;
     }
 }
