@@ -1,4 +1,4 @@
-#include <Windows.h>
+#include <windows.h>
 #include <cstddef>
 #include <stdexcept>
 #include "battleparam.h"
