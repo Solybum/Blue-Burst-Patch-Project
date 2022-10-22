@@ -10,7 +10,7 @@ float* gibblesJumpAnimSpeed = (float*) 0x009be1e8;
 void __cdecl SlowGibblesFix()
 {
     // Restore jump speed
-    *gibblesJumpAnimSpeed = 0.7;
+    *gibblesJumpAnimSpeed = (float)0.7;
 }
 
 void ApplySlowGibblesFix()
