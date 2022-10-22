@@ -39,6 +39,7 @@ add_library(${PROJECT_NAME} SHARED
     earlywalk.cpp
     enemy.cpp
     entitylist.cpp
+    entity.cpp
     fastwarp.cpp
     helpers.cpp
     ime.cpp
@@ -82,3 +83,6 @@ endif()
 
 # Force 32-bit target
 set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS -m32 LINK_FLAGS -m32)
+
+# Define DEBUG in debug mode
+target_compile_definitions(${PROJECT_NAME} PUBLIC "$<$<CONFIG:DEBUG>:DEBUG>")

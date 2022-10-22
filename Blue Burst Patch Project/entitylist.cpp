@@ -2,8 +2,6 @@
 
 namespace EntityList
 {
-    BaseEntityWrapper::BaseEntityWrapper(void* obj) : ObjectWrapper(obj) {}
-
     uint32_t* playerCount = reinterpret_cast<uint32_t*>(0x00aae168);
     uint32_t* enemyCount = reinterpret_cast<uint32_t*>(0x00aae164);
     uint32_t* objectCount = reinterpret_cast<uint32_t*>(0x00aae160);
@@ -45,13 +43,13 @@ namespace EntityList
         return EntityIterator(entityList, *playerCount + *enemyCount);
     }
 
-    void* FindEntity(EntityIndex entityIndex)
+    void* FindEntity(Entity::EntityIndex entityIndex)
     {
         if (entityIndex == -1) return nullptr;
 
         for (auto it = entityList, end = entityList + *totalEntityCount; it != end; it++)
         {
-            auto entity = BaseEntityWrapper(*it);
+            auto entity = Entity::BaseEntityWrapper(*it);
             if (entity.entityIndex() == entityIndex)
             {
                 return *it;

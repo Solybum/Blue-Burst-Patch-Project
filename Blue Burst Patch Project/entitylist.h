@@ -3,22 +3,10 @@
 #include <cstdint>
 #include <iterator>
 #include "common.h"
-#include "object_wrapper.h"
+#include "entity.h"
 
 namespace EntityList
 {
-    class BaseEntityWrapper : public ObjectWrapper
-    {
-    public:
-        BaseEntityWrapper(void* obj);
-
-        DECLARE_WRAPPED_MEMBER(0x1c, EntityIndex, entityIndex);
-        DECLARE_WRAPPED_MEMBER(0x28, int16_t, mapSection);
-        DECLARE_WRAPPED_MEMBER(0x38, Vec3<float>, position);
-
-        DECLARE_WRAPPED_METHOD(23, void, GetHit, void* attacker, float damageMultiplier);
-    };
-
     extern uint32_t* playerCount;
     extern uint32_t* enemyCount;
     extern uint32_t* objectCount;
@@ -64,5 +52,5 @@ namespace EntityList
     EntityIterator Enemies();
     EntityIterator Objects();
     EntityIterator PlayersAndEnemies();
-    void* FindEntity(uint16_t entityIndex);
+    void* FindEntity(Entity::EntityIndex entityIndex);
 };

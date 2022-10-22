@@ -6,6 +6,7 @@
 #include "object_extension.h"
 #include "battleparam.h"
 #include "object.h"
+#include "entity.h"
 
 namespace Enemy
 {
@@ -142,7 +143,36 @@ namespace Enemy
         ListTerminator = 0xffff
     };
 
-    typedef void* (__cdecl *EnemyConstructor)(void*);
+    struct EnemyBase;
+
+    struct InitData
+    {
+        int16_t skin;
+        uint16_t flags;
+        struct InnerData
+        {
+            int16_t indexSmall;
+            uint16_t cloneCount;
+            int16_t floorNumber;
+            int16_t entityLarge;
+            int16_t mapSection;
+            int16_t waveNumber;
+            int16_t waveNumber2;
+            int16_t unknown;
+            Vec3f position;
+            Vec3<int32_t> rotation;
+            float param1;
+            float param2;
+            float param3;
+            float param4;
+            float param5;
+            int16_t param6;
+            int16_t param7;
+            EnemyBase* spawnedInstance;
+        } data;
+    };
+
+    typedef void* (__cdecl *EnemyConstructor)(InitData::InnerData*);
 
 #pragma pack(push, 1)
     struct TaggedEnemyConstructor
@@ -214,47 +244,6 @@ namespace Enemy
         Special = 0x40
     };
 
-    enum EntityFlag : uint32_t
-    {
-        Poisoned = 1,
-        Paralyzed = 2,
-        Shocked = 4,
-        Slowed = 8,
-        Confused = 0x10,
-        Frozen = 0x20,
-        TookDamage = 0x200,
-        Dead = 0x800
-    };
-
-    struct EnemyBase;
-
-    struct InitData
-    {
-        int16_t skin;
-        uint16_t flags;
-        struct InnerData
-        {
-            int16_t indexSmall;
-            uint16_t cloneCount;
-            int16_t floorNumber;
-            int16_t entityLarge;
-            int16_t mapSection;
-            int16_t waveNumber;
-            int16_t waveNumber2;
-            int16_t unknown;
-            Vec3f position;
-            Vec3<int32_t> rotation;
-            float param1;
-            float param2;
-            float param3;
-            float param4;
-            float param5;
-            int16_t param6;
-            int16_t param7;
-            EnemyBase* spawnedInstance;
-        } data;
-    };
-
     struct EnemyBase
     {
         struct Vtable {
@@ -277,9 +266,10 @@ namespace Enemy
 
             union {
                 DEFINE_FIELD(0x8, ObjectFlag objectFlags);
+                DEFINE_FIELD(0x1c, Entity::EntityIndex entityIndex);
                 DEFINE_FIELD(0x24, void* njtl);
                 DEFINE_FIELD(0x28, uint16_t originalMapSection);
-                DEFINE_FIELD(0x30, EntityFlag entityFlags);
+                DEFINE_FIELD(0x30, Entity::EntityFlag entityFlags);
                 DEFINE_FIELD(0x34, void* njcm);
                 DEFINE_FIELD(0x38, Vec3<float> xyz2);
                 DEFINE_FIELD(0x44, Vec3<float> xyz5);

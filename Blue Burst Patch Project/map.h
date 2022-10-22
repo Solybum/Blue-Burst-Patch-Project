@@ -2,7 +2,7 @@
 
 #include <cstdint>
 #include "initlist.h"
-#include "entitylist.h"
+#include "entity.h"
 #include "object_wrapper.h"
 
 namespace Map
@@ -65,7 +65,7 @@ namespace Map
     InitList& GetMapInitList(MapType);
 #endif // PATCH_INITLISTS
 
-    class MapObjectWrapper : public EntityList::BaseEntityWrapper
+    class MapObjectWrapper : public Entity::BaseEntityWrapper
     {
     public:
         MapObjectWrapper(void* obj) : BaseEntityWrapper(obj) {}

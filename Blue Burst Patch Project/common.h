@@ -110,9 +110,6 @@ extern bool32 (__thiscall *CheckAnimationDuration)(void* entity, float duration)
 extern void (__cdecl *PlaySoundEffect)(uint32_t soundId, Vec3<float>* position);
 extern void (__cdecl *PlayParticleEffect)(Vec3f* position, size_t effectId, size_t delay, size_t duration);
 
-typedef int16_t EntityIndex;
-const EntityIndex UndefinedEntityIndex = -1;
-
 extern IDirect3DDevice8** d3dDevice;
 
 #if defined(WIN32) || defined(_WIN32) 
