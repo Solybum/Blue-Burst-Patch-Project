@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "object_extension.h"
 
 MainArenaAllocFunction MainArenaAlloc = reinterpret_cast<MainArenaAllocFunction>(0x005caba4);

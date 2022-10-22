@@ -1,7 +1,7 @@
+#include "pch.h"
 #ifdef PATCH_SLOW_GIBBLES_FIX
 
 #include <cstdint>
-#include "pch.h"
 #include "helpers.h"
 #include "slow_gibbles.h"
 #include "initlist.h"

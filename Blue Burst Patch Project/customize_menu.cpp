@@ -1,3 +1,4 @@
+#include "pch.h"
 #ifdef PATCH_CUSTOMIZE_MENU
 
 #include <iostream>

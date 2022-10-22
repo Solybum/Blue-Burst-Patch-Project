@@ -1,3 +1,4 @@
+#include "pch.h"
 #ifdef PATCH_NEWENEMY
 
 #define _USE_MATH_DEFINES

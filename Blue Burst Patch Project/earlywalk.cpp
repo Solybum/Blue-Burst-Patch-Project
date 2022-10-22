@@ -1,6 +1,5 @@
-#ifdef PATCH_EARLY_WALK_FIX
-
 #include "pch.h"
+#ifdef PATCH_EARLY_WALK_FIX
 #include "helpers.h"
 #include "earlywalk.h"
 

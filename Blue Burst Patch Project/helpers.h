@@ -1,6 +1,9 @@
 #pragma once
 
 #include "windows.h"
+#include <stdint.h>
+
+typedef uint8_t byte;
 
 int gcd(int a, int b);
 
