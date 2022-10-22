@@ -1,6 +1,4 @@
-#include "pch.h"
 #ifdef USE_NEWGFX
-
 #include <stdexcept>
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>

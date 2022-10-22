@@ -1,4 +1,3 @@
-#include "pch.h"
 #include <stdexcept>
 #include <locale>
 #include <codecvt>

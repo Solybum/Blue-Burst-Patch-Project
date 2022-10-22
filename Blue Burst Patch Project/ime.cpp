@@ -1,4 +1,3 @@
-#include "pch.h"
 #ifdef PATCH_IME
 
 #include "ime.h"

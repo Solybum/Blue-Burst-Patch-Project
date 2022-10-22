@@ -1,4 +1,3 @@
-#include "pch.h"
 #include "psobb_functions.h"
 
 void(__cdecl *pf_FogEnable_True)() = (void(__cdecl *)())0x82dab0;

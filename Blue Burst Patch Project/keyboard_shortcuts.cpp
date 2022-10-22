@@ -1,4 +1,3 @@
-#include "pch.h"
 #ifdef PATCH_KEYBOARD_SHORTCUTS
 #include "helpers.h"
 #include "keyboard_shortcuts.h"

@@ -1,4 +1,3 @@
-#include "pch.h"
 #ifdef PATCH_EDITORS
 #include "helpers.h"
 #include "editors.h"
