@@ -18,7 +18,7 @@ double IntAngleToRad(int16_t a)
 
 int16_t RadToIntAngle(double a)
 {
-    return (a + M_PI) / (M_PI * 2.0) * 0xffff;
+    return (int16_t)((a + M_PI) / (M_PI * 2.0) * 0xffff);
 }
 
 double DegToRad(double deg)
