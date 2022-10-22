@@ -1,4 +1,5 @@
 #include "pch.h"
+#ifdef PATCH_EDITORS
 #include <stdint.h>
 #include <stdlib.h>
 #include "helpers.h"
@@ -340,3 +341,5 @@ void ToggleEditorShortcut()
     //ToggleEditor(TEditorType::Editor_TParticle);
     ToggleEditor(TEditorType::Editor_TQuestScriptChecker);
 }
+
+#endif

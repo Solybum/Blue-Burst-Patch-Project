@@ -1,5 +1,5 @@
 #include "pch.h"
-#include <stdlib.h>
+#ifdef PATCH_EDITORS
 #include "helpers.h"
 #include "editors.h"
 #include "psobb_functions.h"
@@ -22,3 +22,5 @@ void ApplyTFreeCameraPatches()
 {
 
 }
+
+#endif

@@ -102,3 +102,4 @@ byte *Create_TFreeCamera();
 void ApplyTParticleEditorPatches();
 byte *Create_TParticleEditor();
 
+void ApplyEditorPatch();

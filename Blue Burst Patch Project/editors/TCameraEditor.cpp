@@ -1,4 +1,5 @@
 #include "pch.h"
+#ifdef PATCH_EDITORS
 #include <stdlib.h>
 #include "helpers.h"
 #include "editors.h"
@@ -119,3 +120,5 @@ void ApplyTCameraEditorPatches()
 
     PatchJMP(0x4d491f, 0x4d4926, (int)&FreeBuffers);
 }
+
+#endif
