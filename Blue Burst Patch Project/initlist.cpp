@@ -1,4 +1,3 @@
-#include "pch.h"
 #ifdef PATCH_INITLISTS
 
 #include <cstddef>

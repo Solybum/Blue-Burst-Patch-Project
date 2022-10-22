@@ -1,5 +1,6 @@
-#include "pch.h"
 #ifdef PATCH_EDITORS
+#include <stdio.h>
+#include <stdarg.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include "helpers.h"

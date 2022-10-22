@@ -1,4 +1,3 @@
-#include "pch.h"
 #ifdef PATCH_FASTWARP
 
 #include "helpers.h"

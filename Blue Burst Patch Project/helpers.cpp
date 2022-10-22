@@ -1,5 +1,5 @@
 #include <cstdint>
-#include "pch.h"
+#include <cstdio>
 #include "helpers.h"
 
 int gcd(int a, int b)

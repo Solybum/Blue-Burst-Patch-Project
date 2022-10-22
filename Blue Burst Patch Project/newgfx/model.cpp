@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #ifdef USE_NEWGFX
 
 #include <stdexcept>

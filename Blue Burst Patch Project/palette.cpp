@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #ifdef PATCH_KEYBOARD_ALTERNATE_PALETTE
 #include "helpers.h"
 #include "palette.h"

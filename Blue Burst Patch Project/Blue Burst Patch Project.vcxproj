@@ -59,7 +59,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;BLUEBURSTPATCHPROJECT_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
@@ -76,7 +76,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;BLUEBURSTPATCHPROJECT_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
@@ -101,6 +101,7 @@
     <ClInclude Include="helpers.h" />
     <ClInclude Include="ime.h" />
     <ClInclude Include="initlist.h" />
+    <ClInclude Include="keyboard_shortcuts.h" />
     <ClInclude Include="large_assets.h" />
     <ClInclude Include="map.h" />
     <ClInclude Include="mathutil.h" />
@@ -114,7 +115,6 @@
     <ClInclude Include="object_wrapper.h" />
     <ClInclude Include="omnispawn.h" />
     <ClInclude Include="palette.h" />
-    <ClInclude Include="pch.h" />
     <ClInclude Include="psobb.h" />
     <ClInclude Include="psobb_functions.h" />
     <ClInclude Include="shop.h" />
@@ -139,6 +139,7 @@
     <ClCompile Include="fastwarp.cpp" />
     <ClCompile Include="helpers.cpp" />
     <ClCompile Include="initlist.cpp" />
+    <ClCompile Include="keyboard_shortcuts.cpp" />
     <ClCompile Include="large_assets.cpp" />
     <ClCompile Include="map.cpp" />
     <ClCompile Include="mathutil.cpp" />
@@ -152,10 +153,6 @@
     <ClCompile Include="object_wrapper.cpp" />
     <ClCompile Include="omnispawn.cpp" />
     <ClCompile Include="palette.cpp" />
-    <ClCompile Include="pch.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-    </ClCompile>
     <ClCompile Include="psobb.cpp" />
     <ClCompile Include="psobb_functions.cpp" />
     <ClCompile Include="shop.cpp" />
