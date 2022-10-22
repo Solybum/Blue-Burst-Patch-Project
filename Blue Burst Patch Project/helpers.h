@@ -1,6 +1,7 @@
 #pragma once
 
-#include "windows.h"
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
 #include <stdint.h>
 
 typedef uint8_t byte;
