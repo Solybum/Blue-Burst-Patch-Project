@@ -26,6 +26,7 @@ define_optional_patch(PATCH_OMNISPAWN PATCH_INITLISTS PATCH_ENEMY_CONSTRUCTOR_LI
 define_optional_patch(PATCH_SKIP_INTRO_CREDITS)
 define_optional_patch(PATCH_SLOW_GIBBLES_FIX)
 define_optional_patch(PATCH_UNSELLABLE_RARES)
+define_optional_patch(PATCH_EDITORS PATCH_KEYBOARD_SHORTCUTS)
 
 # This makes the lpVtbl field of COM objects accessible in Wine's headers
 add_compile_definitions(CINTERFACE)
@@ -52,10 +53,12 @@ add_library(${PROJECT_NAME} SHARED
     object_wrapper.cpp
     omnispawn.cpp
     palette.cpp
-    pch.cpp
     psobb.cpp
     shop.cpp
     slow_gibbles.cpp
+    psobb_functions.cpp
+    keyboard_shortcuts.cpp
+    editors.cpp
     
     newgfx/animation.cpp
     newgfx/bone.cpp
@@ -82,3 +85,6 @@ endif()
 
 # Force 32-bit target
 set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS -m32 LINK_FLAGS -m32)
+
+# Enable WIN32_LEAN_AND_MEAN
+target_compile_definitions(${PROJECT_NAME} PUBLIC "WIN32_LEAN_AND_MEAN")
