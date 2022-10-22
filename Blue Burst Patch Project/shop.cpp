@@ -1,6 +1,6 @@
-#ifdef PATCH_UNSELLABLE_RARES
-
 #include "pch.h"
+
+#ifdef PATCH_UNSELLABLE_RARES
 #include "helpers.h"
 #include "shop.h"
 

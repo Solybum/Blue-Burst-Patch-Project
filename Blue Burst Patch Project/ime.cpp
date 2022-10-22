@@ -1,6 +1,6 @@
+#include "pch.h"
 #ifdef PATCH_IME
 
-#include "pch.h"
 #include "ime.h"
 
 void PatchIme()
