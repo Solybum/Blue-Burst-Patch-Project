@@ -1,7 +1,27 @@
-#include <stdint.h>
-
 #include "pch.h"
+#include <stdint.h>
 #include "globals.h"
+
+// These should be specified in the project's preprocessor macros to enable.
+// Alternatively in the future, maybe they could go into pch.h or a file included there.
+// Leaving here for documentation.
+#if 0
+#define PATCH_IME
+#define PATCH_UNSELLABLE_RARES
+#define PATCH_EARLY_WALK_FIX
+#define PATCH_KEYBOARD_ALTERNATE_PALETTE
+#define PATCH_SLOW_GIBBLES_FIX
+#define PATCH_CUSTOMIZE_MENU
+#define PATCH_FASTWARP
+#define PATCH_OMNISPAWN
+#define PATCH_NEWENEMY
+#define PATCH_LARGE_ASSETS
+#define PATCH_OMNISPAWN
+#define PATCH_ENEMY_CONSTRUCTOR_LISTS
+#define PATCH_KEYBOARD_SHORTCUTS
+#define PATCH_EDITORS
+#define PATCH_INITLISTS
+#endif
 
 #ifdef PATCH_IME
 #include "ime.h"
@@ -45,6 +65,14 @@
 
 #ifdef PATCH_ENEMY_CONSTRUCTOR_LISTS
 #include "enemy.h"
+#endif
+
+#ifdef PATCH_EDITORS
+#include "editors.h"
+#endif
+
+#ifdef PATCH_KEYBOARD_SHORTCUTS
+#include "keyboard_shortcuts.h"
 #endif
 
 #ifdef PATCH_INITLISTS
@@ -104,6 +132,14 @@ void PSOBB()
 
 #ifdef PATCH_ENEMY_CONSTRUCTOR_LISTS
     Enemy::PatchEnemyConstructorLists();
+#endif
+
+#ifdef PATCH_EDITORS
+    ApplyEditorPatch();
+#endif
+
+#ifdef PATCH_KEYBOARD_SHORTCUTS
+    ApplyKeyboardShortcuts();
 #endif
 
 #ifdef PATCH_INITLISTS
