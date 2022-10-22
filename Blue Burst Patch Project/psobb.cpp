@@ -1,3 +1,4 @@
+#include <cstring>
 #include <stdint.h>
 #include "globals.h"
 
