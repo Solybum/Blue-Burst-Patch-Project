@@ -58,7 +58,7 @@ add_library(${PROJECT_NAME} SHARED
     shop.cpp
     slow_gibbles.cpp
     psobb_functions.cpp
-    keyboard_shortcuts.cpp
+    keyboard.cpp
     editors.cpp
     
     newgfx/animation.cpp
