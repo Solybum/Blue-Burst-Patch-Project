@@ -1,11 +1,13 @@
 #ifdef PATCH_EDITORS
-#include <stdio.h>
 #include <stdarg.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
-#include "helpers.h"
-#include "psobb_functions.h"
+
 #include "editors.h"
+#include "helpers.h"
+#include "keyboard.h"
+#include "psobb_functions.h"
 
 // If set, a list is maintained of the editor strings and they will be
 // rendered later by the render methods. This requires replacing the render
@@ -68,7 +70,7 @@ void __cdecl EditorErrorWindow(const char *fmt, ...)
     vsprintf_s(buf, _countof(buf), fmt, args);
     mbstowcs_s(&outSize, wbuf, _countof(wbuf), buf, -1);
 
-    MessageBox(NULL, wbuf, L"Error!", 0);
+    MessageBoxW(NULL, wbuf, L"Error!", 0);
     va_end(args);
 }
 
@@ -209,21 +211,15 @@ void ReplaceTEditorRenderMethods(uint32_t *addrs, uint32_t num_addrs)
 #endif
 }
 
-static void __declspec(naked) DisableMovementIfEditorActive()
+static BOOL __cdecl DisableMovementIfEditorActive()
 {
-    __asm {
-        cmp dword ptr ds:[0xA72764], 0x0; // number of editors
-        jne getOut;
-        mov eax, ds: [0xA0F6F0] ; // movement_input_enabled
-        ret;
+    auto editorCount = *reinterpret_cast<uint16_t*>(0xA72764);
+    auto movementInputEnabled = *reinterpret_cast<BOOL*>(0xA0F6F0);
 
-    getOut:
-        mov eax, 0x1;
-        ret;
-    }
+    return editorCount > 0 || !movementInputEnabled;
 }
 
-static void __stdcall ClearTEditorEx(byte *editor)
+static void __thiscall ClearTEditorEx(void* editor)
 {
     uint32_t i;
     for (uint32_t i = 0; i < _countof(activeEditors); ++i)
@@ -253,18 +249,12 @@ static void __stdcall ClearTEditorEx(byte *editor)
     ResumeEnemyAI();
 }
 
-static void __declspec(naked) ClearTEditor()
+static void __thiscall ClearTEditor(void* ptr)
 {
-    __asm {
-        push ecx;
-        push ecx;
-        call ClearTEditorEx;
-        
-        pop ecx;
-        mov eax, 0x8171e8;
-        call eax;
-        ret;
-    }
+    ClearTEditorEx(ptr);
+
+    // Original code
+    reinterpret_cast<void (__thiscall *)(void*)>(0x8171e8)(ptr);
 }
 
 static void ApplyTEditorPatches()
@@ -299,6 +289,10 @@ void ApplyEditorPatch()
     ApplyTCameraEditorPatches();
     ApplyTFreeCameraPatches();
     ApplyTQuestScriptCheckerPatches();
+
+    Keyboard::onKeyDown({Keyboard::Keycode::Ctrl, Keyboard::Keycode::T}, []() {
+        ToggleEditorShortcut();
+    });
 }
 
 static void ToggleEditor(TEditorType toggleType)

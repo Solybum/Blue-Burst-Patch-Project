@@ -18,7 +18,6 @@
 #define PATCH_LARGE_ASSETS
 #define PATCH_OMNISPAWN
 #define PATCH_ENEMY_CONSTRUCTOR_LISTS
-#define PATCH_KEYBOARD_SHORTCUTS
 #define PATCH_EDITORS
 #define PATCH_INITLISTS
 #endif
@@ -69,10 +68,6 @@
 
 #ifdef PATCH_EDITORS
 #include "editors.h"
-#endif
-
-#ifdef PATCH_KEYBOARD_SHORTCUTS
-#include "keyboard_shortcuts.h"
 #endif
 
 #ifdef PATCH_INITLISTS
@@ -136,10 +131,6 @@ void PSOBB()
 
 #ifdef PATCH_EDITORS
     ApplyEditorPatch();
-#endif
-
-#ifdef PATCH_KEYBOARD_SHORTCUTS
-    ApplyKeyboardShortcuts();
 #endif
 
 #ifdef PATCH_INITLISTS

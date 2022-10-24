@@ -1,6 +1,6 @@
 #ifdef PATCH_EDITORS
 #include <stdlib.h>
-#include "helpers.h"
+#include "../helpers.h"
 #include "editors.h"
 #include "psobb_functions.h"
 
@@ -38,16 +38,12 @@ static void __stdcall FreeBuffersEx()
     (*pf_free)(*(void **)0xa48a74);
 }
 
-static void __declspec(naked) FreeBuffers()
+static void __thiscall FreeBuffers(void* ptr)
 {
-    __asm {
-        pushad;
-        call FreeBuffersEx;
-        popad;
-        mov dword ptr[ebp - 0x4], 0xffffffff;
-        push 0x4d4926;
-        ret;
-    }
+    // Original code
+    reinterpret_cast<void (__thiscall *)(void* ptr)>(0x004f7078)(ptr);
+
+    FreeBuffersEx();
 }
 
 static void __declspec(naked) FixSharedInputState()
@@ -117,7 +113,7 @@ void ApplyTCameraEditorPatches()
 
     PatchNJPrintAtNowCalls(njPrintAtNowCalls, _countof(njPrintAtNowCalls));
 
-    PatchJMP(0x4d491f, 0x4d4926, (int)&FreeBuffers);
+    PatchCALL(0x004d4926, 0x004d492b, (int)&FreeBuffers);
 }
 
 #endif

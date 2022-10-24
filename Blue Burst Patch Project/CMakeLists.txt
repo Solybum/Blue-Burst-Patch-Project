@@ -60,6 +60,13 @@ add_library(${PROJECT_NAME} SHARED
     psobb_functions.cpp
     keyboard.cpp
     editors.cpp
+    editors/TCameraEditor.cpp
+    editors/TFreeCamera.cpp
+    editors/TGroupEnemySetEditor.cpp
+    editors/TGroupSetEditor.cpp
+    editors/TParticleEditor.cpp
+    editors/TQuestScriptChecker.cpp
+    editors/TSetEvtScriptTest.cpp
     
     newgfx/animation.cpp
     newgfx/bone.cpp
