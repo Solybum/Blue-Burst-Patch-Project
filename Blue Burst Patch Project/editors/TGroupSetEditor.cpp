@@ -1,15 +1,19 @@
 #ifdef PATCH_EDITORS
+
 #include <stdlib.h>
-#include "helpers.h"
+
 #include "editors.h"
+#include "helpers.h"
+#include "patching.h"
 #include "psobb_functions.h"
 
-static byte *TGroupSetEditor_instance = NULL;
+static byte *ASM_VAR(TGroupSetEditor_instance) = NULL;
 
 static const uint32_t bufferSize = 0x8800; // 0x200 object inits
 
 uint8_t *Create_TGroupSetEditor()
 {
+    EditorColorReset();
     void(__cdecl * pf_Create)() = (void(__cdecl *)())0x4fbce4;
     void(__cdecl * pf_Buffer_Allocate)() = (void(__cdecl *)())0x4ff310;
 
@@ -28,21 +32,20 @@ uint8_t *Create_TGroupSetEditor()
 }
 
 // Free the object init buffer when this instance goes away
-static void __declspec(naked) FreeBuffer()
+static void __naked FreeBuffer()
 {
-    __asm {
-        pushad;
-        mov eax, 0x4fb6f4;
-        call eax;
-        popad;
-        mov TGroupSetEditor_instance, 0;
+    XASM(pushad);
+    XASM(mov eax, 0x4fb6f4);
+    XASM(call eax);
+    XASM(popad);
+    XASM(mov dword ptr TGroupSetEditor_instance, 0);
 
-        mov dword ptr[ebp - 0x4], 0xFFFFFFFF;
-        push 0x4fbc24;
-        ret;
-    }
+    XASM(mov dword ptr[ebp - 0x4], 0xFFFFFFFF);
+    XASM(push 0x4fbc24);
+    XASM(ret);
 }
 
+static void __stdcall SetMenuColorEx(uint32_t objIdx, uint32_t idx) ASM_NAME(SetMenuColorEx);
 static void __stdcall SetMenuColorEx(uint32_t objIdx, uint32_t idx)
 {
     if (objIdx == idx)
@@ -51,59 +54,51 @@ static void __stdcall SetMenuColorEx(uint32_t objIdx, uint32_t idx)
         EditorColorSet(editorColorDefault);
 }
 
-static void __declspec(naked) SetMenuColor1()
+static void __naked SetMenuColor1()
 {
-    __asm {
-        pushad;
-        push ebx; 
-        mov eax, [ebp - 0x14];
-        push dword ptr[eax + 0xf8];
-        call SetMenuColorEx;
-        popad;
+    XASM(pushad);
+    XASM(push ebx);
+    XASM(mov eax, [ebp - 0x14]);
+    XASM(push dword ptr[eax + 0xf8]);
+    XASM(call SetMenuColorEx);
+    XASM(popad);
 
-        push dword ptr ds : [0xA0F688] ;
-        push 0x4f9134;
-        ret;
-    }
+    XASM(push dword ptr ds : [0xA0F688] );
+    XASM(push 0x4f9134);
+    XASM(ret);
 }
-static void __declspec(naked) SetMenuColor2()
+static void __naked SetMenuColor2()
 {
-    __asm {
-        pushad;
-        push ebx;
-        mov eax, [ebp - 0x14];
-        push dword ptr[eax + 0xec];
-        call SetMenuColorEx;
-        popad;
+    XASM(pushad);
+    XASM(push ebx);
+    XASM(mov eax, [ebp - 0x14]);
+    XASM(push dword ptr[eax + 0xec]);
+    XASM(call SetMenuColorEx);
+    XASM(popad);
 
-        push dword ptr ds : [0xA0F688] ;
-        push 0x4fcb08;
-        ret;
-    }
+    XASM(push dword ptr ds : [0xA0F688] );
+    XASM(push 0x4fcb08);
+    XASM(ret);
 }
 
-static void __declspec(naked) ResetColor1()
+static void __naked ResetColor1()
 {
-    __asm {
-        pushad;
-        call EditorColorReset;
-        popad;
+    XASM(pushad);
+    XASM(call EditorColorReset);
+    XASM(popad);
 
-        push 0x4f9da1;
-        ret;
-    }
+    XASM(push 0x4f9da1);
+    XASM(ret);
 }
 
-static void __declspec(naked) ResetColor2()
+static void __naked ResetColor2()
 {
-    __asm {
-        pushad;
-        call EditorColorReset;
-        popad;
+    XASM(pushad);
+    XASM(call EditorColorReset);
+    XASM(popad);
 
-        push 0x4fd8fa;
-        ret;
-    }
+    XASM(push 0x4fd8fa);
+    XASM(ret);
 }
 
 // Wrapper around the usual print location function. Sets the color.
@@ -270,4 +265,4 @@ void ApplyTGroupSetEditorPatches()
     
 }
 
-#endif
+#endif // PATCH_EDITORS

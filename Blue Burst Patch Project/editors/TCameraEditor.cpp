@@ -1,7 +1,10 @@
 #ifdef PATCH_EDITORS
+
 #include <stdlib.h>
-#include "helpers.h"
+
 #include "editors.h"
+#include "helpers.h"
+#include "patching.h"
 #include "psobb_functions.h"
 
 static byte *TCameraEditor_instance = NULL;
@@ -46,24 +49,22 @@ static void __thiscall FreeBuffers(void* ptr)
     FreeBuffersEx();
 }
 
-static void __declspec(naked) FixSharedInputState()
+static void __naked FixSharedInputState()
 {
-    __asm {
-        push eax;
-        push ebx;
-        push edx;
-        mov ebx, dword ptr[ebp - 0x14];
-        mov eax, dword ptr[ebx + 0x30];
-        lea edx, [eax + eax * 0x4];
-        add edx, edx;
-        add edx, edx;
-        add edx, edx;
-        lea ecx, [0xaae75c + edx];
-        pop edx;
-        pop ebx;
-        pop eax;
-        ret;
-    }
+    XASM(push eax);
+    XASM(push ebx);
+    XASM(push edx);
+    XASM(mov ebx, dword ptr[ebp - 0x14]);
+    XASM(mov eax, dword ptr[ebx + 0x30]);
+    XASM(lea edx, [eax + eax * 0x4]);
+    XASM(add edx, edx);
+    XASM(add edx, edx);
+    XASM(add edx, edx);
+    XASM(lea ecx, [0xaae75c + edx]);
+    XASM(pop edx);
+    XASM(pop ebx);
+    XASM(pop eax);
+    XASM(ret);
 }
 
 // TODO: Inputs seem broken. 
@@ -116,4 +117,4 @@ void ApplyTCameraEditorPatches()
     PatchCALL(0x004d4926, 0x004d492b, (int)&FreeBuffers);
 }
 
-#endif
+#endif // PATCH_EDITORS

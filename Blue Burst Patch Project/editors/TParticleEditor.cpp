@@ -1,10 +1,13 @@
 #ifdef PATCH_EDITORS
-#include <stdlib.h>
-#include "helpers.h"
-#include "psobb_functions.h"
-#include "editors.h"
 
-static byte *TParticleEditor_instance = NULL;
+#include <stdlib.h>
+
+#include "editors.h"
+#include "helpers.h"
+#include "patching.h"
+#include "psobb_functions.h"
+
+static byte *ASM_VAR(TParticleEditor_instance) = NULL;
 
 byte *Create_TParticleEditor()
 {
@@ -17,34 +20,30 @@ byte *Create_TParticleEditor()
     return TParticleEditor_instance;
 }
 
-static void __declspec(naked) CreateDebugParticle()
+static void __naked CreateDebugParticle()
 {
-    __asm {
-        pushad;
-        mov ecx, edi;
-        mov eax, 0x50d530;
-        call eax;
-        popad;
-        push 0x50d8b9;
-        ret;
-    }
+    XASM(pushad);
+    XASM(mov ecx, edi);
+    XASM(mov eax, 0x50d530);
+    XASM(call eax);
+    XASM(popad);
+    XASM(push 0x50d8b9);
+    XASM(ret);
 }
 
-static void __declspec(naked) FixSharedInputState()
+static void __naked FixSharedInputState()
 {
-    __asm {
-        push eax;
-        push edx;
-        mov eax, dword ptr[edi + 0x30];
-        lea edx, [eax + eax * 0x4];
-        add edx, edx;
-        add edx, edx;
-        add edx, edx;
-        lea ecx, [0xaae75c + edx];
-        pop edx;
-        pop eax;
-        ret;
-    }
+    XASM(push eax);
+    XASM(push edx);
+    XASM(mov eax, dword ptr[edi + 0x30]);
+    XASM(lea edx, [eax + eax * 0x4]);
+    XASM(add edx, edx);
+    XASM(add edx, edx);
+    XASM(add edx, edx);
+    XASM(lea ecx, [0xaae75c + edx]);
+    XASM(pop edx);
+    XASM(pop eax);
+    XASM(ret);
 }
 
 void ApplyTParticleEditorPatches()
@@ -90,4 +89,4 @@ void ApplyTParticleEditorPatches()
     ReplaceTEditorRenderMethods(renderMethods, _countof(renderMethods));
 }
 
-#endif
+#endif // PATCH_EDITORS

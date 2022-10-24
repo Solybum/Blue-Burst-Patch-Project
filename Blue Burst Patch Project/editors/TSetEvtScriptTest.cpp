@@ -1,7 +1,10 @@
 #ifdef PATCH_EDITORS
+
 #include <stdlib.h>
-#include "helpers.h"
+
 #include "editors.h"
+#include "helpers.h"
+#include "patching.h"
 
 byte *Create_TSetEvtScriptTest()
 {
@@ -12,41 +15,37 @@ byte *Create_TSetEvtScriptTest()
     return GetLastEditor();
 }
 
-void __declspec(naked) TSetEvtScriptTestMenuListingColor()
+void __naked TSetEvtScriptTestMenuListingColor()
 {
-    __asm {
-        pushad;
-        shr esi, 2;
-        cmp[ebp + 0x40], esi;
-        jne notSelected;
-        push editorColorSelected;
-        jmp getOut;
+    XASM(pushad);
+    XASM(shr esi, 2);
+    XASM(cmp dword ptr [ebp + 0x40], esi);
+    XASM(jne notSelected);
+    XASM(push dword ptr editorColorSelected);
+    XASM(jmp getOut);
 
-    notSelected:
-        push editorColorDefault;
+XASM(notSelected:);
+    XASM(push dword ptr editorColorDefault);
 
-    getOut:
-        // Set the debug color
-        call EditorColorSet;
-        pop ecx;
-        popad;
+XASM(getOut:);
+    // Set the debug color
+    XASM(call EditorColorSet);
+    XASM(pop ecx);
+    XASM(popad);
 
-        // original code and get out
-        push dword ptr ds : [esi + 0xA11E30] ;
-        push 0x80da57;
-        ret;
-    }
+    // original code and get out
+    XASM(push dword ptr ds : [esi + 0xA11E30] );
+    XASM(push 0x80da57);
+    XASM(ret);
 }
 
-void __declspec(naked) TSetEvtScriptTestRestoreColor()
+void __naked TSetEvtScriptTestRestoreColor()
 {
-    __asm {
-        call EditorColorReset;
+    XASM(call EditorColorReset);
 
-        push 0x980724;
-        push 0x80da78;
-        ret;
-    }
+    XASM(push 0x980724);
+    XASM(push 0x80da78);
+    XASM(ret);
 }
 
 void __cdecl TSetEvtScriptTestFileName(char **param_1, char *file_name, char param_3, char param_4, char file_name_buf_size)
@@ -85,4 +84,5 @@ void ApplyTSetEvtScriptTestPatches()
     PatchNJPrintAtCalls(njPrintAtCalls, _countof(njPrintAtCalls));
     ReplaceTEditorRenderMethods(vtableRenderAddrs, _countof(vtableRenderAddrs));
 }
-#endif
+
+#endif // PATCH_EDITORS

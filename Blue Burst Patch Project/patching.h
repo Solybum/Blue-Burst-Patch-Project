@@ -13,5 +13,22 @@
 #ifdef _MSC_VER
 #define XASM(...) __asm __VA_ARGS__
 #else
-#define XASM(...) asm (#__VA_ARGS__)
+#define XASM(...) asm volatile (#__VA_ARGS__)
+#endif
+
+/**
+ * @brief Defines the name for a variable that will be used in inline assembly.
+ * Usage:
+ *  int ASM_VAR(foo) = 123;
+ */
+#ifdef _MSC_VER
+#define ASM_VAR(x) x
+#else
+#define ASM_VAR(x) x asm(#x)
+#endif
+
+#ifdef _MSC_VER
+#define ASM_NAME(x)
+#else
+#define ASM_NAME(x) asm(#x)
 #endif

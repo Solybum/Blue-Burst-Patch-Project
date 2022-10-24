@@ -1,5 +1,7 @@
 #pragma once
+
 #include "helpers.h"
+#include "patching.h"
 
 // Get X from encoded location
 #define LOC_X(l) ((uint32_t)(l) >> 16)
@@ -28,10 +30,10 @@ typedef struct editorTextNode {
 } editorTextNode_t;
 
 // Default color
-extern int editorColorDefault;
+extern int ASM_VAR(editorColorDefault);
 
 // Color of a selected element
-extern int editorColorSelected;
+extern int ASM_VAR(editorColorSelected);
 
 // Returns address of most recently created editor.
 byte *GetLastEditor();
@@ -40,13 +42,13 @@ byte *GetLastEditor();
 void __cdecl EditorFontSizeSet(uint16_t size);
 
 // Sets the color of the text.
-void __cdecl EditorColorSet(uint32_t col);
+void __cdecl EditorColorSet(uint32_t col) ASM_NAME(EditorColorSet);
 
 // Get the current color in case of temporary changes.
 uint32_t __cdecl EditorColorGet();
 
 // Print text at a logical location on the screen.
-void __cdecl EditorPrintAt(uint32_t loc, const char *fmt, ...);
+void __cdecl EditorPrintAt(uint32_t loc, const char *fmt, ...) ASM_NAME(EditorPrintAt);
 
 // Print text on the screen. Uses a hardcoded location.
 void __cdecl EditorPrint(const char *fmt, ...);
@@ -64,7 +66,7 @@ void __cdecl EditorPrintAtConstantString(int display_flags, uint32_t loc, const 
 void __cdecl vEditorPrintAt(int display_flags, uint32_t loc, const char *fmt, va_list *args);
 
 // Set color back to the default.
-void __cdecl EditorColorReset();
+void __cdecl EditorColorReset() ASM_NAME("EditorColorReset");
 
 // Replace calls for errors with EditorErrorWindow().
 void PatchErrorWindows(uint32_t *addrs, uint32_t num_addrs);

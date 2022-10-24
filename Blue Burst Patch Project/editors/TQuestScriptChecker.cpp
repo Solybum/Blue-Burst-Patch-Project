@@ -1,9 +1,12 @@
 #ifdef PATCH_EDITORS
-#include <stdlib.h>
-#include "helpers.h"
-#include "editors.h"
 
-static byte *TQuestScriptChecker_instance = NULL;
+#include <stdlib.h>
+
+#include "editors.h"
+#include "helpers.h"
+#include "patching.h"
+
+static byte *ASM_VAR(TQuestScriptChecker_instance) = NULL;
 
 byte *Create_TQuestScriptChecker()
 {
@@ -16,15 +19,14 @@ byte *Create_TQuestScriptChecker()
     return TQuestScriptChecker_instance;
 }
 
-static const char *label = "LABEL: %i";
-static void __declspec(naked) FixFunctionDisplay()
+static const char *ASM_VAR(label) = "LABEL: %i";
+static void __naked FixFunctionDisplay()
 {
-    __asm {
-        push dword ptr[ebp + 0x38]; 
-        push label;
-        push 0x6bad6f;
-        ret;
-    }
+    XASM(push dword ptr[ebp + 0x38]) ;
+    XASM(push dword ptr label);
+    XASM(push 0x6bad6f);
+    XASM(ret);
+
 }
 
 // Wrapper around the usual print location function. Sets the color.
@@ -88,92 +90,85 @@ static void NJPrintAtWithColor(uint32_t loc, const char *fmt, ...)
     va_end(args);
 }
 
-static const char *change = "CHANGE: %u";
+static const char *ASM_VAR(change) = "CHANGE: %u";
 
-static void __declspec(naked) ShowChangeEx()
+static void __naked ShowChangeEx() ASM_NAME(ShowChangeEx);
+static void __naked ShowChangeEx()
 {
-    __asm {
-        push esi;
-        push edi; 
-        mov esi, dword ptr[esp + 0x10]; // field offset
-        mov edi, dword ptr[esp + 0xC]; // y offset
+    XASM(push esi);
+    XASM(push edi) ;
+    XASM(mov esi, dword ptr[esp + 0x10]); // field offset
+    XASM(mov edi, dword ptr[esp + 0xC]); // y offset
 
         // save to restore these values
-        push eax;
-        push ebx;
+    XASM(push eax);
+    XASM(push ebx);
 
-        mov ecx, TQuestScriptChecker_instance;
-        add ecx, esi;
-        mov eax, dword ptr[ecx];
-        mov ecx, dword ptr[eax + 0x08];
-        mov eax, 1;
+    XASM(mov ecx, TQuestScriptChecker_instance);
+    XASM(add ecx, esi);
+    XASM(mov eax, dword ptr[ecx]);
+    XASM(mov ecx, dword ptr[eax + 0x08]);
+    XASM(mov eax, 1);
 
-    _loop:
-        cmp ecx, 0;
-        jle _done;
-        mov ebx, 10;
-        mul ebx;
-        sub ecx, 1;
-        jmp _loop;
+XASM(_loop:);
+    XASM(cmp ecx, 0);
+    XASM(jle _done);
+    XASM(mov ebx, 10);
+    XASM(mul ebx);
+    XASM(sub ecx, 1);
+    XASM(jmp _loop);
 
-    _done:
-        push eax; // value
-        push change; // fmt string
-        lea ebx, [0x40000 + edi];
-        push ebx; // loc
-        call EditorPrintAt;
-        add esp, 0xC;
+XASM(_done:);
+    XASM(push eax); // value
+    XASM(push dword ptr change); // fmt string
+    XASM(lea ebx, [0x40000 + edi]);
+    XASM(push ebx); // loc
+    XASM(call EditorPrintAt);
+    XASM(add esp, 0xC);
 
-        pop ebx;
-        pop eax;
-        pop edi;
-        pop esi;
-        ret;
-    }
+    XASM(pop ebx);
+    XASM(pop eax);
+    XASM(pop edi);
+    XASM(pop esi);
+    XASM(ret);
 }
 
-static void __declspec(naked) ShowChange1() 
+static void __naked ShowChange1() 
 {
-    __asm {
-        push 0x44;
-        push 0xC;
-        call ShowChangeEx;
-        add esp, 0x8;
+    XASM(push 0x44);
+    XASM(push 0xC);
+    XASM(call ShowChangeEx);
+    XASM(add esp, 0x8);
 
-        push 0xff00ffff;
-        push 0x6bad81;
-        ret;
-    }
+    XASM(push 0xff00ffff);
+    XASM(push 0x6bad81);
+    XASM(ret);
 }
 
-static void __declspec(naked) ShowChange2() 
+static void __naked ShowChange2() 
 {
-    __asm {
-        push 0x44;
-        push 0x1B;
-        call ShowChangeEx;
-        add esp, 0x8;
+    XASM(push 0x44);
+    XASM(push 0x1B);
+    XASM(call ShowChangeEx);
+    XASM(add esp, 0x8);
 
-        mov esi, dword ptr[esp + 0x08];
-        mov edi, dword ptr[esp + 0x04];
-        push 0x6bb0a4;
-        ret;
-    }
+    XASM(mov esi, dword ptr[esp + 0x08]);
+    XASM(mov edi, dword ptr[esp + 0x04]);
+    XASM(push 0x6bb0a4);
+    XASM(ret);
 }
 
-static void __declspec(naked) ShowChange3()
+static void __naked ShowChange3()
 {
-    __asm {
-        push 0x48;
-        push 0x13;
-        call ShowChangeEx;
-        add esp, 0x8;
+    XASM(push 0x48);
+    XASM(push 0x13);
+    XASM(call ShowChangeEx);
+    XASM(add esp, 0x8);
 
-        mov edi, dword ptr[esp];
-        mov ebp, dword ptr[esp + 0x04];
-        push 0x6ba9a4;
-        ret;
-    }
+    XASM(mov edi, dword ptr[esp]);
+    XASM(mov ebp, dword ptr[esp + 0x04]);
+    XASM(push 0x6ba9a4);
+    XASM(ret);
 }
 
 void ApplyTQuestScriptCheckerPatches()
@@ -227,4 +222,5 @@ void ApplyTQuestScriptCheckerPatches()
         PatchCALL(addr, addr + 5, (int)&NJPrintAtWithColor);
     ReplaceTEditorRenderMethods(vtableRenderAddrs, _countof(vtableRenderAddrs));
 }
-#endif
+
+#endif // PATCH_EDITORS

@@ -106,5 +106,5 @@ target_compile_definitions(${PROJECT_NAME} PUBLIC "WIN32_LEAN_AND_MEAN")
 
 if (NOT MSVC)
     # Use intel asm syntax
-    add_compile_options(-masm=intel)
+    target_compile_options(${PROJECT_NAME} PRIVATE -masm=intel)
 endif()

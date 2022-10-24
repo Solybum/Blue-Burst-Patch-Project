@@ -1,10 +1,13 @@
 #ifdef PATCH_EDITORS
+
 #include <stdlib.h>
-#include "helpers.h"
+
 #include "editors.h"
+#include "helpers.h"
+#include "patching.h"
 #include "psobb_functions.h"
 
-static byte *TGroupEnemySetEditor_instance = NULL;
+static byte *ASM_VAR(TGroupEnemySetEditor_instance) = NULL;
 
 static const uint32_t bufferSize = 0x4800; // 0x100 monster inits
 
@@ -28,19 +31,17 @@ uint8_t *Create_TGroupEnemySetEditor()
 }
 
 // Free the object init buffer when this instance goes away
-static void __declspec(naked) FreeBuffer()
+static void __naked FreeBuffer()
 {
-    __asm {
-        pushad;
-        mov eax, 0x4fb6f4;
-        call eax;
-        popad;
-        mov TGroupEnemySetEditor_instance, 0;
+    XASM(pushad);
+    XASM(mov eax, 0x4fb6f4);
+    XASM(call eax);
+    XASM(popad);
+    XASM(mov dword ptr TGroupEnemySetEditor_instance, 0);
 
-        mov dword ptr[ebp - 0x4], 0xFFFFFFFF;
-        push 0x4f84a3;
-        ret;
-    }
+    XASM(mov dword ptr[ebp - 0x4], 0xFFFFFFFF);
+    XASM(push 0x4f84a3);
+    XASM(ret);
 }
 
 // Wrapper around the usual print location function. Sets the color.
@@ -89,15 +90,13 @@ static void NJPrintAtWithColor(uint32_t loc, const char *fmt, ...)
     va_end(args);
 }
 
-static void __declspec(naked) FixFile1()
+static void __naked FixFile1()
 {
-    __asm {
-        add ebx, 0x11c;
-        push ebx;
-        push 0x91ec80;
-        push 0x4fa0f1;
-        ret;
-    }
+    XASM(add ebx, 0x11c);
+    XASM(push ebx);
+    XASM(push 0x91ec80);
+    XASM(push 0x4fa0f1);
+    XASM(ret);
 }
 
 void ApplyTGroupEnemySetEditorPatches()
@@ -198,4 +197,5 @@ void ApplyTGroupEnemySetEditorPatches()
     for (uint32_t addr : setColorNjPrintAtCalls)
         PatchCALL(addr, addr + 5, (int)&NJPrintAtWithColor);
 }
-#endif
+
+#endif // PATCH_EDITORS
