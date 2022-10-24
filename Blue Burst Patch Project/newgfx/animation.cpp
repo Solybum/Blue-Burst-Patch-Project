@@ -4,7 +4,7 @@
 #include <assimp/postprocess.h>
 #include <cmath>
 #include "animation.h"
-#include "../common.h"
+#include "common.h"
 
 // Game runs at 30 fps
 const float DELTA_TIME = 1.0 / 30.0;

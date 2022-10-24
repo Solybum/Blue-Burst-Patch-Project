@@ -1,6 +1,6 @@
 #ifdef PATCH_EDITORS
 #include <stdlib.h>
-#include "../helpers.h"
+#include "helpers.h"
 #include "editors.h"
 #include "psobb_functions.h"
 

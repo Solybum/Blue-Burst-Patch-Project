@@ -15,7 +15,7 @@
 #include <assimp/material.h>
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
-#include "../common.h"
+#include "common.h"
 #include "model.h"
 
 // Force images to always have 4 channels

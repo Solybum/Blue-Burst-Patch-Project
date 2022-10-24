@@ -91,6 +91,8 @@ else()
     add_compile_options(-Wall)
 endif()
 
+target_include_directories(${PROJECT_NAME} PRIVATE ".")
+
 # Force 32-bit target
 set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS -m32 LINK_FLAGS -m32)
 

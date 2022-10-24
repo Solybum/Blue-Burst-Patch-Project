@@ -4,7 +4,7 @@
 #include <cstring>
 #include <cassert>
 #include "mesh.h"
-#include "../common.h"
+#include "common.h"
 
 auto ApplyTransformStack = reinterpret_cast<void (__cdecl *)()>(0x0082f1d0);
 
