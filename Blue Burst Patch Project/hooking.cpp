@@ -17,6 +17,16 @@ auto lambdaPointer(L&& lambda) {
     };
 }
 
+/**
+ * @brief Attempt to get the address of a std::function.
+ */
+template<typename T, typename... U>
+size_t getAddress(std::function<T(U...)> f) {
+    typedef T(fnType)(U...);
+    fnType ** fnPointer = f.template target<fnType*>();
+    return (size_t) *fnPointer;
+}
+
 namespace Hooking
 {
     // Initialize common hooks
@@ -29,13 +39,14 @@ namespace Hooking
     /// Store created hooks here, one per address.
     std::unordered_map<size_t, Hook> createdHooks;
 
-    Hook::Hook(size_t callAddrIn, size_t callAddrOut)
+    Hook::Hook(PrivateCtorMarker priv, size_t callAddrIn, size_t callAddrOut)
+        : callAddr(callAddrIn)
     {
         // To minimize the number of bytes that have to be overwritten by the hook
         // we want the callback calling function to not take any arguments.
         // Instead, we embed the callback list inside the function with a closure.
         callbackCaller = lambdaPointer([this]() {
-            for (auto func : this->callbacks) func();
+            for (auto& wrapper : this->callbacks) wrapper.fn();
         });
 
         PatchCALL(callAddrIn, callAddrOut, reinterpret_cast<int>(callbackCaller));
@@ -44,7 +55,7 @@ namespace Hooking
     Hook& CreateHook(size_t callAddrIn, size_t callAddrOut)
     {
         // Find existing or construct new
-        auto&& [entry, _] = createdHooks.try_emplace(callAddrIn, callAddrIn, callAddrOut);
+        auto&& [entry, _] = createdHooks.try_emplace(callAddrIn, Hook::PrivateCtorMarker{}, callAddrIn, callAddrOut);
         return (*entry).second;
     }
 
@@ -57,11 +68,21 @@ namespace Hooking
 
     void Hook::AddCallback(HookFn func)
     {
-        callbacks.insert(func);
+        callbacks.insert(ComparableFn{func});
     }
 
     void Hook::RemoveCallback(HookFn func)
     {
-        callbacks.erase(func);
+        callbacks.erase(ComparableFn{func});
+    }
+
+    bool Hook::operator<(const Hook& right) const
+    {
+        return this->callAddr < right.callAddr;
+    }
+
+    bool Hook::ComparableFn::operator<(const ComparableFn& right) const
+    {
+        return getAddress(this->fn) < getAddress(right.fn);
     }
 };

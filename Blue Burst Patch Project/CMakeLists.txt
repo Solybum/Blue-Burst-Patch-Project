@@ -38,27 +38,6 @@ add_library(${PROJECT_NAME} SHARED
     customize_menu.cpp
     dllmain.cpp
     earlywalk.cpp
-    enemy.cpp
-    entitylist.cpp
-    entity.cpp
-    fastwarp.cpp
-    helpers.cpp
-    ime.cpp
-    initlist.cpp
-    large_assets.cpp
-    map.cpp
-    mathutil.cpp
-    newenemy.cpp
-    object.cpp
-    object_extension.cpp
-    object_wrapper.cpp
-    omnispawn.cpp
-    palette.cpp
-    psobb.cpp
-    shop.cpp
-    slow_gibbles.cpp
-    psobb_functions.cpp
-    keyboard.cpp
     editors.cpp
     editors/TCameraEditor.cpp
     editors/TFreeCamera.cpp
@@ -67,6 +46,29 @@ add_library(${PROJECT_NAME} SHARED
     editors/TParticleEditor.cpp
     editors/TQuestScriptChecker.cpp
     editors/TSetEvtScriptTest.cpp
+    enemy.cpp
+    entity.cpp
+    entitylist.cpp
+    fastwarp.cpp
+    helpers.cpp
+    hooking.cpp
+    ime.cpp
+    initlist.cpp
+    keyboard.cpp
+    large_assets.cpp
+    map.cpp
+    mathutil.cpp
+    newenemy.cpp
+    object_extension.cpp
+    object_wrapper.cpp
+    object.cpp
+    omnispawn.cpp
+    palette.cpp
+    patching.cpp
+    psobb_functions.cpp
+    psobb.cpp
+    shop.cpp
+    slow_gibbles.cpp
     
     newgfx/animation.cpp
     newgfx/bone.cpp
@@ -101,3 +103,8 @@ target_compile_definitions(${PROJECT_NAME} PUBLIC "$<$<CONFIG:DEBUG>:DEBUG>")
 
 # Enable WIN32_LEAN_AND_MEAN
 target_compile_definitions(${PROJECT_NAME} PUBLIC "WIN32_LEAN_AND_MEAN")
+
+if (NOT MSVC)
+    # Use intel asm syntax
+    add_compile_options(-masm=intel)
+endif()

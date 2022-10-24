@@ -11,14 +11,29 @@ namespace Hooking
     class Hook
     {
     private:
-        Hook(size_t callAddrIn, size_t callAddrOut);
-        std::set<HookFn> callbacks;
+        /**
+         * @brief A wrapper for std::function that can be compared
+         */
+        struct ComparableFn
+        {
+            HookFn fn;
+            bool operator<(const ComparableFn& right) const;
+        };
+
+        struct PrivateCtorMarker {};
+        size_t callAddr;
+        std::set<ComparableFn> callbacks;
         void (*__cdecl callbackCaller)();
-        friend Hook& CreateHook(size_t callAddr);
+        friend Hook& CreateHook(size_t callAddrIn, size_t callAddrOut);
+        friend class std::allocator<Hook>;
 
     public:
+        // Constructor must be public to be able to use this class with std containers,
+        // but it is not constructible without access to private member
+        Hook(PrivateCtorMarker thisConstructorIsPrivate, size_t callAddrIn, size_t callAddrOut);
         void AddCallback(HookFn func);
         void RemoveCallback(HookFn func);
+        bool operator<(const Hook& right) const;
     };
 
     /**
