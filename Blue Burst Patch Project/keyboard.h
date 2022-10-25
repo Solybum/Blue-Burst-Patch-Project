@@ -93,6 +93,7 @@ namespace Keyboard
      */
     bool wasPressed(Keycode key);
 
+#ifdef PATCH_KEYBOARD_HOOKS
     /**
      * @brief Calls the callback when the key is pressed down.
      */
@@ -102,4 +103,5 @@ namespace Keyboard
      * @brief Calls the callback when all of the keys are pressed down.
      */
     void onKeyDown(std::vector<Keycode> keys, Hooking::HookFn callback);
+#endif // PATCH_KEYBOARD_HOOKS
 };

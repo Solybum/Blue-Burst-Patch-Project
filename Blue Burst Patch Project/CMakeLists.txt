@@ -26,7 +26,9 @@ define_optional_patch(PATCH_OMNISPAWN PATCH_INITLISTS PATCH_ENEMY_CONSTRUCTOR_LI
 define_optional_patch(PATCH_SKIP_INTRO_CREDITS)
 define_optional_patch(PATCH_SLOW_GIBBLES_FIX)
 define_optional_patch(PATCH_UNSELLABLE_RARES)
-define_optional_patch(PATCH_EDITORS PATCH_KEYBOARD_SHORTCUTS)
+define_optional_patch(PATCH_HOOKS)
+define_optional_patch(PATCH_KEYBOARD_HOOKS PATCH_HOOKS)
+define_optional_patch(PATCH_EDITORS PATCH_KEYBOARD_HOOKS)
 
 # This makes the lpVtbl field of COM objects accessible in Wine's headers
 add_compile_definitions(CINTERFACE)

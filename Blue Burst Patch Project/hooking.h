@@ -1,31 +1,21 @@
 #pragma once
 
 #include <cstddef>
-#include <functional>
 #include <set>
 
 namespace Hooking
 {
-    using HookFn = std::function<void ()>;
+    using HookFn = void (*)();
 
     class Hook
     {
     private:
-        /**
-         * @brief A wrapper for std::function that can be compared
-         */
-        struct ComparableFn
-        {
-            HookFn fn;
-            bool operator<(const ComparableFn& right) const;
-        };
-
         struct PrivateCtorMarker {};
-        size_t callAddr;
-        std::set<ComparableFn> callbacks;
+        size_t callAddrIn;
+        size_t callAddrOut;
+        std::set<HookFn> callbacks;
         void (*__cdecl callbackCaller)();
         friend Hook& CreateHook(size_t callAddrIn, size_t callAddrOut);
-        friend class std::allocator<Hook>;
 
     public:
         // Constructor must be public to be able to use this class with std containers,
@@ -33,6 +23,7 @@ namespace Hooking
         Hook(PrivateCtorMarker thisConstructorIsPrivate, size_t callAddrIn, size_t callAddrOut);
         void AddCallback(HookFn func);
         void RemoveCallback(HookFn func);
+        void Install() const;
         bool operator<(const Hook& right) const;
     };
 
@@ -49,6 +40,7 @@ namespace Hooking
      */
     Hook& CreateHook(size_t callAddrIn, size_t callAddrOut, HookFn initialCallback);
 
+    void InstallAllHooks();
 
     // Additional common hooks can be added here:
 
@@ -56,4 +48,18 @@ namespace Hooking
      * @brief Called every frame after everything has been updated and rendered.
      */
     extern Hook& afterSceneUpdate;
+
+    /**
+     * @brief Wraps a capturing lambda function in a way that allows it to be cast to a function pointer.
+     */
+    template<typename L>
+    auto LambdaPointer(L&& lambda) {
+        // Type signatures of lambdas are never identical even if their call signatures are.
+        // Therefore, a new specialization of this function - along with the following static variable -
+        // is created for each new lambda that is passed as an argument.
+        static L fn = std::forward<L>(lambda);
+        return []() {
+            return fn();
+        };
+    }
 };

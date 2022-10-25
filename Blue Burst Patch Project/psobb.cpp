@@ -70,6 +70,10 @@
 #include "editors.h"
 #endif
 
+#ifdef PATCH_HOOKS
+#include "hooking.h"
+#endif
+
 #ifdef PATCH_INITLISTS
 #include "initlist.h"
 #endif
@@ -131,6 +135,11 @@ void PSOBB()
 
 #ifdef PATCH_EDITORS
     ApplyEditorPatch();
+#endif
+
+#ifdef PATCH_HOOKS
+    // Should be last so that other patches can create their hooks first
+    Hooking::InstallAllHooks();
 #endif
 
 #ifdef PATCH_INITLISTS
