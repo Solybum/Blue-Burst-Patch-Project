@@ -216,7 +216,7 @@ static BOOL __cdecl DisableMovementIfEditorActive()
     auto editorCount = *reinterpret_cast<uint16_t*>(0xA72764);
     auto movementInputEnabled = *reinterpret_cast<BOOL*>(0xA0F6F0);
 
-    return editorCount > 0 || !movementInputEnabled;
+    return editorCount == 0 || movementInputEnabled;
 }
 
 static void __fastcall ClearTEditorEx(void* editor)
