@@ -43,6 +43,9 @@ A demonstration of how a new enemy may be implemented using the object extension
 ### Intro credits skip `[COMPILED:PATCH_SKIP_INTRO_CREDITS]`
 Skips the credits screen when the game is launched.
 
+### Debug menus `[COMPILED:PATCH_EDITORS]`
+This patch restores various debug editors and menus used by the original developers.
+
 ## Installation
 Use the psobb.exe bundled with this project. That client is modified to automatically load bbpp.dll. Place bbpp.dll in your game directory.
 
@@ -66,3 +69,4 @@ Blue Burst Patch Project is licensed under the MIT license.
 This product contains unmodified and modified subcomponents with separate copyright notices and license terms.
 * [Learn OpenGL](https://learnopengl.com/Guest-Articles/2020/Skeletal-Animation) ([CC BY 4.0](https://creativecommons.org/licenses/by/4.0/legalcode)): Newgfx library is derived from Learn OpenGL
 * [Wine](https://source.winehq.org/source/) ([LGPL-2.1](https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html)): Newgfx library depends on Wine's header files
+* Thanks to VincentNL for their help with developing the debug editor restoration patch.
