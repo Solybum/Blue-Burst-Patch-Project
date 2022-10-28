@@ -61,6 +61,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -78,6 +79,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -94,14 +96,16 @@
     <ClInclude Include="earlywalk.h" />
     <ClInclude Include="editors.h" />
     <ClInclude Include="enemy.h" />
+    <ClInclude Include="entity.h" />
     <ClInclude Include="entitylist.h" />
     <ClInclude Include="fastwarp.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="globals.h" />
     <ClInclude Include="helpers.h" />
+    <ClInclude Include="hooking.h" />
     <ClInclude Include="ime.h" />
     <ClInclude Include="initlist.h" />
-    <ClInclude Include="keyboard_shortcuts.h" />
+    <ClInclude Include="keyboard.h" />
     <ClInclude Include="large_assets.h" />
     <ClInclude Include="map.h" />
     <ClInclude Include="mathutil.h" />
@@ -135,11 +139,13 @@
     <ClCompile Include="editors\TQuestScriptChecker.cpp" />
     <ClCompile Include="editors\TSetEvtScriptTest.cpp" />
     <ClCompile Include="enemy.cpp" />
+    <ClCompile Include="entity.cpp" />
     <ClCompile Include="entitylist.cpp" />
     <ClCompile Include="fastwarp.cpp" />
     <ClCompile Include="helpers.cpp" />
+    <ClCompile Include="hooking.cpp" />
     <ClCompile Include="initlist.cpp" />
-    <ClCompile Include="keyboard_shortcuts.cpp" />
+    <ClCompile Include="keyboard.cpp" />
     <ClCompile Include="large_assets.cpp" />
     <ClCompile Include="map.cpp" />
     <ClCompile Include="mathutil.cpp" />

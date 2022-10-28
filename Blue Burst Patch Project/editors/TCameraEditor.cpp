@@ -38,10 +38,10 @@ static void __stdcall FreeBuffersEx()
     (*pf_free)(*(void **)0xa48a74);
 }
 
-static void __thiscall FreeBuffers(void* ptr)
+static void __fastcall FreeBuffers(void* ptr)
 {
     // Original code
-    reinterpret_cast<void (__thiscall *)(void* ptr)>(0x004f7078)(ptr);
+    reinterpret_cast<void (__fastcall *)(void* ptr)>(0x004f7078)(ptr);
 
     FreeBuffersEx();
 }

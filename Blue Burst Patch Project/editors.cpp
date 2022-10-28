@@ -219,7 +219,7 @@ static BOOL __cdecl DisableMovementIfEditorActive()
     return editorCount > 0 || !movementInputEnabled;
 }
 
-static void __thiscall ClearTEditorEx(void* editor)
+static void __fastcall ClearTEditorEx(void* editor)
 {
     uint32_t i;
     for (uint32_t i = 0; i < _countof(activeEditors); ++i)
@@ -249,12 +249,12 @@ static void __thiscall ClearTEditorEx(void* editor)
     ResumeEnemyAI();
 }
 
-static void __thiscall ClearTEditor(void* ptr)
+static void __fastcall ClearTEditor(void* ptr)
 {
     ClearTEditorEx(ptr);
 
     // Original code
-    reinterpret_cast<void (__thiscall *)(void*)>(0x8171e8)(ptr);
+    reinterpret_cast<void (__fastcall *)(void*)>(0x8171e8)(ptr);
 }
 
 static void ApplyTEditorPatches()
