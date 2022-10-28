@@ -36,16 +36,16 @@ namespace Keyboard
 #ifdef PATCH_KEYBOARD_HOOKS
 	void onKeyDown(Keycode key, Hooking::HookFn callback)
 	{
-		Hooking::afterSceneUpdate.AddCallback(Hooking::LambdaPointer([key, callback]() {
+		Hooking::afterSceneUpdate.AddCallback([key, callback]() {
 			if (wasPressed(key)) callback();
-		}));
+		});
 	}
 
 	void onKeyDown(std::vector<Keycode> keys, Hooking::HookFn callback)
 	{
-		Hooking::afterSceneUpdate.AddCallback(Hooking::LambdaPointer([keys, callback]() {
+		Hooking::afterSceneUpdate.AddCallback([keys, callback]() {
 			if (std::all_of(keys.begin(), keys.end(), wasPressed)) callback();
-		}));
+		});
 	}
 #endif // PATCH_KEYBOARD_HOOKS
 };
