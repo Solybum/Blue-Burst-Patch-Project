@@ -33,7 +33,7 @@ private:
         Die = Spawn
     };
 
-    EntityIndex targetEntityIndex;
+    Entity::EntityIndex targetEntityIndex;
     Vec3<float> targetPosition;
     bool hasTarget;
 

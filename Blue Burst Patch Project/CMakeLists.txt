@@ -29,6 +29,7 @@ define_optional_patch(PATCH_UNSELLABLE_RARES)
 define_optional_patch(PATCH_HOOKS)
 define_optional_patch(PATCH_KEYBOARD_HOOKS PATCH_HOOKS)
 define_optional_patch(PATCH_EDITORS PATCH_KEYBOARD_HOOKS)
+define_optional_patch(PATCH_NEWMAP PATCH_KEYBOARD_HOOKS PATCH_HOOKS PATCH_INITLISTS)
 
 # This makes the lpVtbl field of COM objects accessible in Wine's headers
 add_compile_definitions(CINTERFACE)
@@ -71,6 +72,9 @@ add_library(${PROJECT_NAME} SHARED
     psobb.cpp
     shop.cpp
     slow_gibbles.cpp
+    map_object.cpp
+    newmap/newmap.cpp
+    newmap/map_object_cloud.cpp
     
     newgfx/animation.cpp
     newgfx/bone.cpp
@@ -79,6 +83,10 @@ add_library(${PROJECT_NAME} SHARED
 
 # Link with assimp if using newgfx
 if(USE_NEWGFX)
+    target_link_libraries(${PROJECT_NAME} assimp)
+endif()
+
+if(PATCH_NEWMAP)
     target_link_libraries(${PROJECT_NAME} assimp)
 endif()
 
@@ -95,7 +103,7 @@ else()
     add_compile_options(-Wall)
 endif()
 
-target_include_directories(${PROJECT_NAME} PRIVATE ".")
+target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
 
 # Force 32-bit target
 set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS -m32 LINK_FLAGS -m32)

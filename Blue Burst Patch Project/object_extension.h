@@ -1,5 +1,7 @@
 #pragma once
 
+#include <algorithm>
+
 #include "common.h"
 
 #define MAKE_PADDING_FIELD(size) CONCAT(_pad, __COUNTER__)[size]
@@ -36,3 +38,11 @@ extern MainArenaDeallocFunction MainArenaDealloc;
 extern void* (__thiscall *BaseGameObjectConstructor)(void* self, void* parent);
 extern void (__thiscall *BaseGameObjectDestructor)(void* self, bool32 freeMemory);
 extern void (__thiscall *BaseGameObjectDestructorNoDealloc)(void* self);
+
+template<typename T>
+T* InheritVtable(T* orig)
+{
+    T* vtable = new T;
+    std::copy(orig, orig + 1, vtable);
+    return vtable;
+}
