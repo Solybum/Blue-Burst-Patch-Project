@@ -75,6 +75,9 @@ add_library(${PROJECT_NAME} SHARED
     map_object.cpp
     newmap/newmap.cpp
     newmap/map_object_cloud.cpp
+    ninja.cpp
+    quest.cpp
+    player.cpp
     
     newgfx/animation.cpp
     newgfx/bone.cpp

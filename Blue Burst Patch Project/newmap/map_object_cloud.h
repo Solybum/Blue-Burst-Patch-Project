@@ -4,14 +4,14 @@
 #include <windows.h>
 #include "map_object.h"
 
-class Cloud : public MapObject::MapObjectBase
+class MapObjectCloud : public MapObject::MapObjectBase
 {
 public:
     static void __cdecl LoadAssets();
     static void __cdecl UnloadAssets();
-    static Cloud* __cdecl Create(MapObject::InitData::InnerData* initData);
+    static MapObjectCloud* __cdecl Create(MapObject::InitData::InnerData* initData);
 
-    Cloud(void* parentObject, MapObject::InitData::InnerData* initData);
+    MapObjectCloud(void* parentObject, MapObject::InitData::InnerData* initData);
 
     void Destruct(BOOL freeMemory);
     void Update();

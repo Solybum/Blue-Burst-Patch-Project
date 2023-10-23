@@ -12,9 +12,10 @@
 #include "map_object.h"
 #include "map_object_cloud.h"
 #include "object_extension.h"
-
+#include "player.h"
 #include "helpers.h"
 #include "mathutil.h"
+#include "quest.h"
 
 #pragma pack(push, 1)
 struct MapDesignation
@@ -57,8 +58,6 @@ std::array<MapAssetPrefixes, 1> customMaps = {
 };
 std::unordered_map<uint32_t, uint32_t> currentMapSubtitutions; // (Original map index, custom map index)
 
-auto IsUltEp1 = reinterpret_cast<bool (__cdecl *)()>(0x0078b220);
-
 /**
  * @brief Custom maps will use the objects and enemies from the matching vanilla maps, but can have custom map geometry files.
  */
@@ -87,34 +86,6 @@ uint32_t __cdecl Before_InitEpisodeMaps(uint32_t episode)
     return episode;
 }
 
-using OpcodeSetupFn = void (__cdecl*)(uint32_t opcode);
-using OpcodeFn = void*;
-
-#pragma pack(push, 1)
-struct OpcodeHandler
-{
-    OpcodeSetupFn setupFn;
-    OpcodeFn opcodeFn;
-};
-#pragma pack(pop)
-
-auto opcodeTable = reinterpret_cast<OpcodeHandler*>(0x009ccc00);
-auto SetupOpcodeOperand1 = reinterpret_cast<OpcodeSetupFn>(0x006b1040);
-auto SetupOpcodeOperand11 = reinterpret_cast<OpcodeSetupFn>(0x006b1058);
-
-void SetOpcode(uint16_t opcode, OpcodeSetupFn setupFn, OpcodeFn opcodeFn)
-{
-    uint8_t firstByte = opcode & 0xff;
-    uint8_t secondByte = opcode >> 8;
-    uint32_t opcodeIndex = firstByte;
-
-    if (secondByte == 0xf8) opcodeIndex += 0x100;
-    else if (secondByte == 0xf9) opcodeIndex += 0x200;
-
-    opcodeTable[opcodeIndex].setupFn = setupFn;
-    opcodeTable[opcodeIndex].opcodeFn = opcodeFn;
-}
-
 void __cdecl NewOpcodeDesignateCustomMap(uint8_t origMap, uint8_t newMap)
 {
     currentMapSubtitutions.insert({origMap, newMap});
@@ -126,7 +97,7 @@ void PatchMapDesignateOpcode()
 {
     PatchJMP(0x0080bee8, 0x0080bf11, (int) GetMapAssetPrefixes);
     PatchCALL(0x0080c7a0, 0x0080c7a5, (int) Before_InitEpisodeMaps);
-    SetOpcode(0xf962, SetupOpcodeOperand11, (void*) NewOpcodeDesignateCustomMap);
+    Quest::SetOpcode(0xf962, Quest::SetupOpcodeOperand11, (void*) NewOpcodeDesignateCustomMap);
 }
 
 #pragma pack(push, 1)
@@ -155,21 +126,9 @@ void ApplyNewMapPatch()
 
     EnableMapObjectCloud();
 
-    struct Player {
-        union
-        {
-            union {
-                DEFINE_FIELD(0x28, int16_t room);
-                DEFINE_FIELD(0x38, float x);
-                DEFINE_FIELD(0x3c, float y);
-                DEFINE_FIELD(0x40, float z);
-            };
-            uint8_t _padding[0x500];
-        };
-    };
-
     Keyboard::onKeyDown(Keyboard::Keycode::H, []() {
-        auto player = *((Player**)0x00a94254);
+        auto player = GetPlayer(0);
+
         MapObject::InitData::InnerData initData = {
             10000,
             0,
@@ -177,7 +136,7 @@ void ApplyNewMapPatch()
             0,
             player->room,
             0,
-            Vec3f {player->x, player->y + 20.0f, player->z},
+            Vec3f {player->position.x, player->position.y, player->position.z},
             Vec3<int32_t> { 0, 0, 0},
             0,
             0,
@@ -187,7 +146,7 @@ void ApplyNewMapPatch()
             0,
             0
         };
-        Cloud::Create(&initData);
+        MapObjectCloud::Create(&initData);
     });
 }
 

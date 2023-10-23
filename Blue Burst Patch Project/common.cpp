@@ -45,7 +45,6 @@ namespace Transform
 
 decltype(InitEnemyAnimations) InitEnemyAnimations = reinterpret_cast<decltype(InitEnemyAnimations)>(0x007aa4c8);
 decltype(AnimateEntity) AnimateEntity = reinterpret_cast<decltype(AnimateEntity)>(0x007aa094);
-decltype(GetPlayer) GetPlayer = reinterpret_cast<decltype(GetPlayer)>(0x0068d5a8);
 decltype(GetGround) GetGround = reinterpret_cast<decltype(GetGround)>(0x00780630);
 decltype(CollideWithEntities) CollideWithEntities = reinterpret_cast<decltype(CollideWithEntities)>(0x007b6880);
 decltype(EnableReticle) EnableReticle = reinterpret_cast<decltype(EnableReticle)>(0x006946a8);
@@ -54,7 +53,7 @@ decltype(GetRandomFloat) GetRandomFloat = reinterpret_cast<decltype(GetRandomFlo
 decltype(CheckAnimationDuration) CheckAnimationDuration = reinterpret_cast<decltype(CheckAnimationDuration)>(0x007aaa30);
 decltype(PlaySoundEffect) PlaySoundEffect = reinterpret_cast<decltype(PlaySoundEffect)>(0x00814298);
 decltype(PlayParticleEffect) PlayParticleEffect = reinterpret_cast<decltype(PlayParticleEffect)>(0x0050a984);
-
+decltype(IsUltEp1) IsUltEp1 = reinterpret_cast<decltype(IsUltEp1)>(0x0078b220);
 
 IDirect3DDevice8** d3dDevice = reinterpret_cast<IDirect3DDevice8**>(0x00acd528);
 

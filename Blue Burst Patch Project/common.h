@@ -87,7 +87,6 @@ namespace Transform
 extern void (__thiscall *InitEnemyAnimations)(void* self, uint16_t unknown);
 /// Moves the current animation forward by one or loops back to the start
 extern void (__fastcall *AnimateEntity)(void* entity);
-extern void* (__cdecl *GetPlayer)(uint16_t id);
 
 struct Ground
 {
@@ -109,6 +108,7 @@ extern float (__thiscall *GetRandomFloat)(void* entity);
 extern bool32 (__thiscall *CheckAnimationDuration)(void* entity, float duration);
 extern void (__cdecl *PlaySoundEffect)(uint32_t soundId, Vec3<float>* position);
 extern void (__cdecl *PlayParticleEffect)(Vec3f* position, size_t effectId, size_t delay, size_t duration);
+extern bool (__cdecl * IsUltEp1)();
 
 extern IDirect3DDevice8** d3dDevice;
 
