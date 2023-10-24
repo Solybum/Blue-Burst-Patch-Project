@@ -66,6 +66,10 @@
 #include "enemy.h"
 #endif
 
+#ifdef PATCH_MAP_OBJECT_CONSTRUCTOR_LISTS
+#include "map_object.h"
+#endif
+
 #ifdef PATCH_EDITORS
 #include "editors.h"
 #endif
@@ -133,16 +137,20 @@ void PSOBB()
     ApplyLargeAssetsPatch();
 #endif
 
-#ifdef PATCH_ENEMY_CONSTRUCTOR_LISTS
-    Enemy::PatchEnemyConstructorLists();
-#endif
-
 #ifdef PATCH_EDITORS
     ApplyEditorPatch();
 #endif
 
 #ifdef PATCH_NEWMAP
     ApplyNewMapPatch();
+#endif
+
+#ifdef PATCH_ENEMY_CONSTRUCTOR_LISTS
+    Enemy::PatchEnemyConstructorLists();
+#endif
+
+#ifdef PATCH_MAP_OBJECT_CONSTRUCTOR_LISTS
+    MapObject::PatchMapObjectConstructorLists();
 #endif
 
 #ifdef PATCH_HOOKS

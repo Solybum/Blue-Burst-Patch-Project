@@ -1,7 +1,9 @@
 #pragma once
 
 #include <cstdint>
+#include <unordered_map>
 #include <windows.h>
+#include "map.h"
 #include "mathutil.h"
 #include "object_extension.h"
 
@@ -91,7 +93,24 @@ namespace MapObject
         void Destruct(bool32 freeMemory);
     };
 
+    using CreationFunction = void* (__cdecl *)(InitData::InnerData*);
+
+    struct TaggedMapObjectConstructor
+    {
+        uint16_t objectType;
+        uint16_t unknown1;
+        CreationFunction createObject;
+        float constructionDistance;
+        uint32_t unknown2;
+
+        TaggedMapObjectConstructor(uint16_t type, CreationFunction createFun);
+        TaggedMapObjectConstructor();
+    };
 #pragma pack(pop)
 
     extern void** rootMapObject;
+
+    std::vector<TaggedMapObjectConstructor>& GetMapObjectConstructorList(Map::MapType map);
+
+    void PatchMapObjectConstructorLists();
 };
