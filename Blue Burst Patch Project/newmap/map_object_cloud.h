@@ -9,7 +9,7 @@ class MapObjectCloud : public MapObject::MapObjectBase
 public:
     static void __cdecl LoadAssets();
     static void __cdecl UnloadAssets();
-    static MapObjectCloud* __cdecl Create(MapObject::InitData::InnerData* initData);
+    static void* __cdecl Create(MapObject::InitData::InnerData* initData);
 
     MapObjectCloud(void* parentObject, MapObject::InitData::InnerData* initData);
 
@@ -20,5 +20,3 @@ public:
 private:
     uint16_t texCoordX;
 };
-
-void EnableMapObjectCloud();

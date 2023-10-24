@@ -29,7 +29,7 @@ class MapObjectSnowfall : public MapObject::MapObjectBase
 public:
     static void __cdecl LoadAssets();
     static void __cdecl UnloadAssets();
-    static MapObjectSnowfall* __cdecl Create(MapObject::InitData::InnerData* initData);
+    static void* __cdecl Create(MapObject::InitData::InnerData* initData);
 
     MapObjectSnowfall(void* parentObject, MapObject::InitData::InnerData* initData);
 
@@ -40,5 +40,3 @@ public:
 private:
     ParticleEffect* particles[numParticles];
 };
-
-void EnableMapObjectSnowfall();

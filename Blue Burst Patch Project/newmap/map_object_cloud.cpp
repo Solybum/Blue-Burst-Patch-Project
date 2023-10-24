@@ -113,19 +113,11 @@ void MapObjectCloud::Render()
     Transform::PopTransformStack();
 }
 
-MapObjectCloud* __cdecl MapObjectCloud::Create(MapObject::InitData::InnerData* initData)
+void* __cdecl MapObjectCloud::Create(MapObject::InitData::InnerData* initData)
 {
     void* buf = MainArenaAlloc(sizeof(MapObjectCloud));
     MapObjectCloud* cloud = new (buf) MapObjectCloud(*MapObject::rootMapObject, initData);
     return cloud;
-}
-
-void EnableMapObjectCloud()
-{
-    auto& forest1InitList = Map::GetMapInitList(Map::MapType::Forest1);
-    forest1InitList.AddFunctionPair(InitList::FunctionPair(MapObjectCloud::LoadAssets, MapObjectCloud::UnloadAssets));
-
-    *reinterpret_cast<decltype(MapObjectCloud::Create)**>(0x00a0dd44) = MapObjectCloud::Create;
 }
 
 #endif

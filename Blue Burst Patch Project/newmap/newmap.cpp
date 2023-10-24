@@ -6,15 +6,12 @@
 #include <string>
 #include <stdexcept>
 #include <unordered_map>
+#include <vector>
 
 #include "newmap.h"
-#include "keyboard.h"
 #include "map_object.h"
 #include "map_object_cloud.h"
-#include "object_extension.h"
-#include "player.h"
-#include "helpers.h"
-#include "mathutil.h"
+#include "map_object_snowfall.h"
 #include "quest.h"
 
 #pragma pack(push, 1)
@@ -120,34 +117,25 @@ struct SlbgmDef
 };
 #pragma pack(pop)
 
+void EnableObjects()
+{
+    auto& forest1InitList = Map::GetMapInitList(Map::MapType::Forest1);
+    auto& forest1Objects = MapObject::GetMapObjectConstructorList(Map::MapType::Forest1);
+
+#define ADD_OBJ(obj_id, obj_class) \
+    forest1InitList.AddFunctionPair(InitList::FunctionPair(obj_class::LoadAssets, obj_class::UnloadAssets)); \
+    forest1Objects.push_back(MapObject::TaggedMapObjectConstructor(obj_id, obj_class::Create));
+
+    ADD_OBJ(1337, MapObjectCloud);
+    ADD_OBJ(1338, MapObjectSnowfall);
+
+#undef ADD_OBJ
+}
+
 void ApplyNewMapPatch()
 {
     PatchMapDesignateOpcode();
-
-    EnableMapObjectCloud();
-
-    Keyboard::onKeyDown(Keyboard::Keycode::H, []() {
-        auto player = GetPlayer(0);
-
-        MapObject::InitData::InnerData initData = {
-            10000,
-            0,
-            10000+4096,
-            0,
-            player->room,
-            0,
-            Vec3f {player->position.x, player->position.y, player->position.z},
-            Vec3<int32_t> { 0, 0, 0},
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0
-        };
-        MapObjectCloud::Create(&initData);
-    });
+    EnableObjects();
 }
 
 #endif // PATCH_NEWMAP

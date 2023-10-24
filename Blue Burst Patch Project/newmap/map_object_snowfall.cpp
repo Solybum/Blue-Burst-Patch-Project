@@ -79,19 +79,11 @@ void MapObjectSnowfall::Render()
 {
 }
 
-MapObjectSnowfall* __cdecl MapObjectSnowfall::Create(MapObject::InitData::InnerData* initData)
+void* __cdecl MapObjectSnowfall::Create(MapObject::InitData::InnerData* initData)
 {
     void* buf = MainArenaAlloc(sizeof(MapObjectSnowfall));
     MapObjectSnowfall* cloud = new (buf) MapObjectSnowfall(*MapObject::rootMapObject, initData);
     return cloud;
-}
-
-void EnableMapObjectSnowfall()
-{
-    auto& forest1InitList = Map::GetMapInitList(Map::MapType::Forest1);
-    forest1InitList.AddFunctionPair(InitList::FunctionPair(MapObjectSnowfall::LoadAssets, MapObjectSnowfall::UnloadAssets));
-
-    *reinterpret_cast<decltype(MapObjectSnowfall::Create)**>(0x00a0dd44) = MapObjectSnowfall::Create;
 }
 
 #endif
