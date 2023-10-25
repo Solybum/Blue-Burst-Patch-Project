@@ -53,21 +53,21 @@ MapAssetPrefixes::Prefixes snowMapAssetPrefixStrings = {
 std::array<MapAssetPrefixes, 1> customMaps = {
     MapAssetPrefixes { &snowMapAssetPrefixStrings, 1 }
 };
-std::unordered_map<uint32_t, uint32_t> currentMapSubtitutions; // (Original map index, custom map index)
+std::unordered_map<uint32_t, uint32_t> currentMapSubstitutions; // (Original map index, custom map index)
 
 /**
  * @brief Custom maps will use the objects and enemies from the matching vanilla maps, but can have custom map geometry files.
  */
 const MapAssetPrefixes::Prefixes* __cdecl GetMapAssetPrefixes(uint32_t map)
 {
-    if (!currentMapSubtitutions.count(map))
+    if (!currentMapSubstitutions.count(map))
     {
         // Do vanilla behavior
         if (IsUltEp1()) return vanillaUltMapAssetPrefixes[map].prefixes;
         return vanillaMapAssetPrefixes[map].prefixes;
     }
 
-    return customMaps[currentMapSubtitutions[map]].prefixes;
+    return customMaps[currentMapSubstitutions[map]].prefixes;
 }
 
 __attribute__((regparm(1))) // Take argument in EAX
@@ -75,8 +75,8 @@ uint32_t __cdecl Before_InitEpisodeMaps(uint32_t episode)
 {
     // This gets called when entering or leaving a game or the lobby and from set_episode opcode
     // (but not when going to main menu, but will get called when entering lobby again).
-    // Seems like a good place to reset the map subtitutions.
-    currentMapSubtitutions.clear();
+    // Seems like a good place to reset the map substitutions.
+    currentMapSubstitutions.clear();
     // Code we overwrote
     *reinterpret_cast<uint32_t*>(0x00aafdb8) = episode;
     // Return to original code
@@ -85,7 +85,7 @@ uint32_t __cdecl Before_InitEpisodeMaps(uint32_t episode)
 
 void __cdecl NewOpcodeDesignateCustomMap(uint8_t origMap, uint8_t newMap)
 {
-    currentMapSubtitutions.insert({origMap, newMap});
+    currentMapSubstitutions.insert({origMap, newMap});
 
     // TODO: Replace area initializer
 }
