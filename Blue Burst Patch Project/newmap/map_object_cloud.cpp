@@ -1,3 +1,4 @@
+#include "mathutil.h"
 #ifdef PATCH_NEWMAP
 
 #include <cstdint>
@@ -21,13 +22,13 @@ static BmlMetadata bmlMeta = {
 };
 
 static void* xvm = nullptr;
-static void* bml = nullptr;
+static TBinModel* bml = nullptr;
 
 void __cdecl MapObjectCloud::LoadAssets()
 {
     xvm = LoadXvm("bm_obj_cloud.xvm");
 
-    bml = pf_malloc(0x440);
+    bml = (TBinModel*) pf_malloc(sizeof(TBinModel));
     LoadBml(bml, 5, &bmlMeta, nullptr, 0, nullptr);
 
     PrepareBmlMeshes(bml);
@@ -73,43 +74,41 @@ void MapObjectCloud::Destruct(BOOL freeMemory)
 
 void MapObjectCloud::Update()
 {
+    // Follow player to prevent getting culled by view distance
     auto player = GetPlayer(0);
-
-    xyz2.x = player->position.x;
-    xyz2.y = 100.0;
-    xyz2.z = player->position.z;
+    xyz2.set(player->position);
 
     texCoordX++;
 }
 
 void MapObjectCloud::Render()
 {
-    auto model = GetModel(bml, 0);
-
+    // Always render at 0,0,0
+    Vec3f renderPosition = {0.0, 0.0, 0.0};
     Transform::PushTransformStackCopy();
-    Transform::TranslateTransformStackHead(const_cast<Vec3<float>*>(&xyz2));
+    Transform::TranslateTransformStackHead(&renderPosition);
     Transform::RotateMatrix(nullptr, rotation.y);
+
+    UseTextureArchive(xvm);
 
     // Apply a 2D translation to texture coordinates to create a scrolling animation effect
     float translation = 0.0001 * (float)texCoordX;
-    D3DMATRIX mx = {
+    D3DMATRIX textureTranslationMatrix = {
         1.0, 0.0, 0.0, 0.0,
         0.0, 1.0, 0.0, 0.0,
         translation, translation, 1.0, 0.0,
         0.0, 0.0, 0.0, 1.0,
     };
 
-    UseTextureArchive(xvm);
-
     // Apply transform
     (*d3dDevice)->lpVtbl->SetTextureStageState(*d3dDevice, 0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_COUNT2);
-    (*d3dDevice)->lpVtbl->SetTransform(*d3dDevice, D3DTS_TEXTURE0, &mx);
+    (*d3dDevice)->lpVtbl->SetTransform(*d3dDevice, D3DTS_TEXTURE0, &textureTranslationMatrix);
 
+    auto model = GetModel(bml, 0);
     RenderXj(model);
 
     // Reset transform
     (*d3dDevice)->lpVtbl->SetTransform(*d3dDevice, D3DTS_TEXTURE0, Transform::identityMatrix);
-
     Transform::PopTransformStack();
 }
 

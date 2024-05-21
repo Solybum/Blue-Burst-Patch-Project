@@ -76,6 +76,9 @@ add_library(${PROJECT_NAME} SHARED
     newmap/newmap.cpp
     newmap/map_object_cloud.cpp
     newmap/map_object_snowfall.cpp
+    newmap/map_object_newdoor.cpp
+    newmap/slbgm.cpp
+    newmap/snow_map.cpp
     ninja.cpp
     quest.cpp
     player.cpp
@@ -87,10 +90,6 @@ add_library(${PROJECT_NAME} SHARED
 
 # Link with assimp if using newgfx
 if(USE_NEWGFX)
-    target_link_libraries(${PROJECT_NAME} assimp)
-endif()
-
-if(PATCH_NEWMAP)
     target_link_libraries(${PROJECT_NAME} assimp)
 endif()
 

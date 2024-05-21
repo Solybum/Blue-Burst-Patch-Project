@@ -1,18 +1,26 @@
+#include "helpers.h"
 #ifdef PATCH_NEWMAP
 
 #include <array>
 #include <cstdint>
 #include <cstdlib>
-#include <string>
-#include <stdexcept>
 #include <unordered_map>
 #include <vector>
 
+#include "../common.h"
+#include "../quest.h"
+#include "../map.h"
 #include "newmap.h"
+#include "snow_map.h"
 #include "map_object.h"
 #include "map_object_cloud.h"
 #include "map_object_snowfall.h"
-#include "quest.h"
+#include "map_object_newdoor.h"
+#include "slbgm.h"
+
+static std::array<CustomMapDefinition*, 1> customMaps = {
+    &snowMapEntry
+};
 
 #pragma pack(push, 1)
 struct MapDesignation
@@ -21,39 +29,26 @@ struct MapDesignation
     uint32_t map_variant;
     uint32_t object_set;
 };
-
-struct MapAssetPrefixes
-{
-    struct Prefixes {
-        const char* basename;
-        const char* variant_names[];
-    }* prefixes;
-    uint32_t variant_count;
-};
-
-struct MapLoadingHandler
-{
-    const char* name;
-    uint32_t (__cdecl *init)();
-    void* (__cdecl *uninit)();
-};
 #pragma pack(pop)
 
-const size_t VANILLA_FLOOR_COUNT = 18;
-const size_t VANILLA_MAP_COUNT = 47;
-auto vanillaFloorMapDesignations = reinterpret_cast<MapDesignation*>(0x00aafce0);
-auto vanillaMapAssetPrefixes = reinterpret_cast<MapAssetPrefixes*>(0x00a116e0);
-auto vanillaUltMapAssetPrefixes = reinterpret_cast<MapAssetPrefixes*>(0x00a114e0);
-auto mapLoadingHandlers = reinterpret_cast<MapLoadingHandler*>(0x00a160c0);
+static const size_t VANILLA_FLOOR_COUNT = 18;
+static const size_t VANILLA_MAP_COUNT = 47;
+static auto vanillaFloorMapDesignations = reinterpret_cast<MapDesignation*>(0x00aafce0);
+static auto vanillaMapAssetPrefixes = reinterpret_cast<MapAssetPrefixes*>(0x00a116e0);
+static auto vanillaUltMapAssetPrefixes = reinterpret_cast<MapAssetPrefixes*>(0x00a114e0);
 
-MapAssetPrefixes::Prefixes snowMapAssetPrefixStrings = {
-    "map_snow01",
-    "map_snow01"
-};
-std::array<MapAssetPrefixes, 1> customMaps = {
-    MapAssetPrefixes { &snowMapAssetPrefixStrings, 1 }
-};
-std::unordered_map<uint32_t, uint32_t> currentMapSubstitutions; // (Original map index, custom map index)
+static MapLoader* mapLoaders = reinterpret_cast<MapLoader*>(0x00a160c0);
+static const MapLoader* originalMapLoaders = []() {
+    size_t originalArrayLength = 0;
+    for (auto cursor = mapLoaders; cursor->name != nullptr; cursor++)
+        originalArrayLength++;
+    
+    auto originalCopy = new MapLoader[originalArrayLength];
+    std::copy(mapLoaders, mapLoaders + originalArrayLength, originalCopy);
+    return originalCopy;
+}();
+
+static std::unordered_map<uint32_t, uint32_t> currentMapSubstitutions; // (Original map index, custom map index)
 
 /**
  * @brief Custom maps will use the objects and enemies from the matching vanilla maps, but can have custom map geometry files.
@@ -67,7 +62,7 @@ const MapAssetPrefixes::Prefixes* __cdecl GetMapAssetPrefixes(uint32_t map)
         return vanillaMapAssetPrefixes[map].prefixes;
     }
 
-    return customMaps[currentMapSubstitutions[map]].prefixes;
+    return customMaps[currentMapSubstitutions[map]]->assetPrefixes.prefixes;
 }
 
 __attribute__((regparm(1))) // Take argument in EAX
@@ -76,6 +71,10 @@ uint32_t __cdecl Before_InitEpisodeMaps(uint32_t episode)
     // This gets called when entering or leaving a game or the lobby and from set_episode opcode
     // (but not when going to main menu, but will get called when entering lobby again).
     // Seems like a good place to reset the map substitutions.
+    for (const auto& [origMap, newMap] : currentMapSubstitutions)
+    {
+        mapLoaders[origMap] = originalMapLoaders[origMap];
+    }
     currentMapSubstitutions.clear();
     // Code we overwrote
     *reinterpret_cast<uint32_t*>(0x00aafdb8) = episode;
@@ -87,7 +86,8 @@ void __cdecl NewOpcodeDesignateCustomMap(uint8_t origMap, uint8_t newMap)
 {
     currentMapSubstitutions.insert({origMap, newMap});
 
-    // TODO: Replace area initializer
+    // Replace map loader
+    mapLoaders[origMap] = customMaps[newMap]->mapLoader;
 }
 
 void PatchMapDesignateOpcode()
@@ -97,45 +97,63 @@ void PatchMapDesignateOpcode()
     Quest::SetOpcode(0xf962, Quest::SetupOpcodeOperand11, (void*) NewOpcodeDesignateCustomMap);
 }
 
-#pragma pack(push, 1)
-struct SlbgmTransition
+class ObjectEnabler
 {
-    uint16_t start_index;
-    uint16_t length;
-    uint16_t transition_in;
-    uint16_t transition_out;
-    uint16_t next_part;
+    InitList& initList;
+    std::vector<MapObject::TaggedMapObjectConstructor>& objectList;
+
+public:
+    ObjectEnabler(Map::MapType mapType)
+        : initList(Map::GetMapInitList(mapType)),
+          objectList(MapObject::GetMapObjectConstructorList(mapType))
+    {}
+
+    template<size_t Id, typename Obj>
+    void Enable()
+    {
+        initList.AddFunctionPair(InitList::FunctionPair(Obj::LoadAssets, Obj::UnloadAssets));
+        objectList.emplace_back(Id, Obj::Create);
+    }
 };
-struct SlbgmDef
-{
-    char name[32];
-    uint32_t count;
-    uint32_t unk1;
-    uint32_t unk2;
-    SlbgmTransition* track1;
-    SlbgmTransition* track2;
-};
-#pragma pack(pop)
 
 void EnableObjects()
 {
-    auto& forest1InitList = Map::GetMapInitList(Map::MapType::Forest1);
-    auto& forest1Objects = MapObject::GetMapObjectConstructorList(Map::MapType::Forest1);
+    ObjectEnabler enabler(Map::MapType::Cave1);
+    enabler.Enable<1337, MapObjectCloud>();
+    enabler.Enable<1338, MapObjectSnowfall>();
+    enabler.Enable<1339, MapObjectNewdoor>();
+}
 
-#define ADD_OBJ(obj_id, obj_class) \
-    forest1InitList.AddFunctionPair(InitList::FunctionPair(obj_class::LoadAssets, obj_class::UnloadAssets)); \
-    forest1Objects.push_back(MapObject::TaggedMapObjectConstructor(obj_id, obj_class::Create));
-
-    ADD_OBJ(1337, MapObjectCloud);
-    ADD_OBJ(1338, MapObjectSnowfall);
-
-#undef ADD_OBJ
+void PatchMapLoaders()
+{
+    // References to first field
+    for (auto addr : {0x007a808c + 3})
+        *reinterpret_cast<decltype(MapLoader::name)**>(addr) = &mapLoaders[0].name;
+    
+    // References to second field
+    for (auto addr : {0x007a8915 + 3, 0x00815762 + 3, 0x00815776 + 3})
+        *reinterpret_cast<decltype(MapLoader::Load)**>(addr) = &mapLoaders[0].Load;
+    
+    // References to third field
+    for (auto addr : {0x008155c9 + 3, 0x008155da + 3, 0x0081561d + 3, 0x0081562e + 3})
+        *reinterpret_cast<decltype(MapLoader::Unload)**>(addr) = &mapLoaders[0].Unload;
 }
 
 void ApplyNewMapPatch()
 {
     PatchMapDesignateOpcode();
     EnableObjects();
+
+    PatchMapLoaders();
+
+    // Add slbgm definitions
+    auto& slbgmDefs = Slbgm::GetAllTransitionData();
+    for (auto& mapDef : customMaps)
+    {
+        slbgmDefs.push_back(new Slbgm::SlbgmDef(mapDef->songFilename, mapDef->slbgmFilePath));
+        mapDef->slbgmIndex = slbgmDefs.size() - 1;
+    }
+    Slbgm::ApplySlbgmPatch();
 }
 
 #endif // PATCH_NEWMAP
