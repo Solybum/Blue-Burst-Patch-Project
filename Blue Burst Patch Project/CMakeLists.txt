@@ -79,6 +79,7 @@ add_library(${PROJECT_NAME} SHARED
     newmap/map_object_newdoor.cpp
     newmap/slbgm.cpp
     newmap/snow_map.cpp
+    newmap/fog.cpp
     ninja.cpp
     quest.cpp
     player.cpp

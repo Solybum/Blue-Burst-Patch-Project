@@ -8,7 +8,7 @@ struct MapLoader
 {
     const char* name;
     bool (__cdecl *Load)();
-    void* (__cdecl *Unload)();
+    void (__cdecl *Unload)();
 };
 
 struct MapAssetPrefixes

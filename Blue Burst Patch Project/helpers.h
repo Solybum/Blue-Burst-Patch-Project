@@ -3,6 +3,8 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <stdint.h>
+#include <string>
+#include <vector>
 
 typedef uint8_t byte;
 
@@ -16,3 +18,5 @@ void Log(const WCHAR* fmt, ...);
 
 /// Fill a function with NOPs leaving only a RET. Only works for caller-cleanup functions.
 void StubOutFunction(int addrIn, int addrOut);
+
+std::vector<std::vector<std::string>> ReadCsvFile(const std::string& path);

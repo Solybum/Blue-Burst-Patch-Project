@@ -1,6 +1,9 @@
+#include "helpers.h"
+
 #include <cstdint>
 #include <cstdio>
-#include "helpers.h"
+#include <fstream>
+#include <sstream>
 
 int gcd(int a, int b)
 {
@@ -67,4 +70,30 @@ void StubOutFunction(int addrIn, int addrOut)
 {
     PatchNOP(addrIn, addrOut - addrIn);
     *(uint8_t*) addrIn = 0xc3; // ret
+}
+
+std::vector<std::vector<std::string>> ReadCsvFile(const std::string& path)
+{
+    std::ifstream file;
+    file.open(path);
+
+    if (file.fail())
+        throw std::runtime_error("Failed to open '" + path + "'");
+
+    std::vector<std::vector<std::string>> lines;
+
+    // Read lines
+    std::string line;
+    while (std::getline(file, line))
+    {
+        // Split line
+        std::istringstream lineStream(line);
+        std::string splitPart;
+        auto& splitParts = lines.emplace_back();
+        
+        while (std::getline(lineStream, splitPart, ','))
+            splitParts.push_back(splitPart);
+    }
+
+    return lines;
 }

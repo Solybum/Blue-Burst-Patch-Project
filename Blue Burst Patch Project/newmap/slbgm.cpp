@@ -11,6 +11,7 @@
 #include <vector>
 
 #include "slbgm.h"
+#include "../helpers.h"
 
 namespace Slbgm
 {
@@ -20,40 +21,20 @@ namespace Slbgm
         std::strncpy(name, songFilename.c_str(), 32);
         name[31] = '\0';
         
-        std::ifstream file;
-        file.open(definitionFilePath);
-        
-        if (file.fail())
-            throw std::runtime_error("Failed to open " + definitionFilePath);
-        
         std::vector<SlbgmTransitionPart> track1Parts;
         std::vector<SlbgmTransitionPart> track2Parts;
-        
-        // Read lines, each line is one transition part.
-        // A line is a list of comma separated values, the values are as follows:
-        // track_index, stream_index, transition_in, part_length, transition_out, next_part
-        std::string line;
-        while (std::getline(file, line))
+        auto lines = ReadCsvFile(definitionFilePath);
+
+        for (const auto& splitParts : lines)
         {
-            // Split line and collect into vector of ints
-            std::istringstream lineStream(line);
-            std::string splitPart;
-            std::vector<uint16_t> splitValues;
-            splitValues.resize(6);
-            size_t i = 0;
-            while (std::getline(lineStream, splitPart, ','))
-            {
-                uint16_t value = std::strtoul(splitPart.data(), nullptr, 10);
-                splitValues[i++] = value;
-            }
-            
             // Add transition part
-            auto& transPart = splitValues[0] == 0 ? track1Parts.emplace_back() : track2Parts.emplace_back();
-            transPart.startIndex = splitValues[1];
-            transPart.transitionIn = splitValues[2];
-            transPart.length = splitValues[3];
-            transPart.transitionOut = splitValues[4];
-            transPart.nextPart = splitValues[5];
+            // track_index, stream_index, transition_in, part_length, transition_out, next_part
+            auto& transPart = std::strtoul(splitParts[0].c_str(), nullptr, 10) == 0 ? track1Parts.emplace_back() : track2Parts.emplace_back();
+            transPart.startIndex = std::strtoul(splitParts[1].c_str(), nullptr, 10);
+            transPart.transitionIn = std::strtoul(splitParts[2].c_str(), nullptr, 10);
+            transPart.length = std::strtoul(splitParts[3].c_str(), nullptr, 10);
+            transPart.transitionOut = std::strtoul(splitParts[4].c_str(), nullptr, 10);
+            transPart.nextPart = std::strtoul(splitParts[5].c_str(), nullptr, 10);
         }
         
         // Put track parts on the heap

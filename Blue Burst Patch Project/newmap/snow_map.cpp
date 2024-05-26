@@ -1,6 +1,11 @@
 #ifdef PATCH_NEWMAP
 
+#include <cstdint>
+#include <cstddef>
+#include <cstdlib>
+
 #include "snow_map.h"
+#include "fog.h"
 #include "slbgm.h"
 #include "../map.h"
 
@@ -10,6 +15,8 @@ static MapAssetPrefixes::Prefixes snowMapAssetPrefixStrings = {
     "map_snow01"
 };
 
+static FogEntry originalFogEntry;
+
 bool __cdecl LoadSnowMapStuff()
 {
     auto map = GetCurrentMap();
@@ -17,10 +24,28 @@ bool __cdecl LoadSnowMapStuff()
     if (reinterpret_cast<bool (__cdecl *)()>(0x00781fc4)()) { // warp_load_assets
       return false;
     }
+
+    // Replace fog
+    auto fog = ReadFogFile("data/fog_snow.txt");
+    originalFogEntry = (*fogEntries)[(size_t) map];
+    (*fogEntries)[(size_t) map] = fog;
+
     reinterpret_cast<void (__cdecl *)()>(0x00793f64)(); // unk_load_lightentry()
     reinterpret_cast<void (__cdecl *)()>(0x00782098)(); // unknown_create_map()
+
     Slbgm::LoadSlbgm(snowMapEntry.slbgmIndex);
+
     return true;
+}
+
+void __cdecl UnloadSnowMapStuff()
+{
+    // Restore replaced fog
+    auto map = GetCurrentMap();
+    (*fogEntries)[(size_t) map] = originalFogEntry;
+
+    // Call normal unload stuff
+    reinterpret_cast<decltype(MapLoader::Unload)>(0x007a6dd8)();
 }
 
 CustomMapDefinition snowMapEntry = {
@@ -28,7 +53,7 @@ CustomMapDefinition snowMapEntry = {
     MapLoader {
         snowMapName,
         LoadSnowMapStuff,
-        reinterpret_cast<decltype(MapLoader::Unload)>(0x007a6dd8)
+        UnloadSnowMapStuff
     },
     "slbgm_snow.ogg",
     "data/slbgm_snow.txt",
