@@ -80,6 +80,7 @@ add_library(${PROJECT_NAME} SHARED
     newmap/slbgm.cpp
     newmap/snow_map.cpp
     newmap/fog.cpp
+    newmap/sunlight.cpp
     ninja.cpp
     quest.cpp
     player.cpp
