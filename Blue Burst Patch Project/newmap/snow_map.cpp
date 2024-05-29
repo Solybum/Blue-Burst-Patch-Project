@@ -5,41 +5,64 @@
 
 #include "snow_map.h"
 #include "fog.h"
+#include "newmap.h"
+#include "../map.h"
 #include "sunlight.h"
 #include "slbgm.h"
-#include "../map.h"
 
 static const char* snowMapName = "SNOW01";
 static MapAssetPrefixes::Prefixes snowMapAssetPrefixStrings = {
     "map_snow01",
     "map_snow01"
 };
+static MapAssetPrefixes snowMapAssetPrefixes = {
+    &snowMapAssetPrefixStrings,
+    1
+};
+
+static SetDataTable::Inner1::Inner2 snowSetDataTableInner2 = {
+    "map_snow01",
+    "map_snow01",
+    "map_snow01"
+};
+static SetDataTable::Inner1 snowSetDataTableInner1 = {
+    &snowSetDataTableInner2,
+    1
+};
+static SetDataTable snowSetDataTable = {
+    &snowSetDataTableInner1,
+    1
+};
 
 static FogEntry originalFogEntry;
 static LightEntry originalLightEntry;
+static SetDataTable originalSetDataTable;
 
 bool __cdecl LoadSnowMapStuff()
 {
+    // Replace SetDataTable (before warp_load_assets)
     auto map = GetCurrentMap();
+    (*setDataTable)[(size_t) map] = snowSetDataTable;
+
     reinterpret_cast<bool (__cdecl *)(Map::MapType)>(0x00815584)(map); // load_map_sound_data_
     if (reinterpret_cast<bool (__cdecl *)()>(0x00781fc4)()) { // warp_load_assets
-      return false;
+        return false;
     }
 
-    // Replace fog
+    // Replace fog (before unknown_create_map)
     auto fogIndex = (size_t) map;
     auto fog = ReadFogFile("data/fog_snow.txt");
     originalFogEntry = (*fogEntries)[fogIndex];
     (*fogEntries)[fogIndex] = fog;
     
-    // Replace sunlight
+    // Replace sunlight (before create_map_sunlight_from_lightentry)
     auto lightEntryIndex = (size_t) map;
     auto light = ReadLightFile("data/sun_snow.txt");
     if (IsUltEp1()) lightEntryIndex += 48;
     originalLightEntry = (*lightEntries)[lightEntryIndex];
     (*lightEntries)[lightEntryIndex] = light;
 
-    reinterpret_cast<void (__cdecl *)()>(0x00793f64)(); // unk_load_lightentry()
+    reinterpret_cast<void (__cdecl *)()>(0x00793f64)(); // create_map_sunlight_from_lightentry()
     reinterpret_cast<void (__cdecl *)()>(0x00782098)(); // unknown_create_map()
 
     Slbgm::LoadSlbgm(snowMapEntry.slbgmIndex);
@@ -57,13 +80,16 @@ void __cdecl UnloadSnowMapStuff()
     auto lightEntryIndex = (size_t) map;
     if (IsUltEp1()) lightEntryIndex += 48;
     (*lightEntries)[lightEntryIndex] = originalLightEntry;
+    
+    // Restore SetDataTable
+    (*setDataTable)[(size_t) map] = originalSetDataTable;
 
     // Call normal unload stuff
     reinterpret_cast<decltype(MapLoader::Unload)>(0x007a6dd8)();
 }
 
 CustomMapDefinition snowMapEntry = {
-    MapAssetPrefixes { &snowMapAssetPrefixStrings, 1 },
+    snowMapAssetPrefixes,
     MapLoader {
         snowMapName,
         LoadSnowMapStuff,

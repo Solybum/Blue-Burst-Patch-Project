@@ -18,6 +18,8 @@
 #include "map_object_newdoor.h"
 #include "slbgm.h"
 
+SetDataTable** setDataTable = reinterpret_cast<SetDataTable**>(0x00aafdd0);
+
 static std::array<CustomMapDefinition*, 1> customMaps = {
     &snowMapEntry
 };

@@ -15,10 +15,25 @@ struct MapAssetPrefixes
 {
     struct Prefixes {
         const char* basename;
-        const char* variant_names[];
+        const char* variantNames[];
     }* prefixes;
-    uint32_t variant_count;
+    uint32_t variantCount;
 };
+
+struct SetDataTable
+{
+    struct Inner1 {
+        struct Inner2 {
+            const char* variantName1;
+            const char* variantName2;
+            const char* baseName;
+        }* objectSetVariants;
+        uint32_t count;
+    }* mapVariants;
+    uint32_t count;
+};
+
+extern SetDataTable** setDataTable;
 
 struct CustomMapDefinition
 {
@@ -29,5 +44,6 @@ struct CustomMapDefinition
     size_t slbgmIndex; // Assigned by patch
 };
 #pragma pack(pop)
+
 
 void ApplyNewMapPatch();
