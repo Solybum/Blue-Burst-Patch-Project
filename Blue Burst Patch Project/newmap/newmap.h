@@ -1,5 +1,7 @@
 #pragma once
 
+#include "enemy.h"
+#include "map_object.h"
 #include <cstdint>
 #include <string>
 
@@ -35,13 +37,21 @@ struct SetDataTable
 
 extern SetDataTable** setDataTable;
 
+#define SpawnableEntity(id, EntityType) \
+    { id, \
+      EntityType::LoadAssets, \
+      EntityType::UnloadAssets, \
+      EntityType::Create }
+
 struct CustomMapDefinition
 {
-    MapAssetPrefixes assetPrefixes;
-    MapLoader mapLoader;
-    std::string songFilename;
-    std::string slbgmFilePath;
+    const MapAssetPrefixes assetPrefixes;
+    const MapLoader mapLoader;
+    const std::string songFilename;
+    const std::string slbgmFilePath;
     size_t slbgmIndex; // Assigned by patch
+    const std::vector<Enemy::SpawnableDefinition> allowedMonsters;
+    const std::vector<MapObject::SpawnableDefinition> allowedObjects;
 };
 #pragma pack(pop)
 

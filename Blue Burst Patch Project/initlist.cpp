@@ -168,19 +168,8 @@ void InitList::Clear()
     functionPairs.clear();
 }
 
-bool InitList::HasChanged()
-{
-    return functionPairs.size() != origPairCount;
-}
-
 void InitList::Patch()
 {
-    if (!HasChanged())
-    {
-        // Nothing to do
-        return;
-    }
-
     // This whole thing won't do anything if there isn't at least one list reference
     if (listReferenceAddresses.empty())
     {

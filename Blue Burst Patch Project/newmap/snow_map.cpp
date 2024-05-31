@@ -3,10 +3,15 @@
 #include <cstddef>
 #include <cstdlib>
 
+#include "enemy.h"
 #include "snow_map.h"
 #include "fog.h"
 #include "newmap.h"
 #include "../map.h"
+#include "map_object.h"
+#include "map_object_cloud.h"
+#include "map_object_snowfall.h"
+#include "map_object_newdoor.h"
 #include "sunlight.h"
 #include "slbgm.h"
 
@@ -89,15 +94,26 @@ void __cdecl UnloadSnowMapStuff()
 }
 
 CustomMapDefinition snowMapEntry = {
-    snowMapAssetPrefixes,
-    MapLoader {
+    .assetPrefixes = snowMapAssetPrefixes,
+    .mapLoader = {
         snowMapName,
         LoadSnowMapStuff,
         UnloadSnowMapStuff
     },
-    "slbgm_snow.ogg",
-    "data/slbgm_snow.txt",
-    0
+    .songFilename = "slbgm_snow.ogg",
+    .slbgmFilePath = "data/slbgm_snow.txt",
+    .slbgmIndex = 0,
+    .allowedMonsters = {
+        Enemy::GetEnemyDefinition(Enemy::NpcType::Booma),
+        Enemy::GetEnemyDefinition(Enemy::NpcType::SavageWolf)
+    },
+    .allowedObjects = {
+        MapObject::GetMapObjectDefinition(MapObject::MapObjectType::PlayerSet1),
+        MapObject::GetMapObjectDefinition(MapObject::MapObjectType::FloatingJelifish),
+        SpawnableEntity(1337, MapObjectCloud),
+        SpawnableEntity(1338, MapObjectSnowfall),
+        SpawnableEntity(1339, MapObjectNewdoor)
+    }
 };
 
 #endif // PATCH_NEWMAP

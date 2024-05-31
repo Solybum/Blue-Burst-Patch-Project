@@ -1,4 +1,3 @@
-#include "helpers.h"
 #ifdef PATCH_NEWMAP
 
 #include <array>
@@ -13,9 +12,6 @@
 #include "newmap.h"
 #include "snow_map.h"
 #include "map_object.h"
-#include "map_object_cloud.h"
-#include "map_object_snowfall.h"
-#include "map_object_newdoor.h"
 #include "slbgm.h"
 
 SetDataTable** setDataTable = reinterpret_cast<SetDataTable**>(0x00aafdd0);
@@ -90,6 +86,25 @@ void __cdecl NewOpcodeDesignateCustomMap(uint8_t origMap, uint8_t newMap)
 
     // Replace map loader
     mapLoaders[origMap] = customMaps[newMap]->mapLoader;
+    
+    // Replace enemies and objects
+    auto& initList = Map::GetMapInitList((Map::MapType) origMap);
+    initList.Clear();
+    initList.AddFunctionPair({0x00578d44, 0x00578128}); // load_bm_ene_common_all.bml
+    initList.AddFunctionPair({0x00521950, 0x0051f59c}); // unknown_map_init_common
+    
+    auto& origObjs = MapObject::GetMapObjectConstructorList((Map::MapType) origMap);
+    origObjs.clear();
+    
+    for (const auto& obj : customMaps[newMap]->allowedObjects)
+    {
+        if (obj.LoadAssets != nullptr)
+            initList.AddFunctionPair(InitList::FunctionPair(obj.LoadAssets, obj.UnloadAssets));
+        origObjs.emplace_back(obj.id, obj.Create);
+    }
+
+    initList.Patch();
+    MapObject::PatchMapObjectConstructorLists();
 }
 
 void PatchMapDesignateOpcode()
@@ -118,14 +133,6 @@ public:
     }
 };
 
-void EnableObjects()
-{
-    ObjectEnabler enabler(Map::MapType::Cave1);
-    enabler.Enable<1337, MapObjectCloud>();
-    enabler.Enable<1338, MapObjectSnowfall>();
-    enabler.Enable<1339, MapObjectNewdoor>();
-}
-
 void PatchMapLoaders()
 {
     // References to first field
@@ -144,7 +151,6 @@ void PatchMapLoaders()
 void ApplyNewMapPatch()
 {
     PatchMapDesignateOpcode();
-    EnableObjects();
 
     PatchMapLoaders();
 

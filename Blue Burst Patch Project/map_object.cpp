@@ -4,6 +4,36 @@
 
 namespace MapObject
 {
+    SpawnableDefinition::SpawnableDefinition(MapObjectType id, size_t loadAssetsAddr, size_t unloadAssetsAddr, size_t createAddr)
+        : id((uint16_t) id),
+          LoadAssets(reinterpret_cast<decltype(LoadAssets)>(loadAssetsAddr)),
+          UnloadAssets(reinterpret_cast<decltype(UnloadAssets)>(unloadAssetsAddr)),
+          Create(reinterpret_cast<decltype(Create)>(createAddr)) {}
+
+    SpawnableDefinition::SpawnableDefinition(uint16_t id,
+            decltype(LoadAssets) LoadAssets,
+            decltype(UnloadAssets) UnloadAssets,
+            decltype(Create) Create)
+        : id(id),
+          LoadAssets(LoadAssets),
+          UnloadAssets(UnloadAssets),
+          Create(Create) {}
+    
+    const std::unordered_map<MapObjectType, SpawnableDefinition>& GetMapObjectDefinitions()
+    {
+        static std::unordered_map<MapObjectType, SpawnableDefinition> mapObjectDefinitions =
+        {
+            {MapObjectType::PlayerSet1, SpawnableDefinition(MapObjectType::PlayerSet1, 0, 0, 0x00661728)},
+            {MapObjectType::FloatingJelifish, SpawnableDefinition(MapObjectType::FloatingJelifish, 0x0062cfa8, 0x0062c190, 0x0062c1b0)}
+        };
+        return mapObjectDefinitions;
+    }
+    
+    const SpawnableDefinition& GetMapObjectDefinition(MapObjectType tp)
+    {
+        return GetMapObjectDefinitions().at(tp);
+    }
+
     void** rootMapObject = reinterpret_cast<void**>(0x00aca350);
 
     MapObjectBase::MapObjectBase(void* parentObject)
@@ -72,27 +102,19 @@ namespace MapObject
 
     static const TaggedMapObjectConstructor objectListTerminator = TaggedMapObjectConstructor(0xffff, nullptr);
 
-    bool patchedConstructorLists = false;
+    static std::vector<TaggedMapObjectConstructor*> patchedLists;
 
     void PatchMapObjectConstructorLists()
     {
-        if (patchedConstructorLists) return;
-
-        patchedConstructorLists = true;
-
         // Write used lists
-        for (const auto& entry : objectConstructorListCache)
+        for (auto& [map, objectList] : objectConstructorListCache)
         {
-            auto map = entry.first;
-            auto objectList = entry.second;
-
             // Add terminator
-            objectList.push_back(objectListTerminator);
+            if (objectList.empty() || objectList[objectList.size() - 1].objectType != objectListTerminator.objectType)
+                objectList.push_back(objectListTerminator);
 
-            // Copy to heap (deliberate leak) and write new list to table
-            TaggedMapObjectConstructor* copy = new TaggedMapObjectConstructor[objectList.size()];
-            std::copy(objectList.begin(), objectList.end(), copy);
-            mapObjectTable[(size_t) map] = copy;
+            // Write new list to table
+            mapObjectTable[(size_t) map] = objectList.data();
         }
     }
 };

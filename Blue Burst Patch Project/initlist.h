@@ -51,14 +51,14 @@ private:
     bool nullTerminated;
 
     static void PatchAllInitLists();
-    bool HasChanged();
-    void Patch();
 
     InitList(const FunctionPair* listStart, const FunctionPair* listEnd);
     InitList(const FunctionPair* listStart);
 
 
 public:
+    void Patch();
+
     /// Add addresses that reference the size of the initlist.
     /// These values will be rewritten to the new size of the initlist.
     void AddListReferenceAddress(size_t addr);
