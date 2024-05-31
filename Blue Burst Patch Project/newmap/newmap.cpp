@@ -1,6 +1,5 @@
 #ifdef PATCH_NEWMAP
 
-#include <array>
 #include <cstdint>
 #include <cstdlib>
 #include <unordered_map>
@@ -9,6 +8,8 @@
 #include "../common.h"
 #include "../quest.h"
 #include "../map.h"
+#include "enemy.h"
+#include "initlist.h"
 #include "newmap.h"
 #include "snow_map.h"
 #include "map_object.h"
@@ -16,9 +17,14 @@
 
 SetDataTable** setDataTable = reinterpret_cast<SetDataTable**>(0x00aafdd0);
 
-static std::array<CustomMapDefinition*, 1> customMaps = {
+static std::vector<CustomMapDefinition*> customMaps = {
     &snowMapEntry
 };
+
+// Key is original map, value is original list
+static std::unordered_map<uint8_t, std::vector<InitList::FunctionPair>> replacedInitLists;
+static std::unordered_map<uint8_t, std::vector<Enemy::TaggedEnemyConstructor>> replacedEnemyLists;
+static std::unordered_map<uint8_t, std::vector<MapObject::TaggedMapObjectConstructor>> replacedMapObjectLists;
 
 #pragma pack(push, 1)
 struct MapDesignation
@@ -72,7 +78,22 @@ uint32_t __cdecl Before_InitEpisodeMaps(uint32_t episode)
     for (const auto& [origMap, newMap] : currentMapSubstitutions)
     {
         mapLoaders[origMap] = originalMapLoaders[origMap];
+
+        auto& monsterList = Enemy::GetEnemyConstructorList((Map::MapType) origMap);
+        monsterList = replacedEnemyLists[origMap];
+
+        auto& objectList = MapObject::GetMapObjectConstructorList((Map::MapType) origMap);
+        objectList = replacedMapObjectLists[origMap];
+        
+        auto& initList = Map::GetMapInitList((Map::MapType) origMap);
+        initList.SetFunctions(replacedInitLists[origMap]);
+        initList.Patch();
     }
+    Enemy::PatchEnemyConstructorLists();
+    MapObject::PatchMapObjectConstructorLists();
+    replacedEnemyLists.clear();
+    replacedMapObjectLists.clear();
+    replacedInitLists.clear();
     currentMapSubstitutions.clear();
     // Code we overwrote
     *reinterpret_cast<uint32_t*>(0x00aafdb8) = episode;
@@ -89,18 +110,31 @@ void __cdecl NewOpcodeDesignateCustomMap(uint8_t origMap, uint8_t newMap)
     
     // Replace enemies and objects
     auto& initList = Map::GetMapInitList((Map::MapType) origMap);
+    replacedInitLists[origMap] = initList.GetFunctions();
     initList.Clear();
     initList.AddFunctionPair({0x00578d44, 0x00578128}); // load_bm_ene_common_all.bml
     initList.AddFunctionPair({0x00521950, 0x0051f59c}); // unknown_map_init_common
     
-    auto& origObjs = MapObject::GetMapObjectConstructorList((Map::MapType) origMap);
-    origObjs.clear();
+    auto& objectList = MapObject::GetMapObjectConstructorList((Map::MapType) origMap);
+    replacedMapObjectLists[origMap] = objectList;
+    objectList.clear();
+    
+    auto& monsterList = Enemy::GetEnemyConstructorList((Map::MapType) origMap);
+    replacedEnemyLists[origMap] = monsterList;
+    monsterList.clear();
     
     for (const auto& obj : customMaps[newMap]->allowedObjects)
     {
         if (obj.LoadAssets != nullptr)
             initList.AddFunctionPair(InitList::FunctionPair(obj.LoadAssets, obj.UnloadAssets));
-        origObjs.emplace_back(obj.id, obj.Create);
+        objectList.emplace_back(obj.id, obj.Create);
+    }
+    
+    for (const auto& mon : customMaps[newMap]->allowedMonsters)
+    {
+        if (mon.LoadAssets != nullptr)
+            initList.AddFunctionPair(InitList::FunctionPair(mon.LoadAssets, mon.UnloadAssets));
+        monsterList.emplace_back(mon.id, mon.Create);
     }
 
     initList.Patch();

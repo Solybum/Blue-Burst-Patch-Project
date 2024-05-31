@@ -1,3 +1,4 @@
+#include <cstdint>
 #include <unordered_map>
 #include "enemy.h"
 #include "map.h"
@@ -82,13 +83,13 @@ namespace Enemy
         return GetEnemyDefinitions().at(tp);
     }
 
-    TaggedEnemyConstructor::TaggedEnemyConstructor(NpcType type, EnemyConstructor ctor) :
+    TaggedEnemyConstructor::TaggedEnemyConstructor(uint16_t type, EnemyConstructor ctor) :
         enemyType(type), constructor(ctor), unknown1(0), unknown2(250000.0), defaultCloneCount(0) {}
 
     TaggedEnemyConstructor::TaggedEnemyConstructor() :
-        enemyType(NpcType::Invalid), constructor(nullptr), unknown1(0), unknown2(250000.0), defaultCloneCount(0) {}
+        enemyType((uint16_t) NpcType::Invalid), constructor(nullptr), unknown1(0), unknown2(250000.0), defaultCloneCount(0) {}
 
-    const TaggedEnemyConstructor enemyListTerminator = TaggedEnemyConstructor(NpcType::ListTerminator, nullptr);
+    const TaggedEnemyConstructor enemyListTerminator = TaggedEnemyConstructor((uint16_t) NpcType::ListTerminator, nullptr);
 
     /// Save used lists here
     std::unordered_map<Map::MapType, std::vector<TaggedEnemyConstructor>> enemyConstructorListCache;
@@ -106,7 +107,7 @@ namespace Enemy
         std::vector<TaggedEnemyConstructor> enemyList;
         auto entries = mapEnemyTable[(size_t) map];
 
-        while (entries->enemyType != NpcType::ListTerminator)
+        while ((NpcType) entries->enemyType != NpcType::ListTerminator)
         {
             enemyList.push_back(*entries);
             entries++;
@@ -125,9 +126,9 @@ namespace Enemy
         {
             TaggedEnemyConstructor* currentEntry = *currentList;
 
-            while (currentEntry->enemyType != NpcType::ListTerminator)
+            while ((NpcType) currentEntry->enemyType != NpcType::ListTerminator)
             {
-                if (currentEntry->enemyType == needle)
+                if ((NpcType) currentEntry->enemyType == needle)
                 {
                     return currentEntry;
                 }

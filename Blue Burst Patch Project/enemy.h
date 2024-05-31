@@ -199,13 +199,13 @@ namespace Enemy
 #pragma pack(push, 1)
     struct TaggedEnemyConstructor
     {
-        NpcType enemyType;
+        uint16_t enemyType;
         uint16_t unknown1;
         EnemyConstructor constructor;
         float unknown2;
         uint32_t defaultCloneCount;
 
-        TaggedEnemyConstructor(NpcType type, EnemyConstructor ctor);
+        TaggedEnemyConstructor(uint16_t type, EnemyConstructor ctor);
         TaggedEnemyConstructor();
     };
 

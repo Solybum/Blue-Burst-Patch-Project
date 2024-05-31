@@ -168,6 +168,16 @@ void InitList::Clear()
     functionPairs.clear();
 }
 
+std::vector<InitList::FunctionPair> InitList::GetFunctions() const
+{
+    return functionPairs;
+}
+
+void InitList::SetFunctions(const std::vector<FunctionPair>& newList)
+{
+    functionPairs = newList;
+}
+
 void InitList::Patch()
 {
     // This whole thing won't do anything if there isn't at least one list reference

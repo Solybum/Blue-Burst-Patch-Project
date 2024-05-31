@@ -80,11 +80,14 @@ public:
     /// Should terminate list with a null element?
     void SetNullTerminated(bool);
 
-    /// Appends the init function pairs from another initist.
+    /// Appends the init function pairs from another initlist.
     void Append(const InitList& other);
 
     /// Removes all init function pairs.
     void Clear();
+    
+    std::vector<FunctionPair> GetFunctions() const;
+    void SetFunctions(const std::vector<FunctionPair>&);
 
     static InitList& GetInitList(size_t listStartAddr, size_t listEndAddr);
     static InitList& GetInitList(const FunctionPair* listStart, const FunctionPair* listEnd);
