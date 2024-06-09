@@ -14,6 +14,7 @@
 #include "snow_map.h"
 #include "map_object.h"
 #include "slbgm.h"
+#include "sound_effects.h"
 
 SetDataTable** setDataTable = reinterpret_cast<SetDataTable**>(0x00aafdd0);
 
@@ -88,6 +89,8 @@ uint32_t __cdecl Before_InitEpisodeMaps(uint32_t episode)
         auto& initList = Map::GetMapInitList((Map::MapType) origMap);
         initList.SetFunctions(replacedInitLists[origMap]);
         initList.Patch();
+        
+        RestoreMapPac(origMap);
     }
     Enemy::PatchEnemyConstructorLists();
     MapObject::PatchMapObjectConstructorLists();
@@ -139,6 +142,9 @@ void __cdecl NewOpcodeDesignateCustomMap(uint8_t origMap, uint8_t newMap)
 
     initList.Patch();
     MapObject::PatchMapObjectConstructorLists();
+
+    // Replace sound effects
+    ReplaceMapPac(origMap, "snow.pac", "snow_pac.txt");
 }
 
 void PatchMapDesignateOpcode()
@@ -147,25 +153,6 @@ void PatchMapDesignateOpcode()
     PatchCALL(0x0080c7a0, 0x0080c7a5, (int) Before_InitEpisodeMaps);
     Quest::SetOpcode(0xf962, Quest::SetupOpcodeOperand11, (void*) NewOpcodeDesignateCustomMap);
 }
-
-class ObjectEnabler
-{
-    InitList& initList;
-    std::vector<MapObject::TaggedMapObjectConstructor>& objectList;
-
-public:
-    ObjectEnabler(Map::MapType mapType)
-        : initList(Map::GetMapInitList(mapType)),
-          objectList(MapObject::GetMapObjectConstructorList(mapType))
-    {}
-
-    template<size_t Id, typename Obj>
-    void Enable()
-    {
-        initList.AddFunctionPair(InitList::FunctionPair(Obj::LoadAssets, Obj::UnloadAssets));
-        objectList.emplace_back(Id, Obj::Create);
-    }
-};
 
 void PatchMapLoaders()
 {
@@ -187,6 +174,8 @@ void ApplyNewMapPatch()
     PatchMapDesignateOpcode();
 
     PatchMapLoaders();
+    
+    PatchSoundEffectLimit();
 
     // Add slbgm definitions
     auto& slbgmDefs = Slbgm::GetAllTransitionData();

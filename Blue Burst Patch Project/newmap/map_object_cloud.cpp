@@ -105,7 +105,9 @@ void MapObjectCloud::Render()
     (*d3dDevice)->lpVtbl->SetTransform(*d3dDevice, D3DTS_TEXTURE0, &textureTranslationMatrix);
 
     auto model = GetModel(bml, 0);
+    DisableFog();
     RenderXj(model);
+    EnableFog();
 
     // Reset transform
     (*d3dDevice)->lpVtbl->SetTransform(*d3dDevice, D3DTS_TEXTURE0, Transform::identityMatrix);

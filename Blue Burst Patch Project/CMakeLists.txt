@@ -81,6 +81,7 @@ add_library(${PROJECT_NAME} SHARED
     newmap/snow_map.cpp
     newmap/fog.cpp
     newmap/sunlight.cpp
+    newmap/sound_effects.cpp
     ninja.cpp
     quest.cpp
     player.cpp

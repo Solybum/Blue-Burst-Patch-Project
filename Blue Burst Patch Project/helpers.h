@@ -20,3 +20,9 @@ void Log(const WCHAR* fmt, ...);
 void StubOutFunction(int addrIn, int addrOut);
 
 std::vector<std::vector<std::string>> ReadCsvFile(const std::string& path);
+
+template<typename T>
+T NextAligned(T current, T alignment)
+{
+    return (current + alignment - 1) / alignment * alignment;
+}
