@@ -37,6 +37,7 @@ struct NjmMotion
 
 extern void (__thiscall *UseTextureArchive)(void* tex);
 extern void (__fastcall *RenderXj)(void* model);
+extern void (__cdecl *RenderNj)(void*);
 extern void (__fastcall *RenderAnimatedXjUp)(void* model, void* motion, float elapsed);
 extern TBinModel* (__thiscall *LoadBml)(TBinModel* result, uint32_t unk1, BmlMetadata* bmlMeta, void* unk2, uint32_t unk3, void* optionalDstBuf);
 extern void (__thiscall *FreeBml)(TBinModel* bml, uint32_t doFree);

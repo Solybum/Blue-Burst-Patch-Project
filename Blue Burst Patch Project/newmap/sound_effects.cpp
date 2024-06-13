@@ -1,4 +1,3 @@
-#include "common.h"
 #ifdef PATCH_NEWMAP
 
 #include <algorithm>
@@ -9,7 +8,8 @@
 #include <unordered_map>
 #include <vector>
 
-#include "helpers.h"
+#include "../common.h"
+#include "../helpers.h"
 #include "sound_effects.h"
 
 #pragma pack(push, 1)

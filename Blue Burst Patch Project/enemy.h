@@ -184,13 +184,15 @@ namespace Enemy
         void (__cdecl *LoadAssets)(void) = nullptr;
         void (__cdecl *UnloadAssets)(void) = nullptr;
         void* (__cdecl *Create)(InitData::InnerData* initData) = nullptr;
+        uint32_t cloneCount = 0;
         
         constexpr SpawnableDefinition() = default;
         SpawnableDefinition(NpcType id, size_t loadAssetsAddr, size_t unloadAssetsAddr, size_t createAddr);
         SpawnableDefinition(uint16_t id,
             decltype(LoadAssets) LoadAssets,
             decltype(UnloadAssets) UnloadAssets,
-            decltype(Create) Create);
+            decltype(Create) Create,
+            uint32_t cloneCount = 0);
     };
     
     const std::unordered_map<NpcType, SpawnableDefinition>& GetEnemyDefinitions();
@@ -206,6 +208,7 @@ namespace Enemy
         uint32_t defaultCloneCount;
 
         TaggedEnemyConstructor(uint16_t type, EnemyConstructor ctor);
+        TaggedEnemyConstructor(uint16_t type, EnemyConstructor ctor, uint32_t cloneCount);
         TaggedEnemyConstructor();
     };
 
@@ -255,7 +258,7 @@ namespace Enemy
     extern BmlData::LoadBmlFunction LoadBml;
     extern BmlData::FreeBmlFunction FreeBml;
 
-    extern void** rootEnemyObject;
+    extern BaseObject** rootEnemyObject;
 
     enum Attribute : uint32_t
     {
@@ -274,6 +277,9 @@ namespace Enemy
                 DEFINE_FIELD(0x4, void (__thiscall *Update)(void* self));
                 DEFINE_FIELD(0x8, void (__thiscall *Render)(void* self));
                 DEFINE_FIELD(0xc, void (__thiscall *RenderShadow)(void* self));
+                DEFINE_FIELD(0x5c, float (__thiscall *HitByAttack)(void* self, void* attacker, float powerMultiplier));
+                DEFINE_FIELD(0x60, float (__thiscall *HitByTech)(void* self, void* attacker, uint32_t techGroup, float power, void* unk1, uint8_t tech, uint32_t unk2));
+                DEFINE_FIELD(0x64, float (__thiscall *HitBySpecial)(void* self, void* attacker, void* unk1));
                 DEFINE_FIELD(0x14c, void (__thiscall *ApplyInitData)(void* self, InitData::InnerData* initData));
             };
         };
@@ -288,6 +294,10 @@ namespace Enemy
 
             union {
                 DEFINE_FIELD(0x8, ObjectFlag objectFlags);
+                DEFINE_FIELD(0xc, BaseObject* prevSiblingObject);
+                DEFINE_FIELD(0x10, BaseObject* nextSiblingObject);
+                DEFINE_FIELD(0x14, BaseObject* parentObject);
+                DEFINE_FIELD(0x18, BaseObject* childObject);
                 DEFINE_FIELD(0x1c, Entity::EntityIndex entityIndex);
                 DEFINE_FIELD(0x24, void* njtl);
                 DEFINE_FIELD(0x28, uint16_t originalMapSection);

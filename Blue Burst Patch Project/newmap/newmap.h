@@ -42,6 +42,13 @@ extern SetDataTable** setDataTable;
       EntityType::LoadAssets, \
       EntityType::UnloadAssets, \
       EntityType::Create }
+  
+#define SpawnableEntityWithCloneCount(id, EntityType, cloneCount) \
+    { id, \
+      EntityType::LoadAssets, \
+      EntityType::UnloadAssets, \
+      EntityType::Create, \
+      cloneCount }
 
 struct CustomMapDefinition
 {

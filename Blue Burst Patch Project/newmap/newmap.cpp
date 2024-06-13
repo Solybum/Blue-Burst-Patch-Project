@@ -137,11 +137,12 @@ void __cdecl NewOpcodeDesignateCustomMap(uint8_t origMap, uint8_t newMap)
     {
         if (mon.LoadAssets != nullptr)
             initList.AddFunctionPair(InitList::FunctionPair(mon.LoadAssets, mon.UnloadAssets));
-        monsterList.emplace_back(mon.id, mon.Create);
+        monsterList.emplace_back(mon.id, mon.Create, mon.cloneCount);
     }
 
     initList.Patch();
     MapObject::PatchMapObjectConstructorLists();
+    Enemy::PatchEnemyConstructorLists();
 
     // Replace sound effects
     ReplaceMapPac(origMap, "snow.pac", "snow_pac.txt");

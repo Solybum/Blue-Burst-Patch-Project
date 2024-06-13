@@ -1,12 +1,9 @@
-#include "mathutil.h"
 #ifdef PATCH_NEWMAP
 
-#include <cstdint>
-#include <new>
 #include <d3d8.h>
 #include "map_object_cloud.h"
 #include "map_object.h"
-#include "map.h"
+#include "mathutil.h"
 #include "object_extension.h"
 #include "common.h"
 #include "player.h"

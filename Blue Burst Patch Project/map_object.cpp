@@ -24,6 +24,7 @@ namespace MapObject
         static std::unordered_map<MapObjectType, SpawnableDefinition> mapObjectDefinitions =
         {
             {MapObjectType::PlayerSet1, SpawnableDefinition(MapObjectType::PlayerSet1, 0, 0, 0x00661728)},
+            {MapObjectType::EventCollision, SpawnableDefinition(MapObjectType::EventCollision, 0, 0, 0x00659e40)},
             {MapObjectType::FloatingJelifish, SpawnableDefinition(MapObjectType::FloatingJelifish, 0x0062cfa8, 0x0062c190, 0x0062c1b0)}
         };
         return mapObjectDefinitions;

@@ -1,8 +1,10 @@
 #include <cstdint>
 #include <unordered_map>
+
 #include "enemy.h"
 #include "map.h"
 #include "object_extension.h"
+#include "object.h"
 
 namespace Enemy
 {
@@ -10,16 +12,19 @@ namespace Enemy
         : id((uint16_t) id),
           LoadAssets(reinterpret_cast<decltype(LoadAssets)>(loadAssetsAddr)),
           UnloadAssets(reinterpret_cast<decltype(UnloadAssets)>(unloadAssetsAddr)),
-          Create(reinterpret_cast<decltype(Create)>(createAddr)) {}
+          Create(reinterpret_cast<decltype(Create)>(createAddr)),
+          cloneCount(0) {}
 
     SpawnableDefinition::SpawnableDefinition(uint16_t id,
             decltype(LoadAssets) LoadAssets,
             decltype(UnloadAssets) UnloadAssets,
-            decltype(Create) Create)
+            decltype(Create) Create,
+            uint32_t cloneCount)
         : id(id),
           LoadAssets(LoadAssets),
           UnloadAssets(UnloadAssets),
-          Create(Create) {}
+          Create(Create),
+          cloneCount(cloneCount) {}
 
     /// Each map has a list of enemies that can be spawned in it. Index is map.
     TaggedEnemyConstructor** mapEnemyTable = reinterpret_cast<TaggedEnemyConstructor**>(0x009fba60);
@@ -85,6 +90,9 @@ namespace Enemy
 
     TaggedEnemyConstructor::TaggedEnemyConstructor(uint16_t type, EnemyConstructor ctor) :
         enemyType(type), constructor(ctor), unknown1(0), unknown2(250000.0), defaultCloneCount(0) {}
+    
+    TaggedEnemyConstructor::TaggedEnemyConstructor(uint16_t type, EnemyConstructor ctor, uint32_t cloneCount) :
+        enemyType(type), constructor(ctor), unknown1(0), unknown2(250000.0), defaultCloneCount(cloneCount) {}
 
     TaggedEnemyConstructor::TaggedEnemyConstructor() :
         enemyType((uint16_t) NpcType::Invalid), constructor(nullptr), unknown1(0), unknown2(250000.0), defaultCloneCount(0) {}
@@ -142,34 +150,24 @@ namespace Enemy
         return nullptr;
     }
 
-    bool patchedConstructorLists = false;
-
     void PatchEnemyConstructorLists()
     {
-        if (patchedConstructorLists) return;
-
-        patchedConstructorLists = true;
-
         // Write used lists
-        for (const auto& entry : enemyConstructorListCache)
+        for (auto& [map, enemyList] : enemyConstructorListCache)
         {
-            auto map = entry.first;
-            auto enemyList = entry.second;
-
             // Add terminator
-            enemyList.push_back(enemyListTerminator);
+            if (enemyList.empty() || enemyList[enemyList.size() - 1].enemyType != enemyListTerminator.enemyType)
+                enemyList.push_back(enemyListTerminator);
 
-            // Copy to heap (deliberate leak) and write new list to table
-            TaggedEnemyConstructor* copy = new TaggedEnemyConstructor[enemyList.size()];
-            std::copy(enemyList.begin(), enemyList.end(), copy);
-            mapEnemyTable[(size_t) map] = copy;
+            // Write new list to table
+            mapEnemyTable[(size_t) map] = enemyList.data();
         }
     }
 
     BmlData::LoadBmlFunction LoadBml = reinterpret_cast<BmlData::LoadBmlFunction>(0x0051f6b0);
     BmlData::FreeBmlFunction FreeBml = reinterpret_cast<BmlData::FreeBmlFunction>(0x004066a8);
 
-    void** rootEnemyObject = reinterpret_cast<void**>(0x00aca360);
+    BaseObject** rootEnemyObject = reinterpret_cast<BaseObject**>(0x00aca360);
 
     EnemyBase::EnemyBase(void* parentObject)
     {
