@@ -4,4 +4,3 @@
 
 extern CustomMapDefinition snowMapEntry;
 
-bool __cdecl LoadSnowMapStuff();

@@ -1,9 +1,46 @@
 #ifdef PATCH_NEWMAP
 
-#include "fog.h"
-#include "../helpers.h"
+#include <cstdint>
+#include <unordered_map>
 
-FogEntry** fogEntries = reinterpret_cast<FogEntry**>(0x00a8d770);
+#include "../helpers.h"
+#include "fog.h"
+
+#pragma pack(push, 1)
+struct FogEntry
+{
+    uint32_t type;
+    struct {
+        uint8_t b;
+        uint8_t g;
+        uint8_t r;
+        uint8_t a;
+    } color;
+    float end;
+    float start;
+    float density;
+    uint32_t unk1;
+    float unk2;
+    float unk3;
+    float end_pulse_distance;
+    uint32_t unk4;
+    float start_pulse_distance;
+    uint32_t unk5;
+    float transition;
+    uint32_t unk6;
+    uint8_t unk7;
+    uint8_t unk8;
+    uint8_t lerped_field6;
+    uint8_t unk9;
+    uint8_t lerped_field7;
+    uint8_t unk10;
+    uint8_t lerped_field8;
+    uint8_t unk11;
+};
+#pragma pack(pop)
+
+static FogEntry** fogEntries = reinterpret_cast<FogEntry**>(0x00a8d770);
+static std::unordered_map<uint8_t, FogEntry> replacedFogEntries;
 
 FogEntry ReadFogFile(const std::string& path)
 {
@@ -49,6 +86,18 @@ FogEntry ReadFogFile(const std::string& path)
     };
     
     return fog;
+}
+
+void ReplaceMapFog(uint8_t origMap, const std::string &fogFilePath)
+{
+    replacedFogEntries[origMap] = (*fogEntries)[origMap];
+    (*fogEntries)[origMap] = ReadFogFile(fogFilePath);
+}
+
+void RestoreMapFog(uint8_t origMap)
+{
+    (*fogEntries)[origMap] = replacedFogEntries[origMap];
+    replacedFogEntries.erase(origMap);
 }
 
 #endif // PATCH_NEWMAP

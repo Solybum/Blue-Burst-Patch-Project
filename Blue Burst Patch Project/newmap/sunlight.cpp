@@ -1,9 +1,36 @@
+#include <cstdint>
+#include <unordered_map>
 #ifdef PATCH_NEWMAP
 
-#include "sunlight.h"
+#include "../common.h"
 #include "../helpers.h"
+#include "sunlight.h"
 
-LightEntry** lightEntries = reinterpret_cast<LightEntry**>(0x00a9d4e4);
+#pragma pack(push, 1)
+struct LightEntry
+{
+    float x1;
+    float y1;
+    float z1;
+    float x2;
+    float y2;
+    float z2;
+    float intensity_specular;
+    float intensity_diffuse;
+    float intensity_ambient;
+    float diffuse_a;
+    float diffuse_r;
+    float diffuse_g;
+    float diffuse_b;
+    float ambient_a;
+    float ambient_r;
+    float ambient_g;
+    float ambient_b;
+};
+#pragma pack(pop)
+
+static LightEntry** lightEntries = reinterpret_cast<LightEntry**>(0x00a9d4e4);
+static std::unordered_map<uint8_t, LightEntry> replacedLightEntries;
 
 LightEntry ReadLightFile(const std::string& path)
 {
@@ -36,6 +63,22 @@ LightEntry ReadLightFile(const std::string& path)
     };
     
     return light;
+}
+
+void ReplaceMapSunlight(uint8_t origMap, const std::string& sunlightFilePath)
+{
+    auto lightEntryIndex = origMap;
+    if (IsUltEp1()) lightEntryIndex += 48;
+    replacedLightEntries[origMap] = (*lightEntries)[lightEntryIndex];
+    (*lightEntries)[lightEntryIndex] = ReadLightFile(sunlightFilePath);
+}
+
+void RestoreMapSunlight(uint8_t origMap)
+{
+    auto lightEntryIndex = origMap;
+    if (IsUltEp1()) lightEntryIndex += 48;
+    (*lightEntries)[lightEntryIndex] = replacedLightEntries[lightEntryIndex];
+    replacedLightEntries.erase(lightEntryIndex);
 }
 
 #endif // PATCH_NEWMAP

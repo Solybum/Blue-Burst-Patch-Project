@@ -2,7 +2,7 @@
 
 decltype(UseTextureArchive) UseTextureArchive = reinterpret_cast<decltype(UseTextureArchive)>(0x00829cc8);
 decltype(RenderXj) RenderXj = reinterpret_cast<decltype(RenderXj)>(0x00835090);
-decltype(RenderNj) RenderNj = reinterpret_cast<decltype(RenderXj)>(0x0082e1e8);
+decltype(RenderNj) RenderNj = reinterpret_cast<decltype(RenderNj)>(0x0082e1e8);
 decltype(RenderAnimatedXjUp) RenderAnimatedXjUp = reinterpret_cast<decltype(RenderAnimatedXjUp)>(0x0083bd00);
 decltype(LoadBml) LoadBml = reinterpret_cast<decltype(LoadBml)>(0x005b7a84);
 decltype(FreeBml) FreeBml = reinterpret_cast<decltype(FreeBml)>(0x004066a8);
