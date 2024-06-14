@@ -6,8 +6,9 @@
 #include "fog.h"
 #include "maploader.h"
 #include "newmap.h"
-#include "newmap/setdata.h"
-#include "newmap/sunlight.h"
+#include "setdata.h"
+#include "sunlight.h"
+#include "particle_effects.h"
 #include "slbgm.h"
 
 static MapLoader* mapLoaders = reinterpret_cast<MapLoader*>(0x00a160c0);
@@ -33,6 +34,8 @@ bool __cdecl DefaultMapLoad()
     reinterpret_cast<bool (__cdecl *)(uint8_t)>(0x00815584)(origMap); // load_map_sound_data_
     if (reinterpret_cast<bool (__cdecl *)()>(0x00781fc4)()) // warp_load_assets
         return false;
+    
+    ReplaceMapParticleEffects(origMap, "data/particles_snow.txt");
 
     // Replace fog (before unknown_create_map)
     ReplaceMapFog(origMap, "data/fog_snow.txt");
@@ -43,7 +46,7 @@ bool __cdecl DefaultMapLoad()
     reinterpret_cast<void (__cdecl *)()>(0x00793f64)(); // create_map_sunlight_from_lightentry()
     reinterpret_cast<void (__cdecl *)()>(0x00782098)(); // unknown_create_map()
 
-    Slbgm::LoadSlbgm(mapDef->slbgmIndex);
+    LoadSlbgm(mapDef->slbgmIndex);
 
     // Call optional arbitrary map-specific code
     if (mapDef->mapLoader.Load != nullptr)
@@ -56,6 +59,8 @@ void __cdecl DefaultMapUnload()
 {
     auto origMap = (uint8_t) GetCurrentMap();
     auto mapDef = GetCustomMapDefinition(origMap);
+    
+    RestoreMapParticleEffects(origMap);
 
     // Restore replaced fog
     RestoreMapFog(origMap);

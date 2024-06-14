@@ -6,28 +6,35 @@
 #include "../helpers.h"
 #include "sunlight.h"
 
+#define LightEntryFields(X) \
+    X(float, x1) \
+    X(float, y1) \
+    X(float, z1) \
+    X(float, x2) \
+    X(float, y2) \
+    X(float, z2) \
+    X(float, intensity_specular) \
+    X(float, intensity_diffuse) \
+    X(float, intensity_ambient) \
+    X(float, diffuse_a) \
+    X(float, diffuse_r) \
+    X(float, diffuse_g) \
+    X(float, diffuse_b) \
+    X(float, ambient_a) \
+    X(float, ambient_r) \
+    X(float, ambient_g) \
+    X(float, ambient_b)
+
+#define AS_FIELD_DECL(tp, name) tp name;
+
 #pragma pack(push, 1)
 struct LightEntry
 {
-    float x1;
-    float y1;
-    float z1;
-    float x2;
-    float y2;
-    float z2;
-    float intensity_specular;
-    float intensity_diffuse;
-    float intensity_ambient;
-    float diffuse_a;
-    float diffuse_r;
-    float diffuse_g;
-    float diffuse_b;
-    float ambient_a;
-    float ambient_r;
-    float ambient_g;
-    float ambient_b;
+    LightEntryFields(AS_FIELD_DECL)
 };
 #pragma pack(pop)
+
+#undef AS_FIELD_DECL
 
 static LightEntry** lightEntries = reinterpret_cast<LightEntry**>(0x00a9d4e4);
 static std::unordered_map<uint8_t, LightEntry> replacedLightEntries;
@@ -37,33 +44,15 @@ LightEntry ReadLightFile(const std::string& path)
     // Read sunlight settings from file
     auto lines = ReadCsvFile(path);
     auto& splitParts = lines[0];
-    
-    auto parseFloat = [&](size_t idx) {
-        return std::strtof(splitParts[idx].c_str(), nullptr);
-    };
-    
-    LightEntry light = {
-        .x1 = parseFloat(0),
-        .y1 = parseFloat(1),
-        .z1 = parseFloat(2),
-        .x2 = parseFloat(3),
-        .y2 = parseFloat(4),
-        .z2 = parseFloat(5),
-        .intensity_specular = parseFloat(6),
-        .intensity_diffuse = parseFloat(7),
-        .intensity_ambient = parseFloat(8),
-        .diffuse_a = parseFloat(9),
-        .diffuse_r = parseFloat(10),
-        .diffuse_g = parseFloat(11),
-        .diffuse_b = parseFloat(12),
-        .ambient_a = parseFloat(13),
-        .ambient_r = parseFloat(14),
-        .ambient_g = parseFloat(15),
-        .ambient_b = parseFloat(16)
-    };
+
+#define AS_TYPE_ONLY(tp, name) ,tp
+    auto light = ParseCsvLine<LightEntry LightEntryFields(AS_TYPE_ONLY)>(splitParts);
+#undef AS_TYPE_ONLY
     
     return light;
 }
+
+#undef LightEntryFields
 
 void ReplaceMapSunlight(uint8_t origMap, const std::string& sunlightFilePath)
 {

@@ -2,7 +2,8 @@
 
 #include <vector>
 #include <string>
-#include <d3d8.h>
+
+#include "d3d8.h"
 #include "mathutil.h"
 
 enum class Episode

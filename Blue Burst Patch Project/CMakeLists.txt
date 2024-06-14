@@ -85,6 +85,7 @@ add_library(${PROJECT_NAME} SHARED
     newmap/setdata.cpp
     newmap/enemies_and_objects.cpp
     newmap/sound_effects.cpp
+    newmap/particle_effects.cpp
     newmap/enemy_icecube.cpp
     ninja.cpp
     quest.cpp

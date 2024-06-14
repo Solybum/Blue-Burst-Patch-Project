@@ -67,10 +67,15 @@ void __thiscall EnableNrelPointLight()
     reinterpret_cast<decltype(EnableNrelPointLight)*>(0x008060fc)();
 }
 
+void PatchPointLightExperiment()
+{
+    *reinterpret_cast<decltype(EnableNrelPointLight)**>(0x00b475f8) = EnableNrelPointLight;
+}
+
 bool __cdecl LoadSnowMapStuff()
 {
     PatchIcecubeUnitxt();
-    *reinterpret_cast<decltype(EnableNrelPointLight)**>(0x00b475f8) = EnableNrelPointLight;
+
     return true;
 }
 

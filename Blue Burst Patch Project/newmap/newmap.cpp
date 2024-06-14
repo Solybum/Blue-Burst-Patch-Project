@@ -88,13 +88,14 @@ void ApplyNewMapPatch()
     PatchSoundEffectLimit();
 
     // Add slbgm definitions
-    auto& slbgmDefs = Slbgm::GetAllTransitionData();
+    auto& slbgmDefs = GetSlbgmMetadata();
     for (auto& mapDef : customMaps)
     {
-        slbgmDefs.push_back(new Slbgm::SlbgmDef(mapDef->songFilename, mapDef->slbgmFilePath));
+        slbgmDefs.push_back(new SlbgmDef(mapDef->songFilename, mapDef->slbgmFilePath));
+        // Write index of map's slbgm data into mapDef to allow maploader to use it for loading slbgm
         mapDef->slbgmIndex = slbgmDefs.size() - 1;
     }
-    Slbgm::ApplySlbgmPatch();
+    ApplySlbgmPatch();
 }
 
 const CustomMapDefinition* GetCustomMapDefinition(uint8_t origMap)

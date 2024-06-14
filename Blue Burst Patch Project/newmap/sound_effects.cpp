@@ -184,7 +184,6 @@ void ReplaceMapPac(uint8_t origMap, const std::string& pacFilename, const std::s
     for (size_t i = 0; i < soundCount; i++)
     {
         metadata[i].soundFileOffset = pacCursor;
-        Log(ToWideString(std::to_string(pacCursor)).c_str());
         
         // Read header and skip to next header
         auto itemHeader = reinterpret_cast<PacItemHeader*>(pacFileContents.data() + pacCursor);
