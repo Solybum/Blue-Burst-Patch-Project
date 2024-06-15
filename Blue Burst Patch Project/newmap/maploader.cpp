@@ -1,3 +1,4 @@
+#include "newmap/footsteps.h"
 #ifdef PATCH_NEWMAP
 
 #include <cstdint>
@@ -42,6 +43,8 @@ bool __cdecl DefaultMapLoad()
     
     // Replace sunlight (before create_map_sunlight_from_lightentry)
     ReplaceMapSunlight(origMap, "data/sun_snow.txt");
+    
+    ReplaceMapFootsteps(origMap, "data/footsteps_snow.txt");
 
     reinterpret_cast<void (__cdecl *)()>(0x00793f64)(); // create_map_sunlight_from_lightentry()
     reinterpret_cast<void (__cdecl *)()>(0x00782098)(); // unknown_create_map()
@@ -70,6 +73,8 @@ void __cdecl DefaultMapUnload()
     
     // Restore SetDataTable
     RestoreSetData(origMap);
+    
+    RestoreMapFootsteps(origMap);
 
     // Call normal unload stuff
     reinterpret_cast<decltype(MapLoader::Unload)>(0x007a6dd8)();

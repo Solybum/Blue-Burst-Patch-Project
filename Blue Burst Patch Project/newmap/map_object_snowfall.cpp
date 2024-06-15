@@ -39,7 +39,7 @@ MapObjectSnowfall::MapObjectSnowfall(void* parentObject, MapObject::InitData::In
 
     auto player = GetPlayer(0);
     for (size_t i = 0; i < numParticles; i++) {
-        particles[i] = CreateParticleEffect(&player->position, 92, 0, 0);
+        particles[i] = CreateParticleEffect(&player->position, 0x200, 0, 0);
     }
 }
 
