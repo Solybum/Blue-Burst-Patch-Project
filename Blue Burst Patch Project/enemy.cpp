@@ -205,12 +205,11 @@ namespace Enemy
 
     decltype(SetStatsFromBattleParams) SetStatsFromBattleParams = reinterpret_cast<decltype(SetStatsFromBattleParams)>(0x007868f8);
 
-    CollisionBox::CollisionBox(float x_, float y_, float z_, float r_)
-    {
-        x = x_;
-        y = y_;
-        z = z_;
-        r = r_;
-        unknownFlags = 0x8003;
-    }
+    CollisionBox::CollisionBox(float x, float y, float z, float r) :
+        x(x), y(y), z(z), r(r),
+        unk1(0.0), unk2(0),
+        x2(0.0), y2(0.0), z2(0.0),
+        unknownFlags(0x8003),
+        unk3(0)
+    {}
 };

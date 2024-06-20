@@ -381,6 +381,7 @@ namespace MapObject
                 DEFINE_FIELD(0x8, void (__thiscall *Render)(void* self));
                 DEFINE_FIELD(0xc, void (__thiscall *RenderShadow)(void* self));
                 DEFINE_FIELD(0x14, void (__thiscall *ApplyInitData)(void* self, InitData::InnerData* initData));
+                DEFINE_FIELD(0x64, void (__thiscall *HandleUnlockEvent)(void* self, void* packet));
             };
         };
 
@@ -393,8 +394,11 @@ namespace MapObject
             Vtable* vtable;
 
             union {
+                DEFINE_FIELD(0x4, void* typeId);
+                DEFINE_FIELD(0x1c, uint16_t entityIndex);
                 DEFINE_FIELD(0x28, int16_t mapSection);
                 DEFINE_FIELD(0x38, Vec3f xyz1);
+                DEFINE_FIELD(0x44, Vec3f xyz5);
                 DEFINE_FIELD(0x50, Vec3f xyz2);
                 DEFINE_FIELD(0x5c, Vec3<int32_t> rotation);
                 DEFINE_FIELD(0x68, InitParam initParam1);
@@ -434,4 +438,7 @@ namespace MapObject
     std::vector<TaggedMapObjectConstructor>& GetMapObjectConstructorList(Map::MapType map);
 
     void PatchMapObjectConstructorLists();
+    
+    extern InitData* (__cdecl *GetFloorInitDataArray)(uint32_t floor);
+    extern uint32_t (__cdecl *GetFloorObjectCount)(uint32_t floor);
 };

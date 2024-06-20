@@ -11,6 +11,7 @@
 #include "enemy_icecube.h"
 #include "map_object_cloud.h"
 #include "map_object_newdoor.h"
+#include "map_object_payload.h"
 #include "map_object_snowfall.h"
 #include "newmap.h"
 #include "setdata.h"
@@ -109,7 +110,9 @@ CustomMapDefinition snowMapEntry = {
         MapObject::GetMapObjectDefinition(MapObject::MapObjectType::FloatingJelifish),
         SpawnableEntity(1337, MapObjectCloud),
         SpawnableEntity(1338, MapObjectSnowfall),
-        SpawnableEntity(1339, MapObjectNewdoor)
+        SpawnableEntity(1339, MapObjectNewdoor),
+        SpawnableEntity(MapObjectPayload::objectTypeId, MapObjectPayload),
+        SpawnableEntity(MapObjectPayloadCheckpoint::objectTypeId, MapObjectPayloadCheckpoint),
     }
 };
 

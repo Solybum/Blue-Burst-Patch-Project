@@ -88,6 +88,7 @@ add_library(${PROJECT_NAME} SHARED
     newmap/particle_effects.cpp
     newmap/enemy_icecube.cpp
     newmap/footsteps.cpp
+    newmap/map_object_payload.cpp
     ninja.cpp
     quest.cpp
     player.cpp
@@ -118,7 +119,7 @@ endif()
 target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
 
 # Force 32-bit target
-set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS -m32 LINK_FLAGS -m32)
+set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS -m32 LINK_FLAGS "-m32 -static -static-libgcc -static-libstdc++")
 
 # Define DEBUG in debug mode
 target_compile_definitions(${PROJECT_NAME} PUBLIC "$<$<CONFIG:DEBUG>:DEBUG>")

@@ -339,15 +339,17 @@ namespace Enemy
 
     struct CollisionBox
     {
-        union
-        {
-            float x;
-            DEFINE_FIELD(0x4, float y);
-            DEFINE_FIELD(0x8, float z);
-            DEFINE_FIELD(0xc, float r);
-            DEFINE_FIELD(0x18, uint32_t unknownFlags);
-            uint8_t _padding[0x2c];
-        };
+        float x;
+        float y;
+        float z;
+        float r;
+        float unk1;
+        uint32_t unk2;
+        uint32_t unknownFlags;
+        float x2;
+        float y2;
+        float z2;
+        uint32_t unk3;
 
         CollisionBox(float x, float y, float z, float r);
     };

@@ -1,6 +1,7 @@
+#include <cstdint>
+
 #include "map_object.h"
 #include "object_extension.h"
-#include <cstdint>
 
 namespace MapObject
 {
@@ -118,4 +119,7 @@ namespace MapObject
             mapObjectTable[(size_t) map] = objectList.data();
         }
     }
+    
+    decltype(GetFloorInitDataArray) GetFloorInitDataArray = reinterpret_cast<decltype(GetFloorInitDataArray)>(0x00810160);
+    decltype(GetFloorObjectCount) GetFloorObjectCount = reinterpret_cast<decltype(GetFloorObjectCount)>(0x008123d8);
 };
