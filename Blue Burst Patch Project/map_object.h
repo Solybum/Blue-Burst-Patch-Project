@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <unordered_map>
 #include <windows.h>
+#include "enemy.h"
 #include "map.h"
 #include "mathutil.h"
 #include "object_extension.h"
@@ -407,6 +408,8 @@ namespace MapObject
                 DEFINE_FIELD(0x84, InitParam initParam4);
                 DEFINE_FIELD(0x88, InitParam initParam5);
                 DEFINE_FIELD(0x8c, InitParam initParam6);
+                DEFINE_FIELD(0xa4, Enemy::CollisionBox* collisionBoxes);
+                DEFINE_FIELD(0xa8, uint32_t collisionBoxCount);
             };
 
             // Ensure object's size is at least the same as its superclass

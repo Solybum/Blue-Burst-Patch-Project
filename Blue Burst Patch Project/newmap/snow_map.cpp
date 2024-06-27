@@ -113,6 +113,7 @@ CustomMapDefinition snowMapEntry = {
         SpawnableEntity(1339, MapObjectNewdoor),
         SpawnableEntity(MapObjectPayload::objectTypeId, MapObjectPayload),
         SpawnableEntity(MapObjectPayloadCheckpoint::objectTypeId, MapObjectPayloadCheckpoint),
+        MapObject::GetMapObjectDefinition(MapObject::MapObjectType::BlackSlidingDoor)
     }
 };
 

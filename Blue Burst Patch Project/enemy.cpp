@@ -199,7 +199,8 @@ namespace Enemy
     const EnemyBase::ConstructorFunction EnemyBase::Constructor = reinterpret_cast<EnemyBase::ConstructorFunction>(0x007865e8);
     const EnemyBase::Vtable* EnemyBase::origVtable = reinterpret_cast<Vtable*>(0x00b44b40);
 
-    InsertIntoEntityListFunction InsertIntoEntityList = reinterpret_cast<InsertIntoEntityListFunction>(0x007b4f54);
+    decltype(InsertIntoEntityList) InsertIntoEntityList = reinterpret_cast<decltype(InsertIntoEntityList)>(0x007b4f54);
+    decltype(RemoveFromEntityList) RemoveFromEntityList = reinterpret_cast<decltype(RemoveFromEntityList)>(0x007b4e84);
 
     decltype(InitCollisionBoxes) InitCollisionBoxes = reinterpret_cast<decltype(InitCollisionBoxes)>(0x007b9a88);
 

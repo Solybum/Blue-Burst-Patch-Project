@@ -356,8 +356,8 @@ namespace Enemy
 
 #pragma pack(pop)
 
-    typedef uint32_t (__thiscall *InsertIntoEntityListFunction)(void* entity);
-    extern InsertIntoEntityListFunction InsertIntoEntityList;
+    extern uint32_t (__thiscall *InsertIntoEntityList)(void* entity);
+    extern uint32_t (__cdecl *RemoveFromEntityList)(void* entity);
     extern void (__thiscall *InitCollisionBoxes)(void* self, const CollisionBox* collisionData, uint32_t collisionBoxCount);
     extern bool32 (__thiscall *SetStatsFromBattleParams)(void* self,
         const BattleParam::BPStatsEntry* stats,

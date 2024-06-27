@@ -77,6 +77,8 @@ MapObjectPayloadCheckpoint::MapObjectPayloadCheckpoint(void* parentObject, MapOb
     OVERRIDE_METHOD(MapObjectPayloadCheckpoint, RenderShadow);
     
     vtable->ApplyInitData(this, initData);
+    collisionBoxes = nullptr;
+    collisionBoxCount = 0;
     Enemy::InsertIntoEntityList(this);
     
     typeId = &checkpointTypeSentinel;
@@ -86,6 +88,8 @@ MapObjectPayloadCheckpoint::MapObjectPayloadCheckpoint(void* parentObject, MapOb
 void MapObjectPayloadCheckpoint::Destruct(BOOL freeMemory)
 {
     MapObjectBase::Destruct(false);
+
+    Enemy::RemoveFromEntityList(this);
 
     MapObjectPayloadCheckpoint::~MapObjectPayloadCheckpoint();
 
@@ -128,6 +132,7 @@ MapObjectPayload::MapObjectPayload(void* parentObject, MapObject::InitData::Inne
     OVERRIDE_METHOD(MapObjectPayload, HandleUnlockEvent);
     
     vtable->ApplyInitData(this, initData);
+    collisionBoxes = nullptr;
     Enemy::InitCollisionBoxes(this, &cylinderCollisionBox, 1);
     Enemy::InsertIntoEntityList(this);
 
@@ -147,8 +152,10 @@ MapObjectPayload::MapObjectPayload(void* parentObject, MapObject::InitData::Inne
 void MapObjectPayload::Destruct(BOOL freeMemory)
 {
     FreeCollisionBoxes(this);
-    
+
     MapObjectBase::Destruct(false);
+
+    Enemy::RemoveFromEntityList(this);
 
     MapObjectPayload::~MapObjectPayload();
 

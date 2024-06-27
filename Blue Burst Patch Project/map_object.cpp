@@ -26,7 +26,8 @@ namespace MapObject
         {
             {MapObjectType::PlayerSet1, SpawnableDefinition(MapObjectType::PlayerSet1, 0, 0, 0x00661728)},
             {MapObjectType::EventCollision, SpawnableDefinition(MapObjectType::EventCollision, 0, 0, 0x00659e40)},
-            {MapObjectType::FloatingJelifish, SpawnableDefinition(MapObjectType::FloatingJelifish, 0x0062cfa8, 0x0062c190, 0x0062c1b0)}
+            {MapObjectType::FloatingJelifish, SpawnableDefinition(MapObjectType::FloatingJelifish, 0x0062cfa8, 0x0062c190, 0x0062c1b0)},
+            {MapObjectType::BlackSlidingDoor, SpawnableDefinition(MapObjectType::BlackSlidingDoor, 0x00651ac4, 0x00651734, 0x00651778)}
         };
         return mapObjectDefinitions;
     }
