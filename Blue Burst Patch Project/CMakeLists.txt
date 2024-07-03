@@ -30,16 +30,16 @@ define_optional_patch(PATCH_HOOKS)
 define_optional_patch(PATCH_KEYBOARD_HOOKS PATCH_HOOKS)
 define_optional_patch(PATCH_EDITORS PATCH_KEYBOARD_HOOKS)
 define_optional_patch(PATCH_NEWMAP PATCH_MAP_OBJECT_CONSTRUCTOR_LISTS PATCH_ENEMY_CONSTRUCTOR_LISTS PATCH_INITLISTS)
+define_optional_patch(ENABLE_DEVMOD)
 
 # This makes the lpVtbl field of COM objects accessible in Wine's headers
 add_compile_definitions(CINTERFACE)
 
 # List all source files here
-add_library(${PROJECT_NAME} SHARED
+set(source_files
     battleparam.cpp
     common.cpp
     customize_menu.cpp
-    dllmain.cpp
     earlywalk.cpp
     editors.cpp
     editors/TCameraEditor.cpp
@@ -71,7 +71,6 @@ add_library(${PROJECT_NAME} SHARED
     palette.cpp
     patching.cpp
     psobb_functions.cpp
-    psobb.cpp
     shop.cpp
     slow_gibbles.cpp
     map_object.cpp
@@ -91,6 +90,7 @@ add_library(${PROJECT_NAME} SHARED
     newmap/enemy_icecube.cpp
     newmap/footsteps.cpp
     newmap/map_object_payload.cpp
+    devmod_interface.h
     ninja.cpp
     quest.cpp
     player.cpp
@@ -99,6 +99,8 @@ add_library(${PROJECT_NAME} SHARED
     newgfx/bone.cpp
     newgfx/mesh.cpp
     newgfx/model.cpp)
+
+add_library(${PROJECT_NAME} SHARED dllmain.cpp psobb.cpp ${source_files})
 
 # Link with assimp if using newgfx
 if(USE_NEWGFX)
@@ -118,7 +120,7 @@ else()
     add_compile_options(-Wall)
 endif()
 
-target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
+target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}/devmod")
 
 # Force 32-bit target
 set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS -m32 LINK_FLAGS "-m32 -static -static-libgcc -static-libstdc++")
@@ -132,4 +134,15 @@ target_compile_definitions(${PROJECT_NAME} PUBLIC "WIN32_LEAN_AND_MEAN")
 if (NOT MSVC)
     # Use intel asm syntax
     add_compile_options(-masm=intel)
+endif()
+
+# Create a separate dll from files inside devmod dir
+if (ENABLE_DEVMOD)
+    file(GLOB devmod_source_files "${CMAKE_CURRENT_SOURCE_DIR}/devmod/*.cpp")
+    add_library(devmod SHARED ${source_files} ${devmod_source_files})
+    set_target_properties(devmod PROPERTIES PREFIX "")
+    target_include_directories(devmod PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
+    set_target_properties(devmod PROPERTIES COMPILE_FLAGS -m32 LINK_FLAGS "-m32 -static -static-libgcc -static-libstdc++")
+    target_compile_definitions(devmod PUBLIC "$<$<CONFIG:DEBUG>:DEBUG>")
+    target_compile_definitions(devmod PUBLIC "WIN32_LEAN_AND_MEAN")
 endif()
