@@ -1,3 +1,5 @@
+#ifdef PATCH_OMNISPAWN
+
 #include "helpers.h"
 #include "omnispawn.h"
 #include <mathutil.h>
@@ -165,3 +167,5 @@ namespace Omnispawn
         PatchSoundEffectMapReferences();
     }
 }
+
+#endif
