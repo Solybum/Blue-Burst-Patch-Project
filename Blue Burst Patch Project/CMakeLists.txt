@@ -66,6 +66,8 @@ add_library(${PROJECT_NAME} SHARED
     object_wrapper.cpp
     object.cpp
     omnispawn.cpp
+    omnispawn_particles.cpp
+    omnispawn_sound_effects.cpp
     palette.cpp
     patching.cpp
     psobb_functions.cpp

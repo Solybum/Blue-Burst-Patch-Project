@@ -28,10 +28,10 @@ namespace Omnispawn
 
     // Index is map, element is pointer to particle data.
     // TODO: Structure for particles to make this nicer.
-    static byte *omniMapParticleData[(size_t)MapType::MAX_INDEX + 1];
+    byte *omniMapParticleData[(size_t)MapType::MAX_INDEX + 1];
 
     // Load all particle entry files once.
-    static void LoadAllMapParticleEntryFiles()
+    void LoadAllMapParticleEntryFiles()
     {
         static int loaded = 0;
         if (loaded)
@@ -59,7 +59,7 @@ namespace Omnispawn
 
     // Wraps the loading of particleentry.dat for particles 0-511 inclusive.
     // On first call, loads all of the map specific particles.
-    static uint32_t __cdecl WrapLoadParticleEntry(void)
+    uint32_t __cdecl WrapLoadParticleEntry(void)
     {
         // First time here will load all map particles.
         LoadAllMapParticleEntryFiles();
