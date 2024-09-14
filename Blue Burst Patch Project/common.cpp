@@ -81,5 +81,16 @@ std::string joinPath(const std::initializer_list<std::string>& parts)
 
 std::wstring ToWideString(const std::string& narrow)
 {
+#ifdef WIN32
+    // codecvt is deprecated
+    int numWideChars = MultiByteToWideChar(CP_UTF8, 0, narrow.c_str(), -1, NULL, 0);
+    if (0 == numWideChars)
+        return std::wstring(L"");
+
+    wchar_t *wideStr = new wchar_t[numWideChars + 1];
+    MultiByteToWideChar(CP_UTF8, 0, narrow.c_str(), -1, wideStr, numWideChars);
+    return std::wstring(wideStr);
+#else
     return std::wstring_convert<std::codecvt_utf8<wchar_t>>().from_bytes(narrow);
+#endif
 }

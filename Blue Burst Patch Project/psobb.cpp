@@ -3,6 +3,10 @@
 #include "globals.h"
 
 // These should be specified in the project's preprocessor macros to enable.
+// In Visual Studio, right click the project in the Solution Explorer and select Properties.
+// Prepend or append them to "Preprocessor Definitions" which can be found under
+// Configuration Properties > C/C++ > Preprocessor.
+//
 // Alternatively in the future, maybe they could go into pch.h or a file included there.
 // Leaving here for documentation.
 #if 0
@@ -14,12 +18,14 @@
 #define PATCH_CUSTOMIZE_MENU
 #define PATCH_FASTWARP
 #define PATCH_OMNISPAWN
-#define PATCH_NEWENEMY
+#define PATCH_NEWENEMY // This is missing a header?
 #define PATCH_LARGE_ASSETS
 #define PATCH_OMNISPAWN
 #define PATCH_ENEMY_CONSTRUCTOR_LISTS
 #define PATCH_EDITORS
 #define PATCH_INITLISTS
+#define PATCH_MAP_OBJECT_CONSTRUCTOR_LISTS
+#define PATCH_HOOKS
 #endif
 
 #ifdef PATCH_IME
@@ -162,4 +168,8 @@ void PSOBB()
     // Should be last so that other patches can apply their changes first
     InitList::PatchAllInitLists();
 #endif
+
+    // Increase ax size of decompress buffer for ItemMagEdit
+    *(uint32_t *)0x5dba7c = 0x2000; 
 }
+

@@ -11,6 +11,10 @@
 #include <vector>
 #include <windows.h>
 
+#ifdef _WIN32
+#undef min
+#endif
+
 typedef uint8_t byte;
 
 int gcd(int a, int b);

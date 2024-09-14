@@ -54,7 +54,8 @@ namespace Omnispawn
         NewBPIndex::Delsaber,
         NewBPIndex::Dimenian,
         NewBPIndex::LaDimenian,
-        NewBPIndex::SoDimenian
+        NewBPIndex::SoDimenian,
+        NewBPIndex::GrassAssassin,
     };
 
     struct BPIndexAll
@@ -1412,49 +1413,49 @@ namespace Omnispawn
     NpcType newEnemies[] =
     {
         NpcType::Hildebear,
-        NpcType::Rag_Rappy_Sand_Rappy,
+        NpcType::RagRappy_SandRappy,
         NpcType::Monest,
-        NpcType::Savage_Wolf,
+        NpcType::SavageWolf,
         NpcType::Booma,
-        NpcType::Grass_Assassin,
-        NpcType::Poison_Lily_Del_Lily,
-        NpcType::Nano_Dragon,
-        NpcType::Evil_Shark,
-        NpcType::Pofuilly_Slime,
-        NpcType::Pan_Arms,
-        NpcType::Gillchic,
+        NpcType::GrassAssassin,
+        NpcType::PoisonLily_DelLily,
+        NpcType::NanoDragon,
+        NpcType::EvilShark,
+        NpcType::PofuillySlime,
+        NpcType::PanArms,
+        NpcType::Gillchic_Dubchic,
         NpcType::Garanz,
-        NpcType::Sinow_Beat,
+        NpcType::SinowBeat,
         NpcType::Canadine,
         NpcType::Canane,
-        NpcType::Dubchic_Switch,
+        NpcType::Dubwitch,
         NpcType::Delsaber,
-        NpcType::Chaos_Sorcerer,
-        NpcType::Dark_Gunner,
-        NpcType::Death_Gunner,
-        NpcType::Chaos_Bringer,
-        NpcType::Darth_Belra,
+        NpcType::ChaosSorcerer,
+        NpcType::DarkGunner,
+        NpcType::DeathGunner,
+        NpcType::ChaosBringer,
+        NpcType::DarkBelra,
         NpcType::Dimenian,
         NpcType::Bulclaw,
         NpcType::Claw,
-        NpcType::Sinow_Berill,
-        NpcType::Merillias,
+        NpcType::SinowBerill,
+        NpcType::Merillia,
         NpcType::Mericarol,
-        NpcType::Ul_Gibbon,
+        NpcType::UlGibbon,
         NpcType::Gibbles,
         NpcType::Gee,
-        NpcType::Gi_Gue,
+        NpcType::GiGue,
         NpcType::Deldepth,
         NpcType::Delbiter,
-        NpcType::Dolmdarl,
+        NpcType::Dolmolm,
         NpcType::Morfos,
         NpcType::Recobox,
-        NpcType::Epsilon_Sinow_Zoa,
-        NpcType::Ill_Gill,
+        NpcType::Epsilon_SinowZoa,
+        NpcType::IllGill,
         NpcType::Astark,
-        NpcType::Satellite_Lizard,
-        NpcType::Merissa_A,
-        NpcType::Girt,
+        NpcType::SatelliteLizard,
+        NpcType::MerissaA,
+        NpcType::Girtablulu,
         NpcType::Zu,
         NpcType::Boota,
         NpcType::Dorphon,
@@ -1513,7 +1514,7 @@ namespace Omnispawn
         }
 
         // Ensure Epsilon is chosen over Sinow Zoa
-        enemyConstructors[NpcType::Epsilon_Sinow_Zoa] = reinterpret_cast<Enemy::TaggedEnemyConstructor*>(0x009fae90);
+        enemyConstructors[NpcType::Epsilon_SinowZoa] = reinterpret_cast<Enemy::TaggedEnemyConstructor*>(0x009fae90);
 
         // Add new enemies to all maps
         for (size_t i = 0; i <= (size_t) MapType::MAX_INDEX; i++)
@@ -1527,7 +1528,7 @@ namespace Omnispawn
 
                 for (const Enemy::TaggedEnemyConstructor& oldEnemy : mapEnemyList)
                 {
-                    if (oldEnemy.enemyType == newEnemy)
+                    if (oldEnemy.enemyType == (uint16_t)newEnemy)
                     {
                         found = true;
                         break;
@@ -1757,42 +1758,6 @@ namespace Omnispawn
         *(uint8_t*)0x00782496 = 0xeb;
     }
 
-    typedef uint32_t (__cdecl *LoadMapSoundDataFunction)(uint32_t);
-    LoadMapSoundDataFunction LoadMapSoundData = reinterpret_cast<LoadMapSoundDataFunction>(0x00828d40);
-
-    /// Loads all map-specific .pac files
-    void __cdecl LoadSoundDataAllMaps()
-    {
-        for (uint32_t i = 0; i <= (uint32_t) MapType::MAX_INDEX; i++)
-        {
-            if (LoadMapSoundData(i) == 0)
-            {
-                return;
-            }
-        }
-
-        return;
-    }
-
-    void PatchSoundEffects()
-    {
-        // This is an initlist that loads assets that should stay loaded 
-        // for the entire lifetime of the program
-        InitList& lst = InitList::GetInitList(0x009ff6e0, 0x009ff7c0);
-        // No uninit function because at that point the game is exiting anyway
-        lst.AddFunctionPair(InitList::FunctionPair(LoadSoundDataAllMaps, nullptr));
-        lst.AddListReferenceAddress({0x007a666d + 1, 0x007a63a7 + 1});
-        lst.AddSizeReferenceAddress({0x007a63a2 + 1, 0x007a6668 + 1});
-
-        // Stub out load_map_sound_data_:00815584
-        // Because verything should already be loaded
-        StubOutFunction(0x00815584, 0x0081558f);
-
-        // Stub out unload_map_sound_data:00828c38
-        // Because we wan't to keep everything loaded permanently
-        StubOutFunction(0x00828c38, 0x00828d24);
-    }
-
     bool patchApplied = false;
     void ApplyOmnispawnPatch()
     {
@@ -1805,8 +1770,8 @@ namespace Omnispawn
         PatchBPGetters();
         UnhardcodeBattleParamIndices();
         PatchRagolAssetLoading();
-        PatchSoundEffects();
-
+        PatchOmnispawnSoundEffects();
+        PatchOmnispawnParticles();
         patchApplied = true;
     }
 };

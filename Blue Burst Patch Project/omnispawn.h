@@ -136,5 +136,7 @@ namespace Omnispawn
         EP4_END_INDEX = Girtablulu
     };
 
+    void PatchOmnispawnParticles();
+    void PatchOmnispawnSoundEffects();
     void ApplyOmnispawnPatch();
 };

@@ -148,6 +148,7 @@
     <ClCompile Include="keyboard.cpp" />
     <ClCompile Include="large_assets.cpp" />
     <ClCompile Include="map.cpp" />
+    <ClCompile Include="map_object.cpp" />
     <ClCompile Include="mathutil.cpp" />
     <ClCompile Include="newenemy.cpp" />
     <ClCompile Include="newgfx\animation.cpp" />
@@ -158,6 +159,8 @@
     <ClCompile Include="object_extension.cpp" />
     <ClCompile Include="object_wrapper.cpp" />
     <ClCompile Include="omnispawn.cpp" />
+    <ClCompile Include="omnispawn_particles.cpp" />
+    <ClCompile Include="omnispawn_sound_effects.cpp" />
     <ClCompile Include="palette.cpp" />
     <ClCompile Include="psobb.cpp" />
     <ClCompile Include="psobb_functions.cpp" />
