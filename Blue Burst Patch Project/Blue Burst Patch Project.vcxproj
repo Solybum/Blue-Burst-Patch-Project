@@ -57,7 +57,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;BLUEBURSTPATCHPROJECT_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>PATCH_SKIP_INTRO_CREDITS;PATCH_LARGE_ASSETS;PATCH_ENEMY_CONSTRUCTOR_LISTS;PATCH_IME;PATCH_SLOW_GIBBLES_FIX;PATCH_CUSTOMIZE_MENU;PATCH_FASTWARP;PATCH_OMNISPAWN;PATCH_INITLISTS;PATCH_MAP_OBJECT_CONSTRUCTOR_LISTS;PATCH_HOOKS;WIN32;_DEBUG;BLUEBURSTPATCHPROJECT_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -148,6 +148,7 @@
     <ClCompile Include="keyboard.cpp" />
     <ClCompile Include="large_assets.cpp" />
     <ClCompile Include="map.cpp" />
+    <ClCompile Include="map_object.cpp" />
     <ClCompile Include="mathutil.cpp" />
     <ClCompile Include="newenemy.cpp" />
     <ClCompile Include="newgfx\animation.cpp" />
@@ -158,6 +159,8 @@
     <ClCompile Include="object_extension.cpp" />
     <ClCompile Include="object_wrapper.cpp" />
     <ClCompile Include="omnispawn.cpp" />
+    <ClCompile Include="omnispawn_particles.cpp" />
+    <ClCompile Include="omnispawn_sound_effects.cpp" />
     <ClCompile Include="palette.cpp" />
     <ClCompile Include="psobb.cpp" />
     <ClCompile Include="psobb_functions.cpp" />
