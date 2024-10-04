@@ -34,6 +34,8 @@ Allows spawning any enemy in any area with some exceptions.
 * E4 enemies have Crater stats in E1 and Desert stats in E2.
 * Enemies that appear in both E1 and E2 have E1 stats in Crater and E2 stats in Desert.
 
+**Note for quest makers**: QEdit can be configured to allow creating Omnispawn quests via the FloorSet.ini configuration file. See the QEdit wiki for details.
+
 ### Large assets patch `[COMPILED:PATCH_LARGE_ASSETS]`
 Allows loading of larger asset files.
 
