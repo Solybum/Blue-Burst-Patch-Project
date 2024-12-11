@@ -90,6 +90,7 @@ set(source_files
     newmap/enemy_icecube.cpp
     newmap/footsteps.cpp
     newmap/map_object_payload.cpp
+    newmap/map_object_turret.cpp
     devmod_interface.h
     ninja.cpp
     quest.cpp

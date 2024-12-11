@@ -1,19 +1,20 @@
-#include "enemy.h"
-#include "object.h"
 #ifdef PATCH_NEWMAP
 
 #define _USE_MATH_DEFINES
 
 #include <cmath>
 
+#include "map_object_turret.h"
+
 #include "../common.h"
-#include "../map_object.h"
+#include "../enemy.h"
 #include "../entity.h"
 #include "../entitylist.h"
+#include "../map_object.h"
 #include "../mathutil.h"
 #include "../ninja.h"
+#include "../object.h"
 #include "../psobb_functions.h"
-#include "map_object_turret.h"
 
 enum ModelIndex
 {
@@ -289,47 +290,6 @@ void* __cdecl MapObjectTurret::Create(MapObject::InitData::InnerData* initData)
 {
     void* buf = MainArenaAlloc(sizeof(MapObjectTurret));
     return new (buf) MapObjectTurret(*MapObject::rootMapObject, initData);
-}
-
-BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
-{
-    return true;
-}
-
-void Update(void* obj)
-{
-    reinterpret_cast<MapObjectTurret*>(obj)->Update();
-}
-
-void Destruct(void* obj, BOOL freeMemory)
-{
-    reinterpret_cast<MapObjectTurret*>(obj)->Destruct(freeMemory);
-}
-
-void Render(void* obj)
-{
-    reinterpret_cast<MapObjectTurret*>(obj)->Render();
-}
-
-void RenderShadow(void* obj)
-{
-    reinterpret_cast<MapObjectTurret*>(obj)->RenderShadow();
-}
-
-void devmodInit(MapObjectProxyInterface* iface)
-{
-    Log(ToWideString("devmodInit").c_str());
-    iface->LoadAssets = MapObjectTurret::LoadAssets;
-    iface->UnloadAssets = MapObjectTurret::UnloadAssets;
-    iface->Create = MapObjectTurret::Create;
-    iface->Destruct = Destruct;
-    iface->Update = Update;
-    iface->Render = Render;
-    iface->RenderShadow = RenderShadow;
-}
-
-void devmodUninit()
-{
 }
 
 #undef _USE_MATH_DEFINES

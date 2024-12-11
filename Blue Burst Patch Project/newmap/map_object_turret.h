@@ -1,13 +1,6 @@
 #pragma once
 
 #include "../map_object.h"
-#include "../devmod_interface.h"
-
-extern "C"
-{
-    __declspec(dllexport) void devmodInit(MapObjectProxyInterface*);
-    __declspec(dllexport) void devmodUninit();
-};
 
 class MapObjectTurret : MapObject::MapObjectBase
 {
