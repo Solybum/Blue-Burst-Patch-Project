@@ -68,10 +68,10 @@ double RadDistance(double a, double b);
 double RadLerp(double a, double b, double t);
 
 /// Assuming input is in range 0..0xffff
-double IntAngleToRad(int16_t a);
+double IntAngleToRad(uint32_t a);
 
 /// Assuming input is in range -pi..pi
-int16_t RadToIntAngle(double a);
+uint32_t RadToIntAngle(double a);
 
 template<typename T>
 int Sign(T val) {
@@ -102,3 +102,5 @@ bool PointInTriangle (Vec3<T> pt, Vec3<T> v1, Vec3<T> v2, Vec3<T> v3)
 
 double DegToRad(double deg);
 double RadToDeg(double rad);
+
+#undef _USE_MATH_DEFINES

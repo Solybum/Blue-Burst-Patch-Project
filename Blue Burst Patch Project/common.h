@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdint>
 #include <vector>
 #include <string>
 
@@ -82,6 +83,7 @@ namespace Transform
     extern void (__fastcall *RotateMatrix)(D3DMATRIX* matrix, uint32_t angle);
     extern void (__thiscall *ScaleMatrix)(D3DMATRIX* matrix, float x, float y, float z);
     extern void (__fastcall *TranslateTransformStackHead)(Vec3<float>* translation);
+    extern void (__fastcall *RotateMatrixEuler)(D3DMATRIX* matrix, uint32_t x, uint32_t y, uint32_t z);
 };
 
 /// The unknown parameter seems to commonly be set to 0

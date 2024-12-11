@@ -1,3 +1,8 @@
+#define _USE_MATH_DEFINES
+
+#include <cstdint>
+#include <cmath>
+
 #include "mathutil.h"
 
 double RadDistance(double a, double b)
@@ -11,14 +16,14 @@ double RadLerp(double a, double b, double t)
     return a + RadDistance(a, b) * t;
 }
 
-double IntAngleToRad(int16_t a)
+double IntAngleToRad(uint32_t a)
 {
     return a / 65535.0 * M_PI * 2.0 - M_PI;
 }
 
-int16_t RadToIntAngle(double a)
+uint32_t RadToIntAngle(double a)
 {
-    return (int16_t)((a + M_PI) / (M_PI * 2.0) * 0xffff);
+    return uint32_t(a * 65535.0 / (M_PI * 2.0));
 }
 
 double DegToRad(double deg)
@@ -30,3 +35,5 @@ double RadToDeg(double rad)
 {
     return rad * (180.0 / M_PI);
 }
+
+#undef _USE_MATH_DEFINES

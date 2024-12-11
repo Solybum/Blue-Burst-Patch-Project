@@ -269,6 +269,23 @@ namespace Enemy
         Special = 0x40
     };
 
+    struct CollisionBox
+    {
+        float x;
+        float y;
+        float z;
+        float r;
+        float unk1;
+        uint32_t unk2;
+        uint32_t unknownFlags;
+        float x2;
+        float y2;
+        float z2;
+        uint32_t unk3;
+
+        CollisionBox(float x, float y, float z, float r);
+    };
+
     struct EnemyBase
     {
         struct Vtable {
@@ -308,6 +325,7 @@ namespace Enemy
                 DEFINE_FIELD(0x50, Vec3<float> xyz1);
                 DEFINE_FIELD(0x5c, Vec3<uint32_t> rotation);
                 DEFINE_FIELD(0x80, InitData* initData);
+                DEFINE_FIELD(0xa4, CollisionBox* collisionBoxes);
                 DEFINE_FIELD(0xb8, uint16_t animationId);
                 DEFINE_FIELD(0xc0, float currentAnimationCounter);
                 DEFINE_FIELD(0xc4, float currentAnimationLength);
@@ -319,6 +337,11 @@ namespace Enemy
                 DEFINE_FIELD(0x298, Vec3<float> xyz4);
                 DEFINE_FIELD(0x2a4, Vec3<float> xyz3);
                 DEFINE_FIELD(0x2e8, Attribute attribute);
+                DEFINE_FIELD(0x2ec, uint16_t unkElemDamage1);
+                DEFINE_FIELD(0x2ee, uint16_t unkElemDamage2);
+                DEFINE_FIELD(0x2f0, uint16_t unkElemDamage3);
+                DEFINE_FIELD(0x2f2, uint16_t unkElemDamage4);
+                DEFINE_FIELD(0x2f4, uint16_t unkElemDamage5);
                 DEFINE_FIELD(0x300, Vec3<float> xyz6);
                 DEFINE_FIELD(0x30c, Vec3<float> xyz7);
                 DEFINE_FIELD(0x31c, BattleParam::BPAttacksEntry* bpAttacks);
@@ -335,23 +358,6 @@ namespace Enemy
         EnemyBase(void* parentObject);
 
         void Destruct(bool32 freeMemory);
-    };
-
-    struct CollisionBox
-    {
-        float x;
-        float y;
-        float z;
-        float r;
-        float unk1;
-        uint32_t unk2;
-        uint32_t unknownFlags;
-        float x2;
-        float y2;
-        float z2;
-        uint32_t unk3;
-
-        CollisionBox(float x, float y, float z, float r);
     };
 
 #pragma pack(pop)

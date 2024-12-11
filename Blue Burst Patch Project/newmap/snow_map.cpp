@@ -73,11 +73,25 @@ void PatchPointLightExperiment()
     *reinterpret_cast<decltype(EnableNrelPointLight)**>(0x00b475f8) = EnableNrelPointLight;
 }
 
+#include "devmod_interface.h"
+
+static MapObjectDevmodInterface* devmod = nullptr;
+using ProxyObject = MapObjectDevmodProxy<&devmod>;
+template<> void* ProxyObject::wrappedObj = nullptr;
+
 bool __cdecl LoadSnowMapStuff()
 {
     PatchIcecubeUnitxt();
 
+    devmod = new MapObjectDevmodInterface();
+
     return true;
+}
+
+void __cdecl UnloadSnowMapStuff()
+{
+    if (devmod) delete devmod;
+    devmod = nullptr;
 }
 
 CustomMapDefinition snowMapEntry = {
@@ -90,9 +104,9 @@ CustomMapDefinition snowMapEntry = {
         1
     },
     .mapLoader = {
-        snowMapName,
-        LoadSnowMapStuff,
-        nullptr
+        .name = snowMapName,
+        .Load = LoadSnowMapStuff,
+        .Unload = UnloadSnowMapStuff
     },
     .songFilename = "slbgm_snow.ogg",
     .slbgmFilePath = "data/slbgm_snow.txt",
@@ -113,7 +127,9 @@ CustomMapDefinition snowMapEntry = {
         SpawnableEntity(1339, MapObjectNewdoor),
         SpawnableEntity(MapObjectPayload::objectTypeId, MapObjectPayload),
         SpawnableEntity(MapObjectPayloadCheckpoint::objectTypeId, MapObjectPayloadCheckpoint),
-        MapObject::GetMapObjectDefinition(MapObject::MapObjectType::BlackSlidingDoor)
+        MapObject::GetMapObjectDefinition(MapObject::MapObjectType::BlackSlidingDoor),
+        SpawnableEntity(1342, ProxyObject),
+        MapObject::GetMapObjectDefinition(MapObject::MapObjectType::FogCollision)
     }
 };
 

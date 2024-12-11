@@ -396,6 +396,7 @@ namespace MapObject
 
             union {
                 DEFINE_FIELD(0x4, void* typeId);
+                DEFINE_FIELD(0x8, ObjectFlag objectFlags);
                 DEFINE_FIELD(0x1c, uint16_t entityIndex);
                 DEFINE_FIELD(0x28, int16_t mapSection);
                 DEFINE_FIELD(0x38, Vec3f xyz1);

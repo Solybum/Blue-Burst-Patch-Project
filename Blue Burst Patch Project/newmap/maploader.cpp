@@ -28,6 +28,10 @@ bool __cdecl DefaultMapLoad()
 {
     auto origMap = (uint8_t) GetCurrentMap();
     auto mapDef = GetCustomMapDefinition(origMap);
+    
+    // Call optional arbitrary map-specific code
+    if (mapDef->mapLoader.Load != nullptr)
+        mapDef->mapLoader.Load();
 
     // Replace SetDataTable (before warp_load_assets)
     ReplaceSetData(origMap, mapDef->setDataTable);
@@ -50,10 +54,6 @@ bool __cdecl DefaultMapLoad()
     reinterpret_cast<void (__cdecl *)()>(0x00782098)(); // unknown_create_map()
 
     LoadSlbgm(mapDef->slbgmIndex);
-
-    // Call optional arbitrary map-specific code
-    if (mapDef->mapLoader.Load != nullptr)
-        mapDef->mapLoader.Load();
 
     return true;
 }
