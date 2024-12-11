@@ -121,8 +121,6 @@ void MapObjectPayloadCheckpoint::Render()
 void MapObjectPayloadCheckpoint::RenderShadow() {}
 
 MapObjectPayload::MapObjectPayload(void* parentObject, MapObject::InitData::InnerData* initData) :
-    furthestReachedCheckpointIdx(-1),
-    circleRotation(0),
     MapObject::MapObjectBase(parentObject)
 {
     OVERRIDE_METHOD(MapObjectPayload, Destruct);
@@ -137,6 +135,8 @@ MapObjectPayload::MapObjectPayload(void* parentObject, MapObject::InitData::Inne
     Enemy::InsertIntoEntityList(this);
 
     // Init params
+    circleRotation = 0;
+    furthestReachedCheckpointIdx = -1;
     originalPosition.set(initData->position);
     circleRadius = initParam1.asFloat;
     moveSpeed = initParam2.asFloat;
@@ -167,8 +167,6 @@ void MapObjectPayload::Destruct(BOOL freeMemory)
 
 MapObjectPayloadCheckpoint* MapObjectPayload::FindCheckpoint(uint16_t switchId)
 {
-    bool foundCheckpointObject = false;
-    Vec3f targetPosition;
     for (auto ptr : EntityList::Objects())
     {
         auto obj = ObjectWrapper(ptr);
@@ -234,7 +232,6 @@ void MapObjectPayload::MakeFloorPathMesh()
         // Scale to 0..pi2, add 90deg, mod%pi, scale back down to -pi..pi
         // TODO: This would look better if the angle was half turned towards the third checkpoint
         float sideAngle = std::fmod(forwardAngle + M_PI + M_PI / 2.0, M_PI) - M_PI;
-        float dist = std::sqrt(DistanceSquaredXZ(cur, next));
         float sinSide = std::sin(sideAngle);
         float cosSide = std::cos(sideAngle);
 
@@ -316,7 +313,7 @@ void MapObjectPayload::Update()
     }
 
     auto nextCheckpointIdx = furthestUnlockedCheckpointIdx + 1;
-    if (nextCheckpointIdx >= switches.size())
+    if (nextCheckpointIdx >= int(switches.size()))
     {
         // Reached final checkpoint, do nothing
         return;
