@@ -29,6 +29,7 @@ namespace Entity
         DECLARE_WRAPPED_MEMBER(0x30, Entity::EntityFlag, entityFlags);
         DECLARE_WRAPPED_MEMBER(0x38, Vec3<float>, position);
         DECLARE_WRAPPED_MEMBER(0x5c, Vec3<uint32_t>, rotation);
+        DECLARE_WRAPPED_MEMBER(0x30c, Vec3f, velocity);
 
         DECLARE_WRAPPED_METHOD(23, void, GetHit, void* attacker, float damageMultiplier);
     };

@@ -91,6 +91,7 @@ set(source_files
     newmap/footsteps.cpp
     newmap/map_object_payload.cpp
     newmap/map_object_turret.cpp
+    newmap/map_object_slippery.cpp
     devmod_interface.h
     ninja.cpp
     quest.cpp
