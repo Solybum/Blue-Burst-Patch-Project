@@ -39,6 +39,89 @@ struct Vec3
         y = other->y;
         z = other->z;
     }
+
+    void Lerp(Vec3 b, float t) volatile
+    {
+        x += (b.x - x) * t;
+        y += (b.y - y) * t;
+        z += (b.z - z) * t;
+    }
+
+    float Length() const volatile
+    {
+        return std::hypot(x, y, z);
+    }
+
+    void Normalize() volatile
+    {
+        auto l = Length();
+        if (l == 0.0f) return;
+        x /= l;
+        y /= l;
+        z /= l;
+    }
+
+    void Multiply(float n) volatile
+    {
+        x *= n;
+        y *= n;
+        z *= n;
+    }
+
+    void Cross(Vec3 b) volatile
+    {
+        auto ax = x;
+        auto ay = y;
+        auto az = z;
+		auto bx = b.x;
+        auto by = b.y;
+        auto bz = b.z;
+
+        x = ay * bz - az * by;
+		y = az * bx - ax * bz;
+		z = ax * by - ay * bx;
+    }
+
+    void Add(Vec3 b) volatile
+    {
+        x += b.x;
+        y += b.y;
+        z += b.z;
+    }
+
+    void Subtract(Vec3 b) volatile
+    {
+        x -= b.x;
+        y -= b.y;
+        z -= b.z;
+    }
+
+    void RotateWithQuaternion(float qx, float qy, float qz, float qw)
+    {
+        auto ax = x;
+        auto ay = y;
+        auto vy = z;
+
+		auto tx = (qy * vy - qz * ay) * 2;
+		auto ty = (qz * ax - qx * vy) * 2;
+		auto tz = (qx * ay - qy * ax) * 2;
+
+		x = ax + qw * tx + qy * tz - qz * ty;
+		y = ay + qw * ty + qz * tx - qx * tz;
+		z = vy + qw * tz + qx * ty - qy * tx;
+    }
+
+    void RotateWithAxis(Vec3 axis, float angleRad)
+    {
+		auto halfAngle = angleRad / 2;
+        auto s = sinf(halfAngle);
+
+		auto qx = axis.x * s;
+		auto qy = axis.y * s;
+		auto qz = axis.z * s;
+		auto qw = cosf(halfAngle);
+        RotateWithQuaternion(qx, qy, qz, qw);
+    }
 };
 #pragma pack(pop)
 

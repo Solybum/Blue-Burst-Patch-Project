@@ -14,6 +14,7 @@
 #include "map_object_payload.h"
 #include "map_object_slippery.h"
 #include "map_object_snowfall.h"
+#include "map_object_snowwisp.h"
 #include "map_object_turret.h"
 #include "newmap.h"
 #include "setdata.h"
@@ -132,7 +133,8 @@ CustomMapDefinition snowMapEntry = {
         MapObject::GetMapObjectDefinition(MapObject::MapObjectType::BlackSlidingDoor),
         SpawnableEntity(1342, MapObjectTurret),
         MapObject::GetMapObjectDefinition(MapObject::MapObjectType::FogCollision),
-        SpawnableEntity(1343, MapObjectSlippery)
+        SpawnableEntity(1343, MapObjectSlippery),
+        SpawnableEntity(1344, MapObjectSnowWisp)
     }
 };
 

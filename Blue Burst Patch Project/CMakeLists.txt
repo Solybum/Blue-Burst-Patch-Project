@@ -92,6 +92,7 @@ set(source_files
     newmap/map_object_payload.cpp
     newmap/map_object_turret.cpp
     newmap/map_object_slippery.cpp
+    newmap/map_object_snowwisp.cpp
     devmod_interface.h
     ninja.cpp
     quest.cpp
