@@ -67,6 +67,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
+      <ModuleDefinitionFile>bbpp.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -87,6 +88,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
+      <ModuleDefinitionFile>bbpp.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -144,6 +146,7 @@
     <ClCompile Include="fastwarp.cpp" />
     <ClCompile Include="helpers.cpp" />
     <ClCompile Include="hooking.cpp" />
+    <ClCompile Include="d3d8_hook.cpp" />
     <ClCompile Include="initlist.cpp" />
     <ClCompile Include="keyboard.cpp" />
     <ClCompile Include="large_assets.cpp" />

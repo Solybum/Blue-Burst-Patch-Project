@@ -42,6 +42,30 @@ Allows loading of larger asset files.
 ### New Enemy `[COMPILED:PATCH_NEWENEMY]`
 A demonstration of how a new enemy may be implemented using the object extension framework.
 
+### High Refresh Rate `[COMPILED:PATCH_FRAMERATE]`
+Increases the rendering frame rate of the game natively without wrappers using frame repetition. The target tickrate and functionality can be configured in the Windows Registry under `HKEY_CURRENT_USER\Software\SonicTeam\PSOBB`. The patch reads the `FrameGenEnabled` (DWORD) and `TargetHz` (DWORD) registry keys.
+
+Example `enable_high_refresh.reg`:
+```registry
+Windows Registry Editor Version 5.00
+
+[HKEY_CURRENT_USER\Software\SonicTeam\PSOBB]
+"FrameGenEnabled"=dword:00000001
+"TargetHz"=dword:000000a5
+
+; Other example TargetHz values (replace the value above):
+; 60Hz  -> dword:0000003c
+; 75Hz  -> dword:0000004b
+; 90Hz  -> dword:0000005a
+; 120Hz -> dword:00000078
+; 144Hz -> dword:00000090
+; 165Hz -> dword:000000a5
+; 240Hz -> dword:000000f0
+
+; Uncomment to enable debug logging to d3d8_hook.log
+; "DebugLogsEnabled"=dword:00000001
+```
+
 ### Intro credits skip `[COMPILED:PATCH_SKIP_INTRO_CREDITS]`
 Skips the credits screen when the game is launched.
 

@@ -2,6 +2,10 @@
 #include <stdint.h>
 #include "globals.h"
 
+#ifdef PATCH_FRAMERATE
+#include "d3d8_hook.h"
+#endif
+
 // These should be specified in the project's preprocessor macros to enable.
 // In Visual Studio, right click the project in the Solution Explorer and select Properties.
 // Prepend or append them to "Preprocessor Definitions" which can be found under
@@ -26,6 +30,7 @@
 #define PATCH_INITLISTS
 #define PATCH_MAP_OBJECT_CONSTRUCTOR_LISTS
 #define PATCH_HOOKS
+#define PATCH_FRAMERATE
 #endif
 
 #ifdef PATCH_IME
@@ -129,6 +134,10 @@ void PSOBB()
 
 #ifdef PATCH_SKIP_INTRO_CREDITS
     *(uint8_t*)0x007a645e = 2;
+#endif
+
+#ifdef PATCH_FRAMERATE
+    SetupD3D8Hook();
 #endif
 
 #ifdef PATCH_OMNISPAWN
